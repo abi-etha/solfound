@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolFound — Light the Way. Build What's Yours.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sun:      #E8A020;
+  --sun-lt:   #FBF0D8;
+  --ink:      #0F0A04;
+  --ink-mid:  #1C1208;
+  --warm:     #2A1F12;
+  --sage:     #4A6E5A;
+  --sage-lt:  #E4EDE8;
+  --coral:    #C45030;
+  --dust:     #8C7B6A;
+  --cream:    #FAF6F0;
+  --parchment:#F2EAD8;
+  --white:    #FFFFFF;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--warm);overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-height:1.15}
+p{line-height:1.8;color:var(--dust)}
+a{text-decoration:none;color:inherit}
+
+/* ── NAV ─────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;transition:background 0.3s,box-shadow 0.3s}
+nav.scrolled{background:rgba(15,10,4,0.96);backdrop-filter:blur(12px);box-shadow:0 1px 0 rgba(232,160,32,0.15)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:white;letter-spacing:0.03em}
+.nav-logo span{color:var(--sun)}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{font-size:14px;font-weight:500;color:rgba(255,255,255,0.65);transition:color 0.2s}
+.nav-links a:hover{color:white}
+.nav-cta{background:var(--sun);color:var(--ink);padding:8px 20px;border-radius:6px;font-size:14px;font-weight:600;transition:background 0.2s}
+.nav-cta:hover{background:#d4921c;color:var(--ink)}
+@media(max-width:680px){nav{padding:14px 20px}.nav-links{display:none}}
+
+/* ── HERO ─────────────────────────────────── */
+.hero{min-height:100vh;background:var(--ink);display:flex;align-items:center;position:relative;overflow:hidden;padding:120px 48px 80px}
+.hero-bg{position:absolute;inset:0}
+.hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,32,0.12) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none}
+.hero-glow2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(74,110,90,0.1) 0%,transparent 70%);bottom:-80px;left:10%;pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(232,160,32,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(232,160,32,0.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.hero-inner{max-width:1080px;margin:0 auto;width:100%;position:relative;z-index:1}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--sun);margin-bottom:28px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';display:inline-block;width:32px;height:1px;background:var(--sun)}
+.hero h1{font-size:clamp(3rem,7vw,6rem);color:white;margin-bottom:28px;max-width:14ch;line-height:1.05}
+.hero h1 em{color:var(--sun);font-style:italic}
+.hero-sub{font-size:18px;color:rgba(255,255,255,0.55);max-width:480px;margin-bottom:44px;line-height:1.7;font-family:'Playfair Display',serif;font-style:italic}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn-gold{background:var(--sun);color:var(--ink);padding:14px 28px;border-radius:6px;font-size:15px;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s}
+.btn-gold:hover{background:#d4921c;transform:translateY(-1px)}
+.btn-ghost{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.8);padding:14px 28px;border-radius:6px;font-size:15px;font-weight:500;border:1px solid rgba(255,255,255,0.15);transition:all 0.2s}
+.btn-ghost:hover{background:rgba(255,255,255,0.12);color:white}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,0.3);font-size:11px;letter-spacing:0.1em;text-transform:uppercase}
+.hero-scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(232,160,32,0.4),transparent);animation:scrollpulse 2s ease-in-out infinite}
+@keyframes scrollpulse{0%,100%{opacity:0.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.1)}}
+
+/* ── STATS ─────────────────────────────── */
+.stats{background:var(--ink-mid);border-top:1px solid rgba(232,160,32,0.12);border-bottom:1px solid rgba(232,160,32,0.12);padding:56px 48px}
+.stats-inner{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.stat-item{text-align:center;padding:0 24px;border-right:1px solid rgba(255,255,255,0.07)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.2rem);font-weight:700;color:var(--sun);display:block;margin-bottom:6px;letter-spacing:-0.01em}
+.stat-label{font-size:13px;color:rgba(255,255,255,0.45);font-weight:400;line-height:1.5}
+@media(max-width:600px){.stats-inner{grid-template-columns:1fr;gap:32px}.stat-item{border-right:none;border-bottom:1px solid rgba(255,255,255,0.07);padding-bottom:32px}.stat-item:last-child{border-bottom:none}}
+
+/* ── SHIFT ─────────────────────────────── */
+.section{padding:100px 48px}
+.section-inner{max-width:1080px;margin:0 auto}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--sun);margin-bottom:20px}
+.shift{background:var(--parchment)}
+.shift-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.shift h2{font-size:clamp(2rem,4vw,3rem);color:var(--ink);margin-bottom:20px}
+.shift p{font-size:17px;line-height:1.85}
+.shift-visual{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.shift-card{background:white;border-radius:10px;padding:24px;border:1px solid rgba(44,31,18,0.08)}
+.shift-card-icon{font-size:28px;margin-bottom:12px}
+.shift-card h4{font-family:'Playfair Display',serif;font-size:16px;margin-bottom:6px;color:var(--ink)}
+.shift-card p{font-size:13px;margin:0}
+@media(max-width:780px){.shift-grid{grid-template-columns:1fr;gap:40px}}
+
+/* ── PHILOSOPHY ─────────────────────────── */
+.philosophy{background:var(--ink);padding:100px 48px}
+.philosophy-inner{max-width:900px;margin:0 auto;text-align:center}
+.philosophy .eyebrow{color:var(--sun)}
+.philosophy h2{font-size:clamp(1.8rem,3.5vw,2.8rem);color:white;margin-bottom:56px}
+.creed{display:flex;flex-direction:column;gap:0}
+.creed-line{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,2.5vw,1.8rem);color:rgba(255,255,255,0.55);padding:22px 0;border-bottom:1px solid rgba(255,255,255,0.07);font-style:italic;transition:color 0.3s;cursor:default}
+.creed-line:hover{color:white}
+.creed-line:last-child{border-bottom:none;color:var(--sun)}
+.creed-line span{color:var(--sun);font-style:normal;font-weight:600;margin-right:10px}
+
+/* ── PATHS ─────────────────────────────── */
+.paths{background:var(--cream);padding:100px 48px}
+.paths-inner{max-width:1080px;margin:0 auto}
+.paths h2{font-size:clamp(2rem,4vw,3rem);color:var(--ink);margin-bottom:14px;text-align:center}
+.paths-sub{text-align:center;font-size:17px;margin-bottom:60px;color:var(--dust)}
+.paths-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.path-card{border-radius:12px;overflow:hidden;border:1px solid rgba(44,31,18,0.1);transition:transform 0.2s,box-shadow 0.2s;display:flex;flex-direction:column}
+.path-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(44,31,18,0.12)}
+.path-card-top{padding:36px 28px 28px;position:relative}
+.path-num{font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:20px;opacity:0.6}
+.path-card h3{font-size:1.6rem;margin-bottom:10px}
+.path-card-tagline{font-size:14px;font-style:italic;font-family:'Playfair Display',serif;opacity:0.75;margin-bottom:16px}
+.path-card p{font-size:13px;line-height:1.7;margin:0}
+.path-card-bottom{padding:20px 28px;border-top:1px solid rgba(0,0,0,0.06);margin-top:auto;display:flex;justify-content:space-between;align-items:center}
+.path-link{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;transition:gap 0.2s}
+.path-card:hover .path-link{gap:10px}
+
+/* RootPath */
+.path-root .path-card-top{background:#1F3A28;color:white}
+.path-root .path-card-top p{color:rgba(255,255,255,0.65)}
+.path-root .path-num{color:rgba(255,255,255,0.5)}
+.path-root .path-card-bottom{background:#F5F9F6}
+.path-root .path-link{color:#2C5E3A}
+
+/* LedgerPath */
+.path-ledger .path-card-top{background:#1C1F42;color:white}
+.path-ledger .path-card-top p{color:rgba(255,255,255,0.65)}
+.path-ledger .path-num{color:rgba(255,255,255,0.5)}
+.path-ledger .path-card-bottom{background:#F5F5FB}
+.path-ledger .path-link{color:#3A3E8A}
+
+/* BoutiquePath */
+.path-boutique .path-card-top{background:#3D1A12;color:white}
+.path-boutique .path-card-top p{color:rgba(255,255,255,0.65)}
+.path-boutique .path-num{color:rgba(255,255,255,0.5)}
+.path-boutique .path-card-bottom{background:#FBF3F0}
+.path-boutique .path-link{color:#7A2C1E}
+@media(max-width:780px){.paths-grid{grid-template-columns:1fr}}
+
+/* ── TOOLBOX ─────────────────────────────── */
+.toolbox{background:var(--parchment);padding:100px 48px}
+.toolbox-inner{max-width:1080px;margin:0 auto}
+.toolbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.toolbox h2{font-size:clamp(1.8rem,3.5vw,2.8rem);color:var(--ink);margin-bottom:16px}
+.toolbox p{font-size:16px;margin-bottom:32px}
+.tool-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tool-item{background:white;border-radius:8px;padding:16px 18px;border:1px solid rgba(44,31,18,0.08);display:flex;align-items:center;gap:12px}
+.tool-icon{width:36px;height:36px;border-radius:7px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.tool-name{font-size:13px;font-weight:600;color:var(--ink)}
+.tool-desc{font-size:11px;color:var(--dust)}
+.toolbox-quote{background:var(--ink);border-radius:12px;padding:48px 40px;color:white}
+.toolbox-quote blockquote{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,2.5vw,1.9rem);font-style:italic;color:white;line-height:1.5;margin-bottom:24px}
+.toolbox-quote cite{font-size:13px;color:var(--sun);font-style:normal;font-weight:600}
+@media(max-width:780px){.toolbox-grid{grid-template-columns:1fr;gap:40px}}
+
+/* ── TRANSFORMATION ─────────────────────── */
+.transform{background:var(--ink);padding:100px 48px}
+.transform-inner{max-width:1080px;margin:0 auto}
+.transform .eyebrow{color:var(--sun)}
+.transform h2{font-size:clamp(2rem,4vw,3rem);color:white;margin-bottom:14px}
+.transform-sub{font-size:17px;color:rgba(255,255,255,0.45);margin-bottom:60px;font-family:'Playfair Display',serif;font-style:italic}
+.transform-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.transform-steps::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:1px;background:linear-gradient(to right,transparent,rgba(232,160,32,0.3),rgba(232,160,32,0.3),transparent)}
+.transform-step{text-align:center;padding:0 16px;position:relative}
+.transform-dot{width:56px;height:56px;border-radius:50%;background:rgba(232,160,32,0.1);border:1px solid rgba(232,160,32,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:11px;font-weight:700;color:var(--sun);letter-spacing:0.1em;position:relative;z-index:1}
+.transform-from{font-size:12px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px}
+.transform-arrow{font-size:16px;color:rgba(232,160,32,0.4);margin:6px 0}
+.transform-to{font-size:18px;font-family:'Playfair Display',serif;color:white;font-weight:600}
+@media(max-width:680px){.transform-steps{grid-template-columns:1fr 1fr;gap:40px}.transform-steps::before{display:none}}
+
+/* ── CTA ─────────────────────────────────── */
+.cta-section{background:var(--sun);padding:100px 48px;text-align:center}
+.cta-inner{max-width:640px;margin:0 auto}
+.cta-section h2{font-size:clamp(2rem,4vw,3.2rem);color:var(--ink);margin-bottom:16px}
+.cta-section p{font-size:17px;color:rgba(15,10,4,0.65);margin-bottom:44px;font-family:'Playfair Display',serif;font-style:italic}
+.cta-paths{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.cta-path{background:var(--ink);color:white;padding:14px 24px;border-radius:8px;font-size:14px;font-weight:600;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:160px}
+.cta-path span{font-size:11px;font-weight:400;color:rgba(255,255,255,0.5);font-style:italic}
+.cta-path:hover{background:var(--warm);transform:translateY(-2px)}
+
+/* ── FOOTER ─────────────────────────────── */
+footer{background:var(--ink-mid);padding:48px;border-top:1px solid rgba(232,160,32,0.1)}
+.footer-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.footer-logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white}
+.footer-logo span{color:var(--sun)}
+.footer-tagline{font-size:13px;color:rgba(255,255,255,0.35);font-style:italic}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.25)}
+
+/* ── SCROLL ANIMATIONS ───────────────────── */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-logo">Sol<span>Found</span></div>
+  <div class="nav-links">
+    <a href="#paths">Paths</a>
+    <a href="#toolbox">Toolbox</a>
+    <a href="#paths" class="nav-cta">Find your path →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <div class="hero-grid"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">A platform for the sovereign builder</div>
+    <h1>Light the way.<br><em>Build what's yours.</em></h1>
+    <p class="hero-sub">Freedom doesn't come from climbing someone else's ladder. It comes from building.</p>
+    <div class="hero-actions">
+      <a href="#paths" class="btn-gold">Find your path →</a>
+      <a href="#philosophy" class="btn-ghost">Our philosophy</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    scroll
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat-item fade-up">
+      <span class="stat-num">35M+</span>
+      <div class="stat-label">Micro businesses<br>in the US today</div>
+    </div>
+    <div class="stat-item fade-up" style="transition-delay:0.1s">
+      <span class="stat-num">50%</span>
+      <div class="stat-label">Of new businesses<br>start at home</div>
+    </div>
+    <div class="stat-item fade-up" style="transition-delay:0.2s">
+      <span class="stat-num">$1.3T</span>
+      <div class="stat-label">Generated by self-employed<br>individuals annually</div>
+    </div>
+  </div>
+</div>
+
+<!-- THE SHIFT -->
+<section class="section shift" id="shift">
+  <div class="section-inner shift-grid">
+    <div class="fade-up">
+      <div class="eyebrow">The Shift</div>
+      <h2>Work is becoming more human.</h2>
+      <p>People are rediscovering their ability to create, build, and shape their own lives. The corporate ladder is broken. The staircase was never built for us.<br><br>SolFound exists for the people who are done waiting for permission — and ready to build something that belongs to them.</p>
+    </div>
+    <div class="shift-visual fade-up" style="transition-delay:0.15s">
+      <div class="shift-card">
+        <div class="shift-card-icon">🌱</div>
+        <h4>Start where you are</h4>
+        <p>No funding needed. No credentials required. Just a clear path and the tools to walk it.</p>
+      </div>
+      <div class="shift-card">
+        <div class="shift-card-icon">🔑</div>
+        <h4>Own what you build</h4>
+        <p>What you make is yours. What you learn stays with you. No employer can take it back.</p>
+      </div>
+      <div class="shift-card">
+        <div class="shift-card-icon">⚡</div>
+        <h4>Human-scale</h4>
+        <p>Designed for people, not org charts. No rungs, no gatekeepers. Just a clear path forward.</p>
+      </div>
+      <div class="shift-card">
+        <div class="shift-card-icon">↻</div>
+        <h4>Built to last</h4>
+        <p>If it breaks, you can shape it again. Resilience is a feature, not a promise.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy" id="philosophy">
+  <div class="philosophy-inner">
+    <div class="eyebrow fade-up">The SolFound Philosophy</div>
+    <h2 class="fade-up" style="color:white;margin-bottom:56px">A creed for the sovereign builder.</h2>
+    <div class="creed">
+      <div class="creed-line fade-up">What I make is mine.</div>
+      <div class="creed-line fade-up" style="transition-delay:0.08s">What I learn stays with me.</div>
+      <div class="creed-line fade-up" style="transition-delay:0.16s">If it breaks, I can shape it again.</div>
+      <div class="creed-line fade-up" style="transition-delay:0.24s"><span>☀</span> I am the source — and the return.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PATHS -->
+<section class="paths" id="paths">
+  <div class="paths-inner">
+    <div class="eyebrow" style="text-align:center" class="fade-up">The Paths</div>
+    <h2 class="fade-up">Three roads. One destination.</h2>
+    <p class="paths-sub fade-up">Every path leads to the same place — ownership of your work, your time, your life.</p>
+    <div class="paths-grid">
+
+      <div class="path-card path-root fade-up">
+        <div class="path-card-top">
+          <div class="path-num">Path 01</div>
+          <h3>RootPath</h3>
+          <div class="path-card-tagline">Start where you are. Build from the root up.</div>
+          <p>For the home-based micro business builder. Whether you're growing food, offering a service, or building something from your backyard — RootPath gives you the structure to make it real.</p>
+        </div>
+        <div class="path-card-bottom">
+          <div>
+            <div style="font-size:11px;color:var(--dust);margin-bottom:2px">Best for</div>
+            <div style="font-size:13px;font-weight:600;color:var(--ink)">Garden, handyman, home services</div>
+          </div>
+          <a href="rootpath_final.html" class="path-link" style="color:#2C5E3A">Open path →</a>
+        </div>
+      </div>
+
+      <div class="path-card path-ledger fade-up" style="transition-delay:0.1s">
+        <div class="path-card-top">
+          <div class="path-num">Path 02</div>
+          <h3>LedgerPath</h3>
+          <div class="path-card-tagline">Know your numbers. Own your flow.</div>
+          <p>Financial clarity and money systems for the solo bookkeeper or financial services provider. Build a client base, price your work correctly, and track every dollar from day one.</p>
+        </div>
+        <div class="path-card-bottom">
+          <div>
+            <div style="font-size:11px;color:var(--dust);margin-bottom:2px">Best for</div>
+            <div style="font-size:13px;font-weight:600;color:var(--ink)">Bookkeeping, financial services</div>
+          </div>
+          <a href="ledgerpath.html" class="path-link" style="color:#3A3E8A">Open path →</a>
+        </div>
+      </div>
+
+      <div class="path-card path-boutique fade-up" style="transition-delay:0.2s">
+        <div class="path-card-top">
+          <div class="path-num">Path 03</div>
+          <h3>BoutiquePath</h3>
+          <div class="path-card-tagline">Make it beautiful. Make it yours.</div>
+          <p>For the creative and retail micro business. From 3D printed products to handmade goods, BoutiquePath helps you price your work, find your buyers, and build a brand that lasts.</p>
+        </div>
+        <div class="path-card-bottom">
+          <div>
+            <div style="font-size:11px;color:var(--dust);margin-bottom:2px">Best for</div>
+            <div style="font-size:13px;font-weight:600;color:var(--ink)">Makers, artists, product sellers</div>
+          </div>
+          <a href="boutiquepath.html" class="path-link" style="color:#7A2C1E">Open path →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TOOLBOX -->
+<section class="toolbox" id="toolbox">
+  <div class="toolbox-inner">
+    <div class="toolbox-grid">
+      <div class="fade-up">
+        <div class="eyebrow">The Toolbox</div>
+        <h2>Everything needed to build with confidence.</h2>
+        <p>Not advice. Not inspiration. Real tools. Each Path comes fully equipped — from day one to steady income.</p>
+        <div class="tool-list">
+          <div class="tool-item">
+            <div class="tool-icon">✓</div>
+            <div><div class="tool-name">Getting Started Checklist</div><div class="tool-desc">Step-by-step launch guide</div></div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-icon">📊</div>
+            <div><div class="tool-name">Revenue Model</div><div class="tool-desc">Pricing · Projections · Ramp-Up</div></div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-icon">💰</div>
+            <div><div class="tool-name">Money Tracker</div><div class="tool-desc">Income · Expenses · Tax reserve</div></div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-icon">⚙️</div>
+            <div><div class="tool-name">Workflows & Templates</div><div class="tool-desc">Built-in systems, not guesswork</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="fade-up" style="transition-delay:0.15s">
+        <div class="toolbox-quote">
+          <blockquote>"A warm, guided way to create what's yours."</blockquote>
+          <cite>— The SolFound Promise</cite>
+          <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.1)">
+            <div style="font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:16px">Every path includes the same complete toolbox — built for your specific business type.</div>
+            <a href="#paths" class="btn-gold" style="display:inline-flex;font-size:13px;padding:10px 20px">Choose your path →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSFORMATION -->
+<section class="transform" id="transform">
+  <div class="transform-inner">
+    <div class="eyebrow fade-up">The Transformation</div>
+    <h2 class="fade-up" style="color:white">The journey SolFound makes possible.</h2>
+    <p class="transform-sub fade-up">Each step is a doorway. The final one opens into the light.</p>
+    <div class="transform-steps fade-up">
+      <div class="transform-step">
+        <div class="transform-dot">01</div>
+        <div class="transform-from">From</div>
+        <div class="transform-to" style="color:rgba(255,255,255,0.4);font-size:15px">Dependence</div>
+        <div class="transform-arrow">↓</div>
+        <div class="transform-from">To</div>
+        <div class="transform-to">Capability</div>
+      </div>
+      <div class="transform-step">
+        <div class="transform-dot">02</div>
+        <div class="transform-from">From</div>
+        <div class="transform-to" style="color:rgba(255,255,255,0.4);font-size:15px">Shadows</div>
+        <div class="transform-arrow">↓</div>
+        <div class="transform-from">To</div>
+        <div class="transform-to">Light</div>
+      </div>
+      <div class="transform-step">
+        <div class="transform-dot">03</div>
+        <div class="transform-from">From</div>
+        <div class="transform-to" style="color:rgba(255,255,255,0.4);font-size:15px">Climbing</div>
+        <div class="transform-arrow">↓</div>
+        <div class="transform-from">To</div>
+        <div class="transform-to">Creating</div>
+      </div>
+      <div class="transform-step">
+        <div class="transform-dot" style="background:rgba(232,160,32,0.2);border-color:var(--sun)">04</div>
+        <div class="transform-from">From</div>
+        <div class="transform-to" style="color:rgba(255,255,255,0.4);font-size:15px">Survival</div>
+        <div class="transform-arrow" style="color:var(--sun)">↓</div>
+        <div class="transform-from">To</div>
+        <div class="transform-to" style="color:var(--sun)">Sovereignty</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner fade-up">
+    <h2>Pick your path. Start building.</h2>
+    <p>Your work is waiting to become yours.</p>
+    <div class="cta-paths">
+      <a href="rootpath_final.html" class="cta-path">
+        RootPath
+        <span>Home-based micro business</span>
+      </a>
+      <a href="ledgerpath.html" class="cta-path">
+        LedgerPath
+        <span>Financial clarity & bookkeeping</span>
+      </a>
+      <a href="boutiquepath.html" class="cta-path">
+        BoutiquePath
+        <span>Creative & retail micro business</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Sol<span>Found</span></div>
+      <div class="footer-tagline">Light the way. Build what's yours.</div>
+    </div>
+    <div class="footer-copy">© 2026 SolFound. A platform for sovereign builders.</div>
+  </div>
+</footer>
+
+<script>
+// Nav scroll effect
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// Fade-up on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
