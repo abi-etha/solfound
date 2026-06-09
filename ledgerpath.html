@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LedgerPath — Your staircase to bookkeeping income</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ── Library palette ─────────────────────────────────── */
+  --brown-dark:  #2C1F14;   /* dark leather */
+  --brown-mid:   #5C3D2E;   /* warm walnut */
+  --brown-lt:    #A07850;   /* honey oak */
+  --brown-pale:  #EDE0D0;   /* aged paper */
+  --cream:       #F7F3EE;   /* warm white */
+  --slate:       #4A5568;   /* dusty blue-grey */
+  --slate-lt:    #E8EDF2;   /* light slate */
+  --sage:        #5C7A6E;   /* dusty green */
+  --sage-lt:     #E4EEEB;   /* light sage */
+  --dust-blue:   #4A6FA5;   /* dusty blue */
+  --dust-blue-lt:#E8EEF6;   /* light dusty blue */
+  --parchment:   #F2EAD8;   /* old parchment */
+  --ink:         #1A1208;   /* near black */
+  --text-dark:   #2C1F14;
+  --text-mid:    #6B5B4E;
+  --text-lt:     #A8998C;
+  --alert:       #B84C3A;
+  --alert-lt:    #FAF0EE;
+  --gold:        #C4922A;
+  --gold-lt:     #FBF5E0;
+  --white:       #FFFFFF;
+  --shadow:      0 2px 14px rgba(44,31,20,0.09);
+  --shadow-sm:   0 1px 5px rgba(44,31,20,0.06);
+  --radius:      8px;
+  --radius-sm:   5px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans','Segoe UI',sans-serif;background:var(--cream);color:var(--text-dark);font-size:15px;line-height:1.65}
+h1,h2,h3{font-family:'Crimson Pro',Georgia,serif;font-weight:500;line-height:1.25}
+h1{font-size:2.5rem} h2{font-size:1.5rem;margin-bottom:10px} h3{font-size:1.15rem;margin-bottom:8px}
+p{color:var(--text-mid);line-height:1.75}
+a{text-decoration:none;color:inherit}
+em{font-family:'Crimson Pro',Georgia,serif;font-style:italic}
+
+/* ── Header ──────────────────────────────────────────── */
+.header{background:var(--brown-dark);color:white;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:3px solid var(--brown-lt)}
+.header-left{display:flex;align-items:baseline;gap:18px}
+.logo{font-family:'Crimson Pro',Georgia,serif;font-size:28px;font-weight:600;color:white;letter-spacing:0.02em}
+.logo span{color:var(--brown-lt)}
+.tagline{font-size:13px;opacity:0.65;font-style:italic;font-family:'Crimson Pro',serif}
+.progress-pill{background:var(--alert);padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;white-space:nowrap;transition:background 0.4s}
+.progress-pill.mid{background:var(--gold)}
+.progress-pill.done{background:var(--sage)}
+
+/* ── Nav ─────────────────────────────────────────────── */
+.nav{background:var(--brown-mid);padding:0 32px;display:flex;gap:4px;border-bottom:2px solid var(--brown-dark)}
+.nav a{display:inline-block;padding:11px 16px;font-size:14px;font-weight:500;color:rgba(255,255,255,0.7);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.15s;cursor:pointer}
+.nav a:hover{color:white}
+.nav a.active{color:var(--brown-pale);font-weight:600;border-bottom-color:var(--brown-lt)}
+
+/* ── Layout ──────────────────────────────────────────── */
+.container{max-width:1080px;margin:32px auto;padding:0 24px}
+.page{display:none}.page.active{display:block}
+
+/* ── Cards ────────────────────────────────────────────── */
+.card{background:var(--white);padding:24px;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:20px;border:1px solid rgba(44,31,20,0.06)}
+.card.accent-brown{border-left:4px solid var(--brown-mid)}
+.card.accent-sage{border-left:4px solid var(--sage)}
+.card.accent-blue{border-left:4px solid var(--dust-blue)}
+.card.accent-alert{border-left:4px solid var(--alert)}
+.card.accent-gold{border-left:4px solid var(--gold)}
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.card-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+@media(max-width:680px){
+  .card-grid,.card-grid-3{grid-template-columns:1fr}
+  h1{font-size:1.9rem}
+  .header{flex-direction:column;align-items:flex-start;gap:10px}
+  .nav{padding:0 16px;overflow-x:auto}
+  .container{padding:0 14px;margin:20px auto}
+}
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn{display:inline-block;padding:10px 20px;border-radius:var(--radius-sm);border:none;cursor:pointer;font-family:'DM Sans',inherit;font-size:14px;font-weight:600;margin-top:14px;transition:all 0.15s}
+.btn-primary{background:var(--brown-dark);color:white}.btn-primary:hover{background:var(--brown-mid)}
+.btn-sage{background:var(--sage);color:white}.btn-sage:hover{background:#4a6859}
+.btn-blue{background:var(--dust-blue);color:white}.btn-blue:hover{background:#3a5f95}
+.btn-secondary{background:var(--sage-lt);color:var(--sage)}.btn-secondary:hover{background:#d4e8e2}
+.btn-outline{background:transparent;color:var(--brown-mid);border:1.5px solid var(--brown-mid)}.btn-outline:hover{background:var(--brown-pale)}
+.btn-alert{background:var(--alert);color:white}
+.btn-sm{padding:7px 14px;font-size:13px;margin-top:10px}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+
+/* ── Badges ──────────────────────────────────────────── */
+.badge{display:inline-block;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:10px}
+.badge-alert{background:var(--alert);color:white}
+.badge-sage{background:var(--sage-lt);color:var(--sage)}
+.badge-blue{background:var(--dust-blue-lt);color:var(--dust-blue)}
+.badge-gold{background:var(--gold-lt);color:#7A5C1E}
+.badge-tan{background:var(--brown-pale);color:var(--text-mid)}
+.badge-brown{background:var(--brown-mid);color:white}
+
+/* ── Section label ───────────────────────────────────── */
+.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-lt);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--brown-pale)}
+
+/* ── Hero ────────────────────────────────────────────── */
+.hero-card{background:var(--brown-dark);border-radius:var(--radius);padding:44px 40px;margin-bottom:20px;position:relative;overflow:hidden;border-bottom:4px solid var(--brown-lt)}
+.hero-card::before{content:'';position:absolute;right:-30px;top:-30px;width:240px;height:240px;background:rgba(160,120,80,0.08);border-radius:50%}
+.hero-card::after{content:'';position:absolute;left:-20px;bottom:-40px;width:160px;height:160px;background:rgba(160,120,80,0.05);border-radius:50%}
+/* decorative rule lines like a ledger */
+.hero-ledger-lines{position:absolute;inset:0;opacity:0.04;background:repeating-linear-gradient(0deg,transparent,transparent 31px,rgba(255,255,255,1) 31px,rgba(255,255,255,1) 32px)}
+.hero-card h1{color:white;font-size:2.8rem;margin-bottom:14px;position:relative;z-index:1;line-height:1.15}
+.hero-card h1 span{color:var(--brown-lt)}
+.hero-card > p{color:rgba(255,255,255,0.75);font-size:15px;max-width:500px;margin-bottom:22px;position:relative;z-index:1;font-family:'Crimson Pro',serif;font-size:17px;font-style:italic}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;position:relative;z-index:1}
+.hero-btn{padding:11px 22px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',inherit;transition:all 0.15s}
+.hero-btn-primary{background:var(--brown-lt);color:var(--brown-dark)}.hero-btn-primary:hover{background:#b8905e}
+.hero-btn-ghost{background:rgba(255,255,255,0.1);color:white;border:1.5px solid rgba(255,255,255,0.25)}.hero-btn-ghost:hover{background:rgba(255,255,255,0.18)}
+.hero-meta{margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,0.12);position:relative;z-index:1}
+.r-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.r-label-row span{font-size:13px;color:rgba(255,255,255,0.65)}
+.r-label-row strong{font-size:18px;color:white}
+.r-bar{width:100%;height:8px;background:rgba(255,255,255,0.12);border-radius:8px;overflow:hidden}
+.r-fill{height:100%;background:var(--sage);border-radius:8px;transition:width 0.6s ease}
+.r-sub{margin-top:7px;font-size:12px;color:rgba(255,255,255,0.5)}
+
+/* ── Today card ──────────────────────────────────────── */
+.today-step{background:var(--cream);border-radius:var(--radius-sm);padding:14px 18px;font-size:13px;color:var(--text-mid);margin-top:14px;border-left:3px solid var(--brown-lt)}
+.today-step strong{color:var(--text-dark);display:block;margin-bottom:2px}
+
+/* ── Steps track ─────────────────────────────────────── */
+.steps-track{list-style:none;display:flex;flex-direction:column;gap:0}
+.step-item{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--cream)}
+.step-item:last-child{border-bottom:none;padding-bottom:0}
+.step-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.step-dot.done{background:var(--sage);color:white}
+.step-dot.active{background:var(--alert);color:white}
+.step-dot.todo{background:var(--brown-pale);color:var(--text-mid)}
+.step-text{font-size:14px;font-weight:500}
+.step-text.done{color:var(--sage)}
+.step-text.active{color:var(--alert);font-weight:600}
+.step-text.todo{color:var(--text-mid)}
+.step-sub{font-size:11px;color:var(--text-lt);margin-left:auto;white-space:nowrap}
+
+/* ── QB status cards ─────────────────────────────────── */
+.qb-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
+.qb-card{border:2px solid var(--brown-pale);border-radius:var(--radius);padding:18px;cursor:pointer;transition:all 0.15s;background:var(--white);text-align:center}
+.qb-card:hover{border-color:var(--dust-blue);background:var(--dust-blue-lt)}
+.qb-card.selected{border-color:var(--dust-blue);background:var(--dust-blue-lt);border-width:2px}
+.qb-card.selected-no{border-color:var(--sage);background:var(--sage-lt)}
+.qb-icon{font-size:28px;margin-bottom:8px;display:block}
+.qb-name{font-size:14px;font-weight:600;color:var(--text-dark);display:block;margin-bottom:3px}
+.qb-desc{font-size:12px;color:var(--text-mid);line-height:1.4}
+
+/* ── Readiness bar ───────────────────────────────────── */
+.r-bar-lg{width:100%;height:12px;background:var(--brown-pale);border-radius:8px;overflow:hidden;margin:10px 0 6px}
+.r-fill-lg{height:100%;background:var(--sage);border-radius:8px;transition:width 0.5s ease}
+
+/* ── Accordion ────────────────────────────────────────── */
+.accord{border:1.5px solid var(--brown-pale);border-radius:var(--radius);margin-bottom:14px;overflow:hidden;transition:border-color 0.2s;background:var(--white)}
+.accord.open{border-color:var(--dust-blue)}
+.accord.locked{opacity:0.5}
+.accord-hdr{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;background:var(--white);user-select:none}
+.accord-hdr:hover{background:var(--cream)}
+.accord.locked .accord-hdr{cursor:default}
+.accord-icon{font-size:20px;flex-shrink:0}
+.accord-title{font-size:15px;font-weight:600;color:var(--text-dark);flex:1;font-family:'Crimson Pro',serif;font-size:16px}
+.accord-status{font-size:12px;color:var(--text-lt);white-space:nowrap;margin-right:6px}
+.accord-chevron{font-size:16px;color:var(--text-lt);transition:transform 0.2s;flex-shrink:0}
+.accord.open .accord-chevron{transform:rotate(180deg)}
+.accord-body{display:none;padding:0 20px 20px;background:var(--white)}
+.accord.open .accord-body{display:block}
+.accord-intro{font-size:13px;color:var(--text-mid);margin-bottom:16px;line-height:1.7;padding-top:4px}
+
+/* ── Checklist ────────────────────────────────────────── */
+.check-list{list-style:none;margin-top:4px}
+.check-item{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--cream)}
+.check-item:last-child{border-bottom:none}
+.check-box{width:22px;height:22px;border-radius:4px;border:2px solid var(--brown-pale);background:white;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;margin-top:1px}
+.check-box.checked{background:var(--sage);border-color:var(--sage)}
+.check-box.checked::after{content:'✓';color:white;font-size:13px;font-weight:700}
+.check-label{flex:1}
+.check-label strong{font-size:14px;font-weight:600;color:var(--text-dark);display:block;margin-bottom:2px;cursor:pointer}
+.check-label strong.done-txt{color:var(--text-lt);text-decoration:line-through;font-weight:400}
+.check-label span{font-size:12px;color:var(--text-mid);line-height:1.5}
+.check-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--brown-pale);color:var(--text-mid);flex-shrink:0;margin-top:3px}
+.check-tag.required{background:#FAF0EE;color:var(--alert)}
+.check-tag.qb{background:var(--dust-blue-lt);color:var(--dust-blue)}
+
+/* ── Section CTA ─────────────────────────────────────── */
+.section-cta{background:var(--sage-lt);border:1.5px solid var(--sage);border-radius:var(--radius-sm);padding:16px 20px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.section-cta p{font-size:13px;color:var(--sage);font-weight:500;margin:0}
+.section-cta button{margin-top:0;padding:8px 16px;font-size:13px}
+
+/* ── Pricing rows ────────────────────────────────────── */
+.price-list{list-style:none}
+.price-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--cream);font-size:14px}
+.price-item:last-child{border-bottom:none}
+.price-name{flex:1;font-weight:500;color:var(--text-dark)}
+.price-sub{font-size:12px;color:var(--text-lt);font-weight:400}
+.price-val{font-weight:600;color:var(--sage);min-width:70px;text-align:right}
+.price-flag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;flex-shrink:0}
+.flag-ok{background:var(--sage-lt);color:var(--sage)}
+.flag-warn{background:var(--alert-lt);color:var(--alert)}
+
+/* ── Stat row ────────────────────────────────────────── */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.stat-box{background:var(--cream);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--brown-pale)}
+.stat-val{font-size:22px;font-weight:600;font-family:'Crimson Pro',Georgia,serif;display:block;margin-bottom:3px}
+.stat-lbl{font-size:11px;color:var(--text-lt);font-weight:500;text-transform:uppercase;letter-spacing:0.05em}
+.stat-val.sage{color:var(--sage)} .stat-val.alert{color:var(--alert)} .stat-val.blue{color:var(--dust-blue)}
+@media(max-width:500px){.stat-row{grid-template-columns:1fr 1fr}}
+
+/* ── Ramp ────────────────────────────────────────────── */
+.ramp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.ramp-col{background:var(--cream);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--brown-pale)}
+.ramp-col.active{background:var(--sage-lt);border:2px solid var(--sage)}
+.ramp-month{font-size:11px;color:var(--text-mid);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em}
+.ramp-profit{font-size:20px;font-weight:700;display:block;margin-bottom:4px;font-family:'Crimson Pro',serif}
+.ramp-pct{font-size:11px;color:var(--text-lt)}
+@media(max-width:600px){.ramp-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ── Clients ─────────────────────────────────────────── */
+.client-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--cream)}
+.client-row:last-child{border-bottom:none}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;font-family:'Crimson Pro',serif}
+.client-name{font-size:14px;font-weight:600;color:var(--text-dark)}
+.client-detail{font-size:12px;color:var(--text-mid)}
+.client-note{font-size:12px;color:var(--text-lt);margin-left:auto}
+
+/* ── Tax dates ───────────────────────────────────────── */
+.tax-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--cream);font-size:14px}
+.tax-row:last-child{border-bottom:none}
+.tax-q{font-weight:600;color:var(--text-dark)}
+.tax-due{color:var(--alert);font-weight:600;font-size:13px}
+
+/* ── Guide ───────────────────────────────────────────── */
+.guide-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--cream);cursor:pointer;transition:background 0.1s;border-radius:var(--radius-sm)}
+.guide-row:last-child{border-bottom:none}
+.guide-title{font-size:14px;font-weight:600;color:var(--text-dark);margin-bottom:2px}
+.guide-sub{font-size:12px;color:var(--text-mid)}
+.guide-arrow{font-size:16px;color:var(--text-lt);margin-left:auto;flex-shrink:0}
+
+/* ── Tip ─────────────────────────────────────────────── */
+.tip{background:var(--gold-lt);border-left:4px solid var(--gold);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 16px;font-size:13px;color:var(--text-mid);line-height:1.6;margin-top:12px}
+.tip strong{color:var(--text-dark)}
+.tip-alert{background:var(--alert-lt);border-left-color:var(--alert)}
+.tip-blue{background:var(--dust-blue-lt);border-left-color:var(--dust-blue)}
+.tip-sage{background:var(--sage-lt);border-left-color:var(--sage)}
+
+/* ── Next phase ──────────────────────────────────────── */
+.next-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:500px){.next-grid{grid-template-columns:1fr}}
+.next-card{background:var(--cream);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--brown-pale)}
+.next-card h4{font-size:14px;font-weight:600;color:var(--text-dark);margin-bottom:5px;font-family:'Crimson Pro',serif;font-size:15px}
+.next-card p{font-size:12px;margin:0}
+
+/* ── Markup / rate guide ─────────────────────────────── */
+.rate-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+.rate-box{padding:16px;border-radius:var(--radius-sm);text-align:center;border:1px solid var(--brown-pale)}
+.rate-val{font-size:20px;font-weight:600;display:block;margin-bottom:4px;font-family:'Crimson Pro',serif}
+.rate-lbl{font-size:11px;color:var(--text-mid)}
+
+/* ── QB status pill ──────────────────────────────────── */
+.qb-status-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;margin-left:8px}
+.qb-status-pill.has{background:var(--dust-blue-lt);color:var(--dust-blue)}
+.qb-status-pill.needs{background:var(--gold-lt);color:var(--gold)}
+
+/* ── Sync ────────────────────────────────────────────── */
+.sync-drop-zone{border:2px dashed var(--brown-pale);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:4px}
+.sync-drop-zone:hover,.sync-drop-zone.drag-over{border-color:var(--dust-blue);background:var(--dust-blue-lt)}
+.sync-drop-zone p{font-size:13px;color:var(--text-mid);margin:0}
+.sync-drop-zone strong{display:block;font-size:15px;color:var(--text-dark);margin-bottom:6px}
+.sync-drop-icon{font-size:28px;margin-bottom:10px}
+.sync-status{display:none;padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;margin-top:10px;font-weight:500}
+.sync-status.ok{background:var(--sage-lt);color:var(--sage);display:block}
+.sync-status.err{background:var(--alert-lt);color:var(--alert);display:block}
+.sync-last{font-size:11px;color:var(--text-lt);margin-top:6px}
+.live-badge{display:inline-block;background:var(--sage);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px;vertical-align:middle}
+
+/* ── Download card ───────────────────────────────────── */
+.dl-card{display:flex;align-items:center;gap:16px;padding:16px;background:var(--cream);border-radius:var(--radius-sm);margin-bottom:10px;cursor:pointer;transition:background 0.15s;text-decoration:none;border:1.5px solid transparent}
+.dl-card:hover{background:var(--sage-lt);border-color:var(--sage)}
+.dl-icon{width:44px;height:44px;background:var(--brown-dark);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.dl-info{flex:1}
+.dl-name{font-size:14px;font-weight:600;color:var(--text-dark);display:block;margin-bottom:2px}
+.dl-desc{font-size:12px;color:var(--text-mid)}
+.dl-arrow{font-size:18px;color:var(--text-lt)}
+
+/* ── Milestone dots ──────────────────────────────────── */
+.r-milestone{text-align:center}
+.rm-dot{width:28px;height:28px;border-radius:50%;background:var(--brown-pale);margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-lt);transition:all 0.3s}
+.rm-dot.done{background:var(--sage);color:white}
+.rm-dot.active{background:var(--alert);color:white}
+.rm-lbl{font-size:10px;color:var(--text-lt);font-weight:500}
+
+/* ── Card footer ─────────────────────────────────────── */
+.card-footer{margin-top:14px;padding-top:12px;border-top:1px solid var(--cream);font-size:12px;color:var(--text-lt)}
+
+
+
+/* ── SolFound global nav ─────────────────────────────────── */
+.sf-nav{background:#0F0A04;padding:0 32px;display:flex;align-items:center;gap:0;border-bottom:1px solid rgba(232,160,32,0.15);position:sticky;top:0;z-index:200}
+.sf-nav-logo{font-family:'Crimson Pro',Georgia,'Playfair Display',serif;font-size:16px;font-weight:600;color:white;padding:10px 20px 10px 0;margin-right:8px;border-right:1px solid rgba(255,255,255,0.1);white-space:nowrap;flex-shrink:0}
+.sf-nav-logo span{color:#E8A020}
+.sf-nav-links{display:flex;align-items:center;flex:1}
+.sf-nav-links a{font-size:13px;font-weight:500;color:rgba(255,255,255,0.55);padding:11px 14px;border-bottom:2px solid transparent;transition:all 0.15s;white-space:nowrap}
+.sf-nav-links a:hover{color:white}
+.sf-nav-links a.sf-active{color:#E8A020;border-bottom-color:#E8A020;font-weight:600}
+.sf-hamburger{display:none;background:none;border:none;cursor:pointer;padding:10px 8px;margin-left:auto;flex-direction:column;gap:5px}
+.sf-hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,0.7);border-radius:2px;transition:all 0.2s}
+.sf-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.sf-hamburger.open span:nth-child(2){opacity:0}
+.sf-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.sf-drawer{display:none;position:fixed;top:43px;left:0;right:0;background:#0F0A04;border-bottom:1px solid rgba(232,160,32,0.15);z-index:199;flex-direction:column;padding:8px 0}
+.sf-drawer a{font-size:15px;font-weight:500;color:rgba(255,255,255,0.7);padding:13px 24px;border-left:3px solid transparent;transition:all 0.15s}
+.sf-drawer a:hover{color:white;background:rgba(255,255,255,0.04)}
+.sf-drawer a.sf-active{color:#E8A020;border-left-color:#E8A020;font-weight:600}
+.sf-drawer.open{display:flex}
+@media(max-width:640px){
+  .sf-nav{padding:0 16px}
+  .sf-nav-links{display:none}
+  .sf-hamburger{display:flex}
+}
+
+/* ── Sync toast ──────────────────────────────────────────── */
+.sf-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A3D2A;color:#5DBF8A;border:1px solid rgba(93,191,138,0.3);border-radius:8px;padding:12px 20px;font-size:13px;font-weight:600;white-space:nowrap;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:9999;pointer-events:none;display:flex;align-items:center;gap:8px}
+.sf-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+
+/* ── Libby integration ───────────────────────────────────── */
+.libby-card{border:2px solid var(--dust-blue);border-radius:var(--radius);padding:24px;margin-bottom:20px;background:var(--white);box-shadow:var(--shadow)}
+.libby-header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.libby-logo{width:38px;height:38px;border-radius:8px;background:var(--brown-dark);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.libby-title{font-family:'Crimson Pro',serif;font-size:18px;font-weight:600;color:var(--text-dark)}
+.libby-status-dot{width:9px;height:9px;border-radius:50%;background:#ccc;display:inline-block;margin-left:6px;vertical-align:middle;transition:background 0.3s}
+.libby-status-dot.online{background:#34C759}
+.libby-status-dot.offline{background:#ccc}
+.libby-status-dot.checking{background:var(--gold);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.libby-status-text{font-size:12px;color:var(--text-lt);margin-left:4px}
+.libby-drop{border:2px dashed var(--dust-blue-lt);border-radius:var(--radius);padding:32px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--dust-blue-lt);position:relative}
+.libby-drop:hover,.libby-drop.drag-over{border-color:var(--dust-blue);background:#dde8f5}
+.libby-drop.processing{border-color:var(--gold);background:var(--gold-lt);cursor:wait}
+.libby-drop-icon{font-size:32px;margin-bottom:10px}
+.libby-drop strong{display:block;font-size:15px;color:var(--text-dark);margin-bottom:4px}
+.libby-drop p{font-size:12px;color:var(--text-mid);margin:0}
+.libby-results{margin-top:16px;display:none}
+.libby-result-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--cream);border-radius:var(--radius-sm);margin-bottom:8px;border:1px solid var(--brown-pale)}
+.libby-result-row:last-child{margin-bottom:0}
+.libby-result-vendor{font-size:13px;font-weight:600;color:var(--text-dark);flex:1}
+.libby-result-meta{font-size:11px;color:var(--text-mid)}
+.libby-result-conf{font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px}
+.libby-conf-high{background:var(--sage-lt);color:var(--sage)}
+.libby-conf-med{background:var(--gold-lt);color:#7A5010}
+.libby-conf-low{background:var(--alert-lt);color:var(--alert)}
+.libby-import-btn{font-size:12px;font-weight:600;background:var(--dust-blue);color:white;border:none;padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:background 0.15s}
+.libby-import-btn:hover{background:#3a5f95}
+.libby-offline-msg{background:var(--cream);border-radius:var(--radius-sm);padding:16px;font-size:13px;color:var(--text-mid);border:1px solid var(--brown-pale);display:none}
+
+</style>
+</head>
+<body>
+<div class="sf-nav">
+  <div class="sf-nav-logo">Sol<span>Found</span></div>
+  <div class="sf-nav-links">
+        <a href="index.html">Home</a>
+        <a href="rootpath_final.html">RootPath</a>
+        <a href="ledgerpath.html" class="sf-active">LedgerPath</a>
+        <a href="boutiquepath.html">BoutiquePath</a>
+    <a href="rentalpath.html">RentalPath</a>
+    <a href="libby.html">Libby</a>
+  </div>
+  <button class="sf-hamburger" id="sf-hamburger" aria-label="Menu" onclick="sfToggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+<div class="sf-drawer" id="sf-drawer">
+      <a href="index.html">Home</a>
+      <a href="rootpath_final.html">RootPath</a>
+      <a href="ledgerpath.html" class="sf-active">LedgerPath</a>
+      <a href="boutiquepath.html">BoutiquePath</a>
+  <a href="rentalpath.html">RentalPath</a>
+  <a href="libby.html">Libby</a>
+</div>
+<div class="sf-toast" id="sf-toast"></div>
+
+
+<!-- ══ HEADER ═══════════════════════════════════════════ -->
+<header class="header">
+  <div class="header-left">
+    <div class="logo">Ledger<span>Path</span></div>
+    <div class="tagline">Your staircase to bookkeeping income</div>
+  </div>
+  <div class="progress-pill" id="global-pill">Ready to start</div>
+</header>
+
+<!-- ══ NAV ══════════════════════════════════════════════ -->
+<nav class="nav">
+  <a class="active" onclick="goPage('home',this)">Home</a>
+  <a onclick="goPage('readiness',this)">Readiness</a>
+  <a onclick="goPage('price',this)">Rates</a>
+  <a onclick="goPage('track',this)">Track</a>
+  <a onclick="goPage('grow',this)">Grow</a>
+  <a onclick="goPage('learn',this)">Learn</a>
+</nav>
+
+<main class="container">
+
+<!-- ══════════════════════════════════════════════════════
+     HOME
+══════════════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <div class="hero-card">
+    <div class="hero-ledger-lines"></div>
+    <h1>Turn your numbers skill<br>into <span>steady income.</span></h1>
+    <p>Real bookkeeping. Real clients. Real money — without a CPA license or a corporate desk.</p>
+    <div class="hero-actions">
+      <button class="hero-btn hero-btn-primary" onclick="goPage('readiness',null)">Check my readiness →</button>
+      <button class="hero-btn hero-btn-ghost" onclick="goPage('price',null)">See my rates →</button>
+    </div>
+    <div class="hero-meta">
+      <div class="r-label-row">
+        <span id="hero-lbl">Your launch readiness — 0 milestones done</span>
+        <strong id="hero-pct">0%</strong>
+      </div>
+      <div class="r-bar"><div class="r-fill" id="hero-fill" style="width:0%"></div></div>
+      <div class="r-sub" id="hero-sub">Start the readiness checklist — most people are closer than they think.</div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+
+    <div class="card accent-alert">
+      <div class="section-label">Your next move</div>
+      <span class="badge badge-alert" id="today-badge">Start here</span>
+      <h3 id="today-title">Do you have QuickBooks?</h3>
+      <p id="today-desc" style="font-size:14px">Before anything else, let's figure out your QuickBooks situation — training and subscription. That shapes everything: what clients you can take on, what you charge, and how fast you can start.</p>
+      <div class="today-step">
+        <strong id="today-next-lbl">First step</strong>
+        <span id="today-next">Go to Readiness → answer the two QuickBooks questions</span>
+      </div>
+      <button class="btn btn-alert btn-sm" id="today-btn" onclick="goPage('readiness',null)">Let's figure it out →</button>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Your journey — Phase 1</div>
+      <ul class="steps-track" id="home-steps">
+        <li class="step-item"><div class="step-dot done">✓</div><span class="step-text done">Got the idea</span><span class="step-sub" style="color:var(--sage)">Done</span></li>
+        <li class="step-item"><div class="step-dot active" id="ph2-dot">2</div><span class="step-text active" id="ph2-txt">QB + legal setup</span><span class="step-sub" id="ph2-sub">0 / 9</span></li>
+        <li class="step-item"><div class="step-dot todo" id="ph3-dot">3</div><span class="step-text todo" id="ph3-txt">Rates set</span><span class="step-sub" id="ph3-sub">Not started</span></li>
+        <li class="step-item"><div class="step-dot todo" id="ph4-dot">4</div><span class="step-text todo" id="ph4-txt">First ad out</span><span class="step-sub" id="ph4-sub">Not started</span></li>
+        <li class="step-item"><div class="step-dot todo" id="ph5-dot">5</div><span class="step-text todo" id="ph5-txt">Tracker set up</span><span class="step-sub" id="ph5-sub">Not started</span></li>
+        <li class="step-item"><div class="step-dot todo" id="ph6-dot">6</div><span class="step-text todo" id="ph6-txt">First client</span><span class="step-sub" id="ph6-sub">The goal!</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="card-grid">
+    <div class="card accent-brown">
+      <div class="section-label">Step 1 — Start here</div>
+      <h3>Am I ready to take clients?</h3>
+      <p>We check your QB situation, legal basics, and Texas requirements. No jargon — just clear yes or no answers.</p>
+      <button class="btn btn-primary btn-sm" onclick="goPage('readiness',null)">Check my readiness →</button>
+    </div>
+    <div class="card accent-blue">
+      <div class="section-label">Step 2 — Know your numbers</div>
+      <h3>What should I charge?</h3>
+      <p>Hourly rates, monthly retainers, cleanup projects. Let's build a rate card that reflects what your time is actually worth.</p>
+      <button class="btn btn-blue btn-sm" onclick="goPage('price',null)">Build my rate card →</button>
+    </div>
+    <div class="card accent-sage">
+      <div class="section-label">Step 3 — Stay organized</div>
+      <h3>Where does my money go?</h3>
+      <p>Track your own books while you manage others. Simple income log, expenses, and quarterly tax reserve.</p>
+      <button class="btn btn-sage btn-sm" onclick="goPage('track',null)">Open my tracker →</button>
+    </div>
+    <div class="card accent-gold">
+      <div class="section-label">Step 4 — Plan ahead</div>
+      <h3>What does growth look like?</h3>
+      <p>From 1 client to 8. From basic bookkeeping to payroll and tax prep referrals. Your honest month-by-month ramp.</p>
+      <button class="btn btn-outline btn-sm" onclick="goPage('grow',null)">See my growth plan →</button>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center;padding:40px 28px;background:var(--brown-dark);border:none">
+    <p style="font-size:13px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.4);font-weight:600;margin-bottom:14px">The honest truth</p>
+    <p style="font-size:22px;font-family:'Crimson Pro',Georgia,serif;color:white;line-height:1.5;margin-bottom:12px;font-style:italic">"Small businesses are drowning in paperwork.<br>You're the person who can throw them a rope."</p>
+    <p style="font-size:14px;margin-bottom:0;color:rgba(255,255,255,0.6)">Your neighborhood. Your clients. Your ledger.</p>
+  </div>
+
+</div><!-- /home -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     READINESS
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-readiness">
+
+  <div class="card accent-alert">
+    <div class="section-label">Let's make sure you're set up to succeed</div>
+    <h2>Your readiness checklist — QB, legal, and launch.</h2>
+    <p>Bookkeeping has fewer legal barriers than most people think — but the QuickBooks piece matters a lot. Let's find out exactly where you stand, step by step.</p>
+    <div style="height:10px"></div>
+    <div class="badge badge-alert" id="r-badge">0 of 21 milestones complete</div>
+  </div>
+
+  <!-- Overall score -->
+  <div class="card">
+    <div class="section-label">Your readiness score</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <span id="r-lbl" style="font-size:14px;color:var(--text-mid)">Just getting started — and that's the right place to begin</span>
+      <strong id="r-pct" style="font-size:22px;color:var(--sage)">0%</strong>
+    </div>
+    <div class="r-bar-lg"><div class="r-fill-lg" id="r-fill" style="width:0%"></div></div>
+    <p style="font-size:13px;color:var(--text-mid);margin-top:8px" id="r-sublbl">Work through each section below. Your progress saves automatically.</p>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:16px">
+      <div class="r-milestone"><div class="rm-dot" id="rm1-dot">·</div><div class="rm-lbl">QB ready</div></div>
+      <div class="r-milestone"><div class="rm-dot" id="rm2-dot">·</div><div class="rm-lbl">Legal set</div></div>
+      <div class="r-milestone"><div class="rm-dot" id="rm3-dot">·</div><div class="rm-lbl">Rates set</div></div>
+      <div class="r-milestone"><div class="rm-dot" id="rm4-dot">·</div><div class="rm-lbl">First ad</div></div>
+      <div class="r-milestone"><div class="rm-dot" id="rm5-dot">·</div><div class="rm-lbl">Tracker on</div></div>
+    </div>
+  </div>
+
+  <!-- STEP 1: QuickBooks -->
+  <div class="accord open" id="acc1">
+    <div class="accord-hdr" onclick="toggleAccord('acc1')">
+      <span class="accord-icon">📚</span>
+      <span class="accord-title">Step 1 — QuickBooks status</span>
+      <span class="accord-status" id="acc1-status">Answer both questions to continue</span>
+      <span class="accord-chevron">▾</span>
+    </div>
+    <div class="accord-body">
+      <p class="accord-intro">QuickBooks is the industry standard for small business bookkeeping. Your answers here shape your checklist, your rate card, and your client strategy — so answer honestly.</p>
+      <div style="background:var(--gold-lt);border-left:4px solid var(--gold);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 16px;font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:16px">
+        <strong style="color:var(--text-dark)">Starting from zero? Good news.</strong> Most successful solo bookkeepers started exactly here. The free Intuit ProAdvisor certification takes 8–12 hours and immediately justifies higher rates. QB Online Simple Start is $30/mo — or free through the ProAdvisor program. Your checklist will show you exactly what to do next.
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="font-size:14px;font-weight:600;color:var(--text-dark);margin-bottom:10px">Do you have QuickBooks training or certification?
+          <span class="qb-status-pill has" id="qb-train-pill" style="display:none">✓ Trained</span>
+          <span class="qb-status-pill needs" id="qb-notrain-pill" style="display:none">→ Needs training</span>
+        </div>
+        <div class="qb-grid">
+          <div class="qb-card" onclick="setQB('training','yes')" id="qb-train-yes">
+            <span class="qb-icon">🎓</span>
+            <span class="qb-name">Yes — I have training</span>
+            <span class="qb-desc">Certified ProAdvisor, course completed, or solid self-taught experience</span>
+          </div>
+          <div class="qb-card" onclick="setQB('training','no')" id="qb-train-no">
+            <span class="qb-icon">📖</span>
+            <span class="qb-name">Not yet — I need training</span>
+            <span class="qb-desc">I'm new to QB or want to get formally certified before taking clients</span>
+          </div>
+        </div>
+        <div id="qb-train-msg" style="display:none;margin-top:8px"></div>
+      </div>
+
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--text-dark);margin-bottom:10px">Do you have a QuickBooks subscription?
+          <span class="qb-status-pill has" id="qb-sub-pill" style="display:none">✓ Subscribed</span>
+          <span class="qb-status-pill needs" id="qb-nosub-pill" style="display:none">→ Needs subscription</span>
+        </div>
+        <div class="qb-grid">
+          <div class="qb-card" onclick="setQB('sub','yes')" id="qb-sub-yes">
+            <span class="qb-icon">✅</span>
+            <span class="qb-name">Yes — I have a subscription</span>
+            <span class="qb-desc">Active QB Online or QB Desktop subscription in my name</span>
+          </div>
+          <div class="qb-card" onclick="setQB('sub','no')" id="qb-sub-no">
+            <span class="qb-icon">💳</span>
+            <span class="qb-name">Not yet — need to subscribe</span>
+            <span class="qb-desc">I'll need QB Online Simple Start ($30/mo) or ProAdvisor program access</span>
+          </div>
+        </div>
+        <div id="qb-sub-msg" style="display:none;margin-top:8px"></div>
+      </div>
+
+      <div class="section-cta" id="cta1" style="display:none">
+        <p id="cta1-txt">QB status captured! Let's check your universal legal requirements next.</p>
+        <button class="btn btn-sage btn-sm" onclick="openAccord('acc2')">Next: Legal requirements →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Universal requirements -->
+  <div class="accord" id="acc2">
+    <div class="accord-hdr" onclick="toggleAccord('acc2')">
+      <span class="accord-icon">📋</span>
+      <span class="accord-title">Step 2 — Universal requirements</span>
+      <span class="accord-status" id="acc2-status">0 / 4 done</span>
+      <span class="accord-chevron">▾</span>
+    </div>
+    <div class="accord-body">
+      <p class="accord-intro">These apply to every micro-business in Texas. Quick one-time decisions — most take under 15 minutes to resolve.</p>
+      <ul class="check-list" id="cl-universal"></ul>
+      <div class="section-cta" id="cta2" style="display:none">
+        <p>Universal requirements done! Now the bookkeeping-specific items.</p>
+        <button class="btn btn-sage btn-sm" onclick="openAccord('acc3')">Next: Bookkeeping-specific →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Bookkeeping-specific -->
+  <div class="accord locked" id="acc3">
+    <div class="accord-hdr" onclick="toggleAccord('acc3')">
+      <span class="accord-icon">🎯</span>
+      <span class="accord-title">Step 3 — Bookkeeping-specific requirements</span>
+      <span class="accord-status" id="acc3-status">Complete Steps 1 &amp; 2 first</span>
+      <span class="accord-chevron">▾</span>
+    </div>
+    <div class="accord-body">
+      <p class="accord-intro" id="acc3-intro">Your specific checklist based on your QB status and business type.</p>
+      <ul class="check-list" id="cl-specific"></ul>
+      <div class="section-cta" id="cta3" style="display:none">
+        <p>Legal checklist complete! Time to set your rates.</p>
+        <button class="btn btn-sage btn-sm" onclick="goPage('price',null)">Set my rates →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: Rates -->
+  <div class="accord locked" id="acc4">
+    <div class="accord-hdr" onclick="toggleAccord('acc4')">
+      <span class="accord-icon">💲</span>
+      <span class="accord-title">Step 4 — Rates confirmed</span>
+      <span class="accord-status" id="acc4-status">Complete legal steps first</span>
+      <span class="accord-chevron">▾</span>
+    </div>
+    <div class="accord-body">
+      <p class="accord-intro">Before your first client, know what you're charging and why. Open the rate card in the Rates tab, set your numbers, then come back and check these off.</p>
+      <ul class="check-list" id="cl-pricing"></ul>
+      <div class="section-cta" id="cta4" style="display:none">
+        <p>Rates confirmed! Now let's get your name out there.</p>
+        <button class="btn btn-sage btn-sm" onclick="openAccord('acc5')">Set up my first outreach →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: First outreach -->
+  <div class="accord locked" id="acc5">
+    <div class="accord-hdr" onclick="toggleAccord('acc5')">
+      <span class="accord-icon">📣</span>
+      <span class="accord-title">Step 5 — First outreach</span>
+      <span class="accord-status" id="acc5-status">Complete pricing first</span>
+      <span class="accord-chevron">▾</span>
+    </div>
+    <div class="accord-body">
+      <p class="accord-intro">You don't need a website or business cards. You need three conversations with small business owners in your neighborhood this week.</p>
+      <ul class="check-list" id="cl-marketing"></ul>
+      <div class="section-cta" id="cta5" style="display:none">
+        <p>Outreach done! Set up your own tracker before that first client pays you.</p>
+        <button class="btn btn-sage btn-sm" onclick="goPage('track',null)">Set up my tracker →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6: Tracker -->
+  <div class="accord locked" id="acc6">
+    <div class="accord-hdr" onclick="toggleAccord('acc6')">
+      <span class="accord-icon">💰</span>
+      <span class="accord-title">Step 6 — Your own books set up</span>
+      <span class="accord-status" id="acc6-status">Complete outreach first</span>
+      <span class="accord-chevron">▾</span>
+    </div>
+    <div class="accord-body">
+      <p class="accord-intro">A bookkeeper who doesn't track their own income is a cautionary tale. Set up your tracker before your first invoice goes out.</p>
+      <ul class="check-list" id="cl-tracker"></ul>
+      <div class="section-cta" id="cta6" style="display:none">
+        <p>🎉 You're ready. Go land your first client — your neighborhood needs you.</p>
+        <button class="btn btn-sage btn-sm" onclick="goPage('grow',null)">See my growth plan →</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /readiness -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     RATES (Price equivalent)
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-price">
+
+  <div class="card accent-blue">
+    <div class="section-label">Your rate card <span class="live-badge" id="sync-live-badge" style="display:none">LIVE</span></div>
+    <h2>Know what to charge. Know what you're worth.</h2>
+    <p style="margin-bottom:16px">Bookkeepers who underprice burn out fast. These numbers pull from your Revenue Model spreadsheet — download it below, set your wage target, and your rate card is done.</p>
+    <div class="stat-row">
+      <div class="stat-box"><span class="stat-val blue" id="stat-weekly-rev">$1,989</span><div class="stat-lbl">Weekly revenue</div></div>
+      <div class="stat-box"><span class="stat-val" id="stat-eff-hr">$23/hr</span><div class="stat-lbl">Effective rate</div></div>
+      <div class="stat-box"><span class="stat-val sage" id="stat-gap">+$19</span><div class="stat-lbl">Gap to goal</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px">
+      <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--brown-pale)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Your wage</div><div style="font-size:14px;font-weight:600;color:var(--text-dark)" id="inputs-wage">$30/hr</div></div>
+      <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--brown-pale)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Markup</div><div style="font-size:14px;font-weight:600;color:var(--text-dark)" id="inputs-markup">1.7×</div></div>
+      <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--brown-pale)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Weekly goal</div><div style="font-size:14px;font-weight:600;color:var(--text-dark)" id="inputs-goal">$800/wk</div></div>
+      <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--brown-pale)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Overhead</div><div style="font-size:14px;font-weight:600;color:var(--text-dark)" id="inputs-oh">$599/mo</div></div>
+    </div>
+    <div class="card-footer" id="sync-last-price">Sample numbers shown — sync your spreadsheet below to see your real data</div>
+  </div>
+
+  <!-- Services / rate card -->
+  <div class="card">
+    <div class="section-label">Your services — rate check</div>
+    <ul class="price-list" id="price-product-list">
+      <li class="price-item"><div class="price-name">Monthly bookkeeping — solo biz <span class="price-sub">up to 50 transactions/mo</span></div><div class="price-val">$200–350</div><div class="price-flag flag-ok">Standard</div></li>
+      <li class="price-item"><div class="price-name">Monthly bookkeeping — small biz <span class="price-sub">50–150 transactions/mo</span></div><div class="price-val">$350–600</div><div class="price-flag flag-ok">Standard</div></li>
+      <li class="price-item"><div class="price-name">Books cleanup / catch-up <span class="price-sub">per month of backlog</span></div><div class="price-val">$150–300</div><div class="price-flag flag-ok">Viable</div></li>
+      <li class="price-item"><div class="price-name">Hourly rate <span class="price-sub">one-off tasks, consults</span></div><div class="price-val">$35–65/hr</div><div class="price-flag flag-ok">Viable</div></li>
+      <li class="price-item"><div class="price-name">QB setup + training <span class="price-sub">new client onboarding</span></div><div class="price-val">$200–400</div><div class="price-flag flag-ok">High value</div></li>
+      <li class="price-item"><div class="price-name">Payroll processing <span class="price-sub">per pay run, Phase 2</span></div><div class="price-val">$50–150</div><div class="price-flag" style="background:var(--dust-blue-lt);color:var(--dust-blue)">Phase 2</div></li>
+    </ul>
+    <div class="tip tip-alert" style="margin-top:14px"><strong>Don't underprice to get clients.</strong> A client who pays $150/mo trains you to be a $150/mo bookkeeper. Start at market rate — the right clients will see the value.</div>
+  </div>
+
+  <!-- Rate guide -->
+  <div class="card">
+    <div class="section-label">Hourly rate guide</div>
+    <div class="rate-row">
+      <div class="rate-box" style="background:var(--cream)"><span class="rate-val">$35/hr</span><div class="rate-lbl">New / building portfolio</div></div>
+      <div class="rate-box" style="background:var(--sage-lt);border:2px solid var(--sage)"><span class="rate-val" style="color:var(--sage)">$50/hr</span><div class="rate-lbl" style="color:var(--sage);font-weight:600">Standard (your target)</div></div>
+      <div class="rate-box" style="background:var(--cream)"><span class="rate-val">$65+/hr</span><div class="rate-lbl">QB certified + experience</div></div>
+    </div>
+    <div class="tip tip-blue" style="margin-top:14px"><strong>QB ProAdvisor tip:</strong> Getting certified through Intuit's free ProAdvisor program typically lets you raise rates by $10–15/hr and attracts higher-quality clients who already understand the value of professional bookkeeping.</div>
+  </div>
+
+  <!-- Sync card -->
+  <div class="card">
+    <div class="section-label">Open your revenue model</div>
+    <div style="background:var(--cream);border-radius:8px;padding:18px 20px;margin-bottom:16px;border:1px solid rgba(0,0,0,0.06)">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-lt);margin-bottom:12px">How it works</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:12px;font-size:13px">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--dust-blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0">1</div>
+          <span><strong style="color:var(--text-dark)">Download the template</strong> — use the link below</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:13px">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--dust-blue);color:white;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-weight:700">2</div>
+          <span><strong style="color:var(--text-dark)">Fill in the gold cells</strong> — your wage, products, and weekly goal</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:13px">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--dust-blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0">3</div>
+          <span><strong style="color:var(--text-dark)">Drop it below</strong> — watch every number on the dashboard update live</span>
+        </div>
+      </div>
+    </div>
+    <div class="sync-drop-zone" id="drop-zone-price"
+         onclick="document.getElementById('sync-file-input-price').click()"
+         ondragover="event.preventDefault();this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')"
+         ondrop="window.handleDrop(event)">
+      <div class="sync-drop-icon">📊</div>
+      <strong id="drop-title-price">Drop your Revenue Model here</strong>
+      <p>or click to browse · <em>LedgerPath_Revenue_Model_v2.xlsx</em></p>
+      <input type="file" id="sync-file-input-price" accept=".xlsx,.xls" style="display:none" onchange="window.handleFileUpload(event)">
+    </div>
+    <div class="sync-status" id="sync-status-price"></div>
+    <p class="sync-last" id="sync-last-price2"></p>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--cream)">
+      <a class="dl-card" href="LedgerPath_Revenue_Model_v2.xlsx" download>
+        <div class="dl-icon">📊</div>
+        <div class="dl-info"><span class="dl-name">LedgerPath Revenue Model v2</span><span class="dl-desc">Services · Pricing · Client Calculator · Projections · 7 sheets</span></div>
+        <span class="dl-arrow">↓</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="section-cta" style="background:var(--sage-lt);border-color:var(--sage);border-radius:var(--radius)">
+    <p style="color:var(--sage)">Rates confirmed? Head back to Readiness and check them off to unlock your outreach step.</p>
+    <button class="btn btn-sage btn-sm" onclick="goPage('readiness',null)">Back to readiness →</button>
+  </div>
+
+</div><!-- /price (rates) -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     TRACK
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-track">
+
+  <div class="card accent-gold">
+    <div class="section-label">Monthly snapshot — <span id="track-month-label">this month</span></div>
+    <h2>A bookkeeper who tracks their own books. Imagine that.</h2>
+    <p style="margin-bottom:16px">Log your first client payment and this comes alive. The Money Tracker auto-categorizes everything for tax time — so you're not scrambling every April like the clients you help.</p>
+    <div class="stat-row">
+      <div class="stat-box"><span class="stat-val sage" id="stat-track-income">$0</span><div class="stat-lbl">Income</div></div>
+      <div class="stat-box"><span class="stat-val alert" id="stat-track-expenses">$0</span><div class="stat-lbl">Expenses</div></div>
+      <div class="stat-box"><span class="stat-val" id="stat-track-profit">$0</span><div class="stat-lbl">Profit</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-sm">Log a payment →</button>
+      <button class="btn btn-outline btn-sm">Log an expense →</button>
+    </div>
+  </div>
+
+
+  <!-- ── Libby Statement Import ──────────────────────────── -->
+  <div class="libby-card" id="libby-card">
+    <div class="libby-header">
+      <div class="libby-logo" style="background:none;overflow:hidden;padding:0">
+        <img src="https://web-production-407fa.up.railway.app/static/libby.png"
+             alt="Libby"
+             style="width:38px;height:38px;object-fit:cover;border-radius:8px">
+      </div>
+      <div>
+        <div class="libby-title">Libby <span class="libby-status-dot" id="libby-dot"></span><span class="libby-status-text" id="libby-status-text">Checking...</span></div>
+        <div style="font-size:12px;color:var(--text-mid)">AI-assisted statement processing — drop a PDF, get transactions</div>
+      </div>
+    </div>
+
+    <!-- Offline message -->
+    <div class="libby-offline-msg" id="libby-offline">
+      Libby is running on Railway at <strong>web-production-407fa.up.railway.app</strong>. If this shows offline, it may be waking up — try dropping a file anyway and it will auto-start within 10 seconds.
+    </div>
+
+    <!-- Drop zone -->
+    <div class="libby-drop" id="libby-drop"
+         onclick="document.getElementById('libby-file-input').click()"
+         ondragover="event.preventDefault();this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')"
+         ondrop="libbyHandleDrop(event)">
+      <div class="libby-drop-icon" style="margin-bottom:6px">
+        <img src="https://web-production-407fa.up.railway.app/static/libby.png"
+             alt="Libby"
+             style="height:56px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(44,32,24,0.15))"
+             onerror="this.style.opacity='0'">
+      </div>
+      <strong id="libby-drop-title">Drop a bank or credit card statement (PDF)</strong>
+      <p>Libby detects the vendor, extracts transactions, and returns a ready-to-import CSV</p>
+      <input type="file" id="libby-file-input" accept=".pdf" style="display:none" onchange="libbyHandleFile(event)">
+    </div>
+
+    <!-- Results -->
+    <div class="libby-results" id="libby-results"></div>
+
+    <div class="sync-status" id="libby-process-status"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Open your money tracker</div>
+    <a class="dl-card" href="LedgerPath_Money_Tracker.xlsx" download>
+      <div class="dl-icon">💰</div>
+      <div class="dl-info"><span class="dl-name">LedgerPath Money Tracker</span><span class="dl-desc">Income · Expenses · Tax reserve · Quarterly estimates · Clients</span></div>
+      <span class="dl-arrow">↓</span>
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Sync your money tracker <span class="live-badge" id="sync-live-badge-track" style="display:none">LIVE</span></div>
+    <p style="font-size:13px;color:var(--text-mid);margin-bottom:16px">Drop your Money Tracker here and your monthly stats update instantly.</p>
+    <div class="sync-drop-zone" id="drop-zone-track"
+         onclick="document.getElementById('sync-file-input-track').click()"
+         ondragover="event.preventDefault();this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')"
+         ondrop="window.handleTrackerDrop(event)">
+      <div class="sync-drop-icon">💰</div>
+      <strong id="drop-title-track">Drop your Money Tracker here</strong>
+      <p>or click to browse · <em>LedgerPath_Money_Tracker.xlsx</em></p>
+      <input type="file" id="sync-file-input-track" accept=".xlsx,.xls" style="display:none" onchange="window.handleTrackerUpload(event)">
+    </div>
+    <div class="sync-status" id="sync-status-tracker"></div>
+    <p class="sync-last" id="sync-last-tracker"></p>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="section-label">Quarterly tax dates</div>
+      <div class="tax-row"><span class="tax-q">Q1 (Jan–Mar)</span><span class="tax-due">Apr 15 <span id="tax-q1-reserve" style="font-size:11px;font-weight:400;color:var(--text-mid)"></span></span></div>
+      <div class="tax-row"><span class="tax-q">Q2 (Apr–Jun)</span><span class="tax-due">Jun 15 <span id="tax-q2-reserve" style="font-size:11px;font-weight:400;color:var(--text-mid)"></span></span></div>
+      <div class="tax-row"><span class="tax-q">Q3 (Jul–Sep)</span><span class="tax-due">Sep 15 <span id="tax-q3-reserve" style="font-size:11px;font-weight:400;color:var(--text-mid)"></span></span></div>
+      <div class="tax-row"><span class="tax-q">Q4 (Oct–Dec)</span><span class="tax-due">Jan 15 <span id="tax-q4-reserve" style="font-size:11px;font-weight:400;color:var(--text-mid)"></span></span></div>
+      <div class="tip" style="margin-top:12px"><strong>You know this better than anyone —</strong> set the reminder anyway. April 15 sneaks up on even the organized ones.</div>
+    </div>
+    <div class="card">
+      <div class="section-label">The self-bookkeeper rule</div>
+      <h3 style="font-size:1.1rem;margin-bottom:10px">"Separate business account. 15% to tax reserve. From the very first payment."</h3>
+      <p style="font-size:13px">You're going to tell your clients this. You have to live it too. Open a dedicated business checking account and a separate savings labeled "Tax Reserve" before your first invoice goes out.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px">
+        <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--brown-pale)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">YTD Income</div><div style="font-size:14px;font-weight:600;color:var(--sage)" id="annual-income-total">—</div></div>
+        <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--brown-pale)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">YTD Profit</div><div style="font-size:14px;font-weight:600;color:var(--text-dark)" id="annual-profit-total">—</div></div>
+        <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--brown-pale)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Tax reserve</div><div style="font-size:14px;font-weight:600;color:var(--alert)" id="annual-taxreserve">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-cta" style="background:var(--sage-lt);border-color:var(--sage);border-radius:var(--radius)">
+    <p style="color:var(--sage)">Tracker set up? Head back to Readiness and check it off — you're one step from your first client.</p>
+    <button class="btn btn-sage btn-sm" onclick="goPage('readiness',null)">Back to readiness →</button>
+  </div>
+
+</div><!-- /track -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     GROW
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-grow">
+
+  <div class="card accent-sage">
+    <div class="section-label">Ramp-up plan — your first 4 months</div>
+    <h2>Month 1 is about landing clients, not profit. That comes in Month 3.</h2>
+    <p style="margin-bottom:16px">Bookkeeping has very low startup costs but a slower ramp than product businesses — clients need to trust you before they hand over their books. Plan for it.</p>
+    <div class="ramp-grid">
+      <div class="ramp-col" id="ramp-m1"><div class="ramp-month">Month 1</div><span class="ramp-profit" style="color:var(--alert)">-$80</span><div class="ramp-pct">1–2 clients</div></div>
+      <div class="ramp-col" id="ramp-m2"><div class="ramp-month">Month 2</div><span class="ramp-profit" style="color:var(--gold)">$320</span><div class="ramp-pct">3–4 clients</div></div>
+      <div class="ramp-col" id="ramp-m3"><div class="ramp-month">Month 3</div><span class="ramp-profit" style="color:var(--sage)">$820</span><div class="ramp-pct">5–6 clients</div></div>
+      <div class="ramp-col active" id="ramp-m4"><div class="ramp-month" style="color:var(--sage)">Month 4+</div><span class="ramp-profit" style="color:var(--sage)">$1,400</span><div class="ramp-pct" style="color:var(--sage)">7–8 clients</div></div>
+    </div>
+    <div class="tip tip-sage"><strong>At $200–350/client/month,</strong> you only need 5–6 steady clients to hit $1,000–2,000/month part-time. That is very achievable in a neighborhood with small restaurants, salons, contractors, and retailers.</div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="section-label">Your clients <span class="live-badge" id="client-live-badge" style="display:none">LIVE</span></div>
+      <p style="font-size:13px;margin-bottom:14px">Your clients are your business. A small business owner who trusts you with their books is not switching bookkeepers for $20/month. Retention is everything.</p>
+      <div id="customer-list-live">
+        <div class="client-row">
+          <div class="avatar" style="background:var(--dust-blue-lt);color:var(--dust-blue)">MR</div>
+          <div><div class="client-name">Maria's Salon</div><div class="client-detail">Montrose · Monthly books</div></div>
+          <div class="client-note">Month 2</div>
+        </div>
+        <div class="client-row">
+          <div class="avatar" style="background:var(--sage-lt);color:var(--sage)">JT</div>
+          <div><div class="client-name">James T. Contracting</div><div class="client-detail">Heights · Cleanup + monthly</div></div>
+          <div class="client-note">New</div>
+        </div>
+        <div class="client-row" style="opacity:0.4">
+          <div class="avatar" style="background:var(--brown-pale);color:var(--text-lt)">+</div>
+          <div><div class="client-name" style="color:var(--text-lt)">Add your first client</div></div>
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-sm" style="margin-top:14px">Open client tracker →</button>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Your staircase — next phases</div>
+      <div class="next-grid">
+        <div class="next-card"><h4>QB ProAdvisor cert</h4><p>Free through Intuit. Raises your rates by $10–15/hr and unlocks discounted client subscriptions.</p></div>
+        <div class="next-card"><h4>Add payroll</h4><p>$50–150 per pay run on top of monthly fees. Adds $200–600/mo per client with employees.</p></div>
+        <div class="next-card"><h4>Tax prep referrals</h4><p>Partner with a local CPA. You refer, they pay you 10–15% of the tax prep fee. Passive income.</p></div>
+        <div class="next-card"><h4>Small business package</h4><p>Bundle books + payroll + quarterly reviews. $600–900/mo. 4 clients = $2,400–3,600/mo.</p></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /grow -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     LEARN
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-learn">
+
+  <div class="card">
+    <div class="section-label">Guides &amp; resources</div>
+    <div class="guide-row"><div><div class="guide-title">Getting QB ProAdvisor certified (free)</div><div class="guide-sub">Step-by-step walkthrough of Intuit's free certification program</div></div><span class="badge badge-blue" style="flex-shrink:0;margin:0 12px 0 auto">QB</span><span class="guide-arrow">→</span></div>
+    <div class="guide-row"><div><div class="guide-title">What bookkeepers can and can't do in Texas</div><div class="guide-sub">The difference between bookkeeping, accounting, and CPA work — legally</div></div><span class="badge badge-tan" style="flex-shrink:0;margin:0 12px 0 auto">Legal</span><span class="guide-arrow">→</span></div>
+    <div class="guide-row"><div><div class="guide-title">Your first client conversation</div><div class="guide-sub">What to ask, what to quote, and how to close without feeling pushy</div></div><span class="badge badge-sage" style="flex-shrink:0;margin:0 12px 0 auto">Clients</span><span class="guide-arrow">→</span></div>
+    <div class="guide-row"><div><div class="guide-title">Pricing monthly retainers vs hourly</div><div class="guide-sub">When each model works — and how to migrate clients from hourly to retainer</div></div><span class="badge badge-gold" style="flex-shrink:0;margin:0 12px 0 auto">Pricing</span><span class="guide-arrow">→</span></div>
+    <div class="guide-row"><div><div class="guide-title">Self-employment taxes for bookkeepers</div><div class="guide-sub">What you owe, when, and how to save from the first payment</div></div><span class="badge badge-gold" style="flex-shrink:0;margin:0 12px 0 auto">Tax</span><span class="guide-arrow">→</span></div>
+    <div class="guide-row"><div><div class="guide-title">How to find your first 3 clients</div><div class="guide-sub">Restaurant owners, contractors, salon owners — where to look in your neighborhood</div></div><span class="badge badge-brown" style="flex-shrink:0;margin:0 12px 0 auto">Growth</span><span class="guide-arrow">→</span></div>
+  </div>
+
+  <div class="card" style="text-align:center;padding:44px 28px;background:var(--brown-dark);border:none">
+    <p style="font-size:13px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);font-weight:600;margin-bottom:16px">A note from LedgerPath</p>
+    <p style="font-size:22px;font-family:'Crimson Pro',Georgia,serif;color:white;margin-bottom:14px;line-height:1.6;font-style:italic">"Every small business in your neighborhood<br>needs someone they trust with their numbers.<br>That person can be you."</p>
+    <p style="font-size:14px;margin-bottom:28px;color:rgba(255,255,255,0.55)">Your neighborhood. Your clients. Your ledger.</p>
+    <button class="btn btn-primary" onclick="goPage('readiness',null)" style="background:var(--brown-lt);color:var(--brown-dark)">Start my readiness check →</button>
+  </div>
+
+</div><!-- /learn -->
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ════════════════════════════════════════════════════════
+//  LEDGERPATH — STATE & DATA
+// ════════════════════════════════════════════════════════
+
+let S = JSON.parse(localStorage.getItem('lp_v1') || '{"qb":{"training":null,"sub":null},"checks":{}}');
+function save(){ localStorage.setItem('lp_v1', JSON.stringify(S)); }
+
+// ── CHECKLIST DATA ────────────────────────────────────────
+const UNIVERSAL = [
+  {id:'u1', text:'Decided on business structure', detail:'Sole Proprietor is free and instant in Texas — zero filing needed. An LLC adds liability protection but costs $300+ and can wait until you have steady clients.', tag:'Legal', req:true},
+  {id:'u2', text:'Business name / DBA sorted', detail:'If operating under a business name (e.g. "Clear Books Co."), file a DBA at Harris County for ~$25. If using your own name, skip this.', tag:'Legal', req:false},
+  {id:'u3', text:'EIN obtained', detail:'Required to open a business bank account and to pay contractors. Free at IRS.gov, takes 5 minutes online. Strongly recommended for bookkeepers.', tag:'IRS', req:true},
+  {id:'u4', text:'Separate business bank account open', detail:'Non-negotiable for a bookkeeper. You cannot manage client finances credibly while mixing your own. Open it before your first invoice.', tag:'Financial', req:true},
+];
+
+// Bookkeeping-specific checks adapt based on QB status
+function getBizChecks(){
+  const hasTrain = S.qb.training === 'yes';
+  const hasSub   = S.qb.sub === 'yes';
+  const checks = [
+    {id:'b1', text:'Understand what bookkeepers can and cannot do in Texas', detail:'Bookkeepers can record transactions, reconcile accounts, and prepare financial reports. They cannot sign tax returns, provide tax advice, or hold themselves out as a CPA. Know the line.', tag:'Legal', req:true},
+    {id:'b2', text:'Client service agreement drafted', detail:'A simple 1-page agreement covering: scope of services, monthly fee, what you need from them (receipts, bank access), and termination terms. Free templates at contractsmarket.com.', tag:'Legal', req:true},
+    {id:'b3', text:'Liability insurance considered', detail:'Errors & Omissions (E&O) insurance protects you if a client claims your bookkeeping error cost them money. $30–60/month. Worth getting before your second or third client.', tag:'Insurance', req:false},
+  ];
+  if(!hasTrain){
+    checks.unshift({id:'b0', text:'QuickBooks training / certification completed', detail:'Intuit offers free QB ProAdvisor certification at quickbooks.intuit.com/accountants/proadvisor. Takes 8–12 hours. Raises your rates and your credibility immediately.', tag:'QB', req:true});
+  }
+  if(!hasSub){
+    checks.push({id:'b4', text:'QuickBooks subscription set up', detail:'QB Online Simple Start is $30/mo. As a ProAdvisor, you can get discounted subscriptions for yourself and clients. Start with Simple Start and upgrade as needed.', tag:'QB', req:true});
+  }
+  checks.push({id:'b5', text:'Data security basics in place', detail:"You'll have access to clients' financial data. Use a password manager, enable 2FA on all accounts, and never store client credentials in plain text. This is trust, not just compliance.", tag:'Security', req:true});
+  return checks;
+}
+
+const PRICING_CHECKS = [
+  {id:'pr1', text:'Revenue Model downloaded and opened', detail:'Download from the Rates tab. Open in Excel or Google Sheets. Fill in the gold cells only.', tag:'Tool', req:true},
+  {id:'pr2', text:'Hourly target rate decided', detail:'$35/hr if building portfolio, $50/hr standard, $65+/hr if QB certified. Set this in the Inputs tab as your Desired Hourly Wage.', tag:'Setup', req:true},
+  {id:'pr3', text:'Monthly retainer rates built out', detail:'Calculate: estimated hours per client × hourly rate = monthly retainer. Enter each service tier in the Products tab.', tag:'Setup', req:true},
+  {id:'pr4', text:'Reality check done — rates cover your wage target', detail:'Check the Pricing tab — every service should show Viable in the flag column. If not, adjust hours estimate or rate.', tag:'Review', req:true},
+];
+
+const MARKETING_CHECKS = [
+  {id:'mk1', text:'Listed 10 local businesses to approach', detail:'Think: restaurants, salons, contractors, retail shops, real estate agents, consultants. Write them down. These are your first prospective clients.', tag:'Strategy', req:true},
+  {id:'mk2', text:'Had 3 conversations with small business owners', detail:'Not pitching — just asking. "How do you handle your books right now?" is enough to open the door. Three conversations this week.', tag:'Outreach', req:true},
+  {id:'mk3', text:'LinkedIn profile updated (bookkeeping focus)', detail:'Update your headline to "Bookkeeper | QuickBooks | [Your City]". Add a short summary. This is how business owners will vet you when they look you up.', tag:'Online', req:true},
+  {id:'mk4', text:'One referral source activated', detail:'Tell one person — a friend, neighbor, or family member who owns or knows a business owner — what you do and that you are taking clients. Word of mouth is how most bookkeepers land their first client.', tag:'Referral', req:false},
+];
+
+const TRACKER_CHECKS = [
+  {id:'tr1', text:'Money Tracker downloaded and opened', detail:'Download from the Track tab. Open the Dashboard tab first to see the overview.', tag:'Tool', req:true},
+  {id:'tr2', text:'First business expense logged', detail:'QB subscription, software, office supplies, home office portion — log it now in the Expense Log tab. This habit is everything.', tag:'Habit', req:true},
+  {id:'tr3', text:'Tax reserve savings account open', detail:'Label it "Tax Reserve." Move 15% of every client payment here before spending anything. You know better than anyone what happens when business owners skip this.', tag:'Financial', req:true},
+  {id:'tr4', text:'Invoice template ready', detail:'Simple Word doc or QB invoice template with: your name, EIN, services rendered, amount due, and payment terms (Net 15 is standard for bookkeepers).', tag:'Tool', req:false},
+];
+
+// ── QB SELECTION ──────────────────────────────────────────
+function setQB(field, val){
+  S.qb[field] = val;
+  save();
+
+  const yesId = field === 'training' ? 'qb-train-yes' : 'qb-sub-yes';
+  const noId  = field === 'training' ? 'qb-train-no'  : 'qb-sub-no';
+  document.getElementById(yesId).className = 'qb-card' + (val==='yes'?' selected':'');
+  document.getElementById(noId).className  = 'qb-card' + (val==='no' ?' selected-no':'');
+
+  // Pills
+  if(field === 'training'){
+    document.getElementById('qb-train-pill').style.display  = val==='yes'?'inline-flex':'none';
+    document.getElementById('qb-notrain-pill').style.display = val==='no'?'inline-flex':'none';
+    const msg = document.getElementById('qb-train-msg');
+    msg.style.display = 'block';
+    if(val==='yes'){
+      msg.innerHTML = '<div class="tip tip-sage"><strong>Great — your checklist reflects your training.</strong> If you have your ProAdvisor certification, mention it to every prospective client. It matters.</div>';
+    } else {
+      msg.innerHTML = '<div class="tip tip-alert"><strong>No worries — QB certification is free.</strong> Head to quickbooks.intuit.com/accountants/proadvisor and complete the free online certification. Takes 8–12 hours and immediately justifies higher rates. It will be added to your checklist below.</div>';
+    }
+  }
+  if(field === 'sub'){
+    document.getElementById('qb-sub-pill').style.display  = val==='yes'?'inline-flex':'none';
+    document.getElementById('qb-nosub-pill').style.display = val==='no'?'inline-flex':'none';
+    const msg = document.getElementById('qb-sub-msg');
+    msg.style.display = 'block';
+    if(val==='yes'){
+      msg.innerHTML = '<div class="tip tip-sage"><strong>Perfect.</strong> Make sure your subscription covers client access or that you are using the ProAdvisor accountant version.</div>';
+    } else {
+      msg.innerHTML = '<div class="tip tip-blue"><strong>QB Online Simple Start is $30/mo</strong> — or free if you complete the ProAdvisor program. This will be added to your legal checklist. You can take your first client while setting it up, but have it live before invoicing.</div>';
+    }
+  }
+
+  renderAll();
+  updateAll();
+
+  // Show step 1 CTA if both answered
+  if(S.qb.training && S.qb.sub){
+    const cta = document.getElementById('cta1');
+    cta.style.display = 'flex';
+    const txt = document.getElementById('cta1-txt');
+    const bothGood = S.qb.training==='yes' && S.qb.sub==='yes';
+    const neitherGood = S.qb.training==='no' && S.qb.sub==='no';
+    txt.textContent = bothGood
+      ? 'QB status confirmed \u2014 you are ready to take clients. Next: check your legal requirements.'
+      : neitherGood
+      ? 'QB items added to your checklist. Complete them and you will be ready. Next: check your legal setup.'
+      : 'QB status noted and your checklist is updated. Next: check your legal requirements.';
+    document.getElementById('acc1-status').textContent = '✓ QB status captured';
+    document.getElementById('acc3').classList.remove('locked');
+    openAccord('acc2');
+  }
+}
+
+// ── LIST RENDERING ────────────────────────────────────────
+function renderList(items, containerId){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML = items.map(item => {
+    const done = !!S.checks[item.id];
+    const tagCls = item.tag === 'QB' ? 'check-tag qb' : item.tag === 'required' ? 'check-tag required' : 'check-tag';
+    return `<li class="check-item">
+      <div class="check-box ${done?'checked':''}" onclick="tick('${item.id}')"></div>
+      <div class="check-label">
+        <strong class="${done?'done-txt':''}" onclick="tick('${item.id}')">${item.text}${item.req?'':' <span style="font-size:11px;color:var(--text-lt)">(optional)</span>'}</strong>
+        <span>${item.detail}</span>
+      </div>
+      <div class="${tagCls}">${item.tag}</div>
+    </li>`;
+  }).join('');
+}
+
+function tick(id){
+  S.checks[id] = !S.checks[id];
+  save(); renderAll(); updateAll();
+}
+
+function renderAll(){
+  renderList(UNIVERSAL, 'cl-universal');
+  const bizChecks = getBizChecks();
+  renderList(bizChecks, 'cl-specific');
+  renderList(PRICING_CHECKS, 'cl-pricing');
+  renderList(MARKETING_CHECKS, 'cl-marketing');
+  renderList(TRACKER_CHECKS, 'cl-tracker');
+}
+
+// ── SCORES ────────────────────────────────────────────────
+function score(items){ return items.filter(i => S.checks[i.id]).length; }
+
+function totalScore(){
+  const bizChecks = getBizChecks();
+  const all = [...UNIVERSAL, ...bizChecks, ...PRICING_CHECKS, ...MARKETING_CHECKS, ...TRACKER_CHECKS];
+  const done = all.filter(i => S.checks[i.id]).length;
+  const total = all.length;
+  const qbDone = (S.qb.training ? 1 : 0) + (S.qb.sub ? 1 : 0);
+  return { done: done + qbDone, total: total + 2, pct: Math.round((done+qbDone)/(total+2)*100) };
+}
+
+// ── MASTER UPDATE ─────────────────────────────────────────
+function updateAll(){
+  const {done, total, pct} = totalScore();
+  const bizChecks = getBizChecks();
+  const uDone = score(UNIVERSAL),      uTotal = UNIVERSAL.length;
+  const bDone = score(bizChecks),      bTotal = bizChecks.length;
+  const prDone = score(PRICING_CHECKS),prTotal = PRICING_CHECKS.length;
+  const mkDone = score(MARKETING_CHECKS),mkTotal = MARKETING_CHECKS.length;
+  const trDone = score(TRACKER_CHECKS),trTotal = TRACKER_CHECKS.length;
+  const qbBothDone = S.qb.training && S.qb.sub;
+  const legalDone = qbBothDone && uDone===uTotal && bDone===bTotal;
+
+  // Header pill
+  const pill = document.getElementById('global-pill');
+  pill.textContent = pct+'% ready';
+  pill.className = 'progress-pill'+(pct>=80?' done':pct>=40?' mid':'');
+
+  // Hero
+  document.getElementById('hero-fill').style.width = pct+'%';
+  document.getElementById('hero-pct').textContent = pct+'%';
+  document.getElementById('hero-lbl').textContent = 'Your launch readiness — '+done+' of '+total+' milestones done';
+  const heroSubs = [
+    'Start the readiness checklist — most people are closer than they think.',
+    'Good progress — keep working through the steps.',
+    'Almost there — you are close to your first client.',
+    'You are ready. Go find your first client.'
+  ];
+  document.getElementById('hero-sub').textContent = heroSubs[pct===0?0:pct<50?1:pct<100?2:3];
+
+  // Readiness page
+  const rFill = document.getElementById('r-fill');
+  if(rFill) rFill.style.width = pct+'%';
+  const rPct = document.getElementById('r-pct');
+  if(rPct) rPct.textContent = pct+'%';
+  const rBadge = document.getElementById('r-badge');
+  if(rBadge) rBadge.textContent = done+' of '+total+' milestones complete';
+  const rLbls = ['Just getting started — and that\'s the right place to begin','Making real progress — keep going','Almost there — a couple more steps','You are fully ready. Go land your first client!'];
+  const rEl = document.getElementById('r-lbl'); if(rEl) rEl.textContent = rLbls[pct===0?0:pct<50?1:pct<100?2:3];
+
+  // Accordion statuses
+  document.getElementById('acc2-status').textContent = uDone+' / '+uTotal+' done';
+  document.getElementById('acc3-status').textContent = qbBothDone ? bDone+' / '+bTotal+' done' : 'Complete Steps 1 & 2 first';
+  document.getElementById('acc4-status').textContent = prDone+' / '+prTotal+' done';
+  document.getElementById('acc5-status').textContent = mkDone+' / '+mkTotal+' done';
+  document.getElementById('acc6-status').textContent = trDone+' / '+trTotal+' done';
+
+  // Lock/unlock
+  setLock('acc3', !qbBothDone);
+  setLock('acc4', !legalDone);
+  setLock('acc5', !legalDone || prDone<prTotal);
+  setLock('acc6', !legalDone || prDone<prTotal || mkDone<mkTotal);
+
+  // CTAs
+  showCta('cta2', uDone===uTotal);
+  showCta('cta3', bDone===bTotal && qbBothDone);
+  showCta('cta4', prDone===prTotal);
+  showCta('cta5', mkDone===mkTotal);
+  showCta('cta6', trDone===trTotal);
+
+  // Milestone dots
+  const qbReady = S.qb.training && S.qb.sub;
+  setMilestone('rm1', (qbReady && uDone===uTotal && bDone===bTotal)?'done':(qbReady||uDone>0)?'active':'todo');
+  setMilestone('rm2', legalDone?'done':qbReady&&uDone===uTotal?'active':'todo');
+  setMilestone('rm3', prDone===prTotal?'done':legalDone?'active':'todo');
+  setMilestone('rm4', mkDone===mkTotal?'done':prDone===prTotal?'active':'todo');
+  setMilestone('rm5', trDone===trTotal?'done':mkDone===mkTotal?'active':'todo');
+
+  // Home steps
+  updateHomeSteps(uDone, uTotal, bDone, bTotal, prDone, mkDone, trDone, legalDone, qbBothDone);
+  updateTodayCard(pct, legalDone, prDone, mkDone, trDone, qbBothDone);
+}
+
+function setLock(id, locked){
+  const el = document.getElementById(id);
+  if(!el) return;
+  locked ? el.classList.add('locked') : el.classList.remove('locked');
+}
+function setMilestone(id, state){
+  const dot = document.getElementById(id+'-dot');
+  if(!dot) return;
+  dot.className = 'rm-dot '+state;
+  dot.textContent = state==='done'?'✓':state==='active'?'→':'·';
+}
+function showCta(id, show){
+  const el = document.getElementById(id);
+  if(el) el.style.display = show?'flex':'none';
+}
+
+function updateHomeSteps(uDone, uTotal, bDone, bTotal, prDone, mkDone, trDone, legalDone, qbDone){
+  const steps = [
+    {dot:'ph2-dot', txt:'ph2-txt', sub:'ph2-sub', done:legalDone, active:!legalDone, label:'QB + legal setup',
+     subTxt: legalDone ? 'Complete' : (uDone+bDone)+' / '+(uTotal+bTotal)+' done'},
+    {dot:'ph3-dot', txt:'ph3-txt', sub:'ph3-sub', done:prDone===4, active:legalDone&&prDone<4, label:'Rates set',
+     subTxt: prDone===4?'Complete':legalDone?prDone+' / 4 done':'Waiting on legal'},
+    {dot:'ph4-dot', txt:'ph4-txt', sub:'ph4-sub', done:mkDone>=3, active:prDone===4&&mkDone<3, label:'First outreach',
+     subTxt: mkDone>=3?'Done':prDone===4?mkDone+' / 4 done':'Waiting on rates'},
+    {dot:'ph5-dot', txt:'ph5-txt', sub:'ph5-sub', done:trDone>=3, active:mkDone>=3&&trDone<3, label:'Tracker set up',
+     subTxt: trDone>=3?'Done':mkDone>=3?trDone+' / 4 done':'Waiting on outreach'},
+    {dot:'ph6-dot', txt:'ph6-txt', sub:'ph6-sub', done:false, active:trDone>=3, label:'First client',
+     subTxt: trDone>=3?'You are ready!':'Complete all steps'},
+  ];
+  steps.forEach((s,i) => {
+    const dot=document.getElementById(s.dot), txt=document.getElementById(s.txt), sub=document.getElementById(s.sub);
+    if(!dot) return;
+    dot.className = 'step-dot '+(s.done?'done':s.active?'active':'todo');
+    dot.textContent = s.done?'✓':(i+2);
+    txt.className = 'step-text '+(s.done?'done':s.active?'active':'todo');
+    txt.textContent = s.label;
+    if(sub){ sub.textContent=s.subTxt; sub.style.color=s.done?'var(--sage)':s.active?'var(--alert)':'var(--text-lt)'; }
+  });
+}
+
+function updateTodayCard(pct, legalDone, prDone, mkDone, trDone, qbDone){
+  const badge=document.getElementById('today-badge'), title=document.getElementById('today-title');
+  const desc=document.getElementById('today-desc'), next=document.getElementById('today-next');
+  const btn=document.getElementById('today-btn');
+  if(!badge) return;
+
+  if(!qbDone){
+    badge.textContent='Start here'; badge.className='badge badge-alert';
+    title.textContent='First, tell us your QuickBooks situation';
+    desc.textContent='Your QB training and subscription status shapes everything — your checklist, your rates, and which clients you can take on. Answer two quick questions and we customize the rest.';
+    next.textContent='Go to Readiness → answer the two QB questions in Step 1';
+    btn.textContent='Answer QB questions →'; btn.onclick=()=>goPage('readiness',null);
+  } else if(!legalDone){
+    badge.textContent='In progress'; badge.className='badge badge-gold';
+    title.textContent='Keep going on your legal and QB setup';
+    desc.textContent='You have answered the QB questions. Now finish the remaining legal and setup steps — you want everything in order before you invoice your first client.';
+    next.textContent='Continue the checklist in Readiness';
+    btn.textContent='Continue checklist →'; btn.onclick=()=>goPage('readiness',null);
+  } else if(prDone<4){
+    badge.textContent='Legal done! 🎉'; badge.className='badge badge-sage';
+    title.textContent='Now set your rates';
+    desc.textContent='You are legally set up. Next, open your Revenue Model, set your hourly target and retainer tiers, and confirm your rates are viable before you quote your first client.';
+    next.textContent='Download Revenue Model → set your rates → come back and check it off';
+    btn.textContent='Set my rates →'; btn.onclick=()=>goPage('price',null);
+  } else if(mkDone<3){
+    badge.textContent='Rates set! 🎉'; badge.className='badge badge-sage';
+    title.textContent='Time to have some conversations';
+    desc.textContent='Rates confirmed. Now go talk to three small business owners this week. Not pitching — just asking how they handle their books. Three conversations opens doors.';
+    next.textContent='List 10 local businesses → have 3 conversations this week';
+    btn.textContent='Outreach checklist →'; btn.onclick=()=>goPage('readiness',null);
+  } else if(trDone<3){
+    badge.textContent='Outreach done! 🎉'; badge.className='badge badge-sage';
+    title.textContent='Set up your own books before that first invoice';
+    desc.textContent='You are talking to prospects. Set up your tracker before money starts moving — starting clean is much easier than catching up later.';
+    next.textContent='Download Money Tracker → log your first QB subscription expense';
+    btn.textContent='Set up my tracker →'; btn.onclick=()=>goPage('track',null);
+  } else {
+    badge.textContent='Ready for clients! 📒'; badge.className='badge badge-brown';
+    title.textContent='Go land your first client';
+    desc.textContent='Everything is in place. Legal, rates, outreach, tracker — all set. Follow up on those conversations you started. The first yes is the hardest. Then it compounds.';
+    next.textContent='Follow up with one of those conversations today';
+    btn.textContent='See my growth plan →'; btn.onclick=()=>goPage('grow',null);
+  }
+}
+
+// ── ACCORDION ─────────────────────────────────────────────
+function toggleAccord(id){
+  const el = document.getElementById(id);
+  if(el && !el.classList.contains('locked')) el.classList.toggle('open');
+}
+function openAccord(id){
+  const el = document.getElementById(id);
+  if(el && !el.classList.contains('locked')){ el.classList.add('open'); el.scrollIntoView({behavior:'smooth',block:'start'}); }
+}
+
+// ── NAV ───────────────────────────────────────────────────
+function goPage(name, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const labels={home:'Home',readiness:'Readiness',price:'Rates',track:'Track',grow:'Grow',learn:'Learn'};
+  document.querySelectorAll('.nav a').forEach(a=>{if(a.textContent.trim()===labels[name])a.classList.add('active');});
+  window.scrollTo(0,0);
+}
+
+// ── REVENUE MODEL SYNC (same engine as RootPath) ──────────
+window.handleFileUpload = function(e){ const file=e.target.files[0]; if(file) processFile(file); };
+window.handleDrop = function(e){
+  e.preventDefault();
+  const dz=document.getElementById('drop-zone-price'); if(dz) dz.classList.remove('drag-over');
+  const file=e.dataTransfer.files[0]; if(file) processFile(file);
+};
+
+function processFile(file){
+  if(!file.name.match(/\.xlsx?$/i)){ showSyncStatus('err','Not an Excel file. Upload LedgerPath_Revenue_Model_v2.xlsx'); return; }
+  showSyncStatus('ok','Reading your Revenue Model...');
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array',cellNF:true,cellText:false});
+      const data=extractRevenueData(wb);
+      applyRevenueToDashboard(data);
+      localStorage.setItem('lp_sync',JSON.stringify({filename:file.name,ts:new Date().toLocaleString(),...data}));
+    }catch(err){ showSyncStatus('err','Could not read file: '+err.message); console.error(err); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function numC(ws,addr){ const c=ws[addr]; if(!c) return 0; return typeof c.v==='number'?c.v:(parseFloat(c.v)||0); }
+function strC(ws,addr){ const c=ws[addr]; if(!c) return ''; return String(c.v||'').trim(); }
+
+function extractRevenueData(wb){
+  if(!wb.Sheets['Inputs']) throw new Error('Missing Inputs sheet — is this the LedgerPath Revenue Model v2?');
+  const wsIn=wb.Sheets['Inputs'], wsOH=wb.Sheets['Overhead'];
+  // v2 Inputs layout: B4=wage, B7=markupUsed, B8=weeklyHrs, B9=weeklyGoal, B14=taxPct
+  const wage=numC(wsIn,'B4'), markupUsed=numC(wsIn,'B7'), weeklyHrs=numC(wsIn,'B8');
+  const weeklyGoal=numC(wsIn,'B9'), taxPct=numC(wsIn,'B14');
+  // v2 Overhead: rows 4-13, column B
+  let fixedOH=0;
+  if(wsOH) for(let r=4;r<=14;r++) fixedOH+=numC(wsOH,'B'+r);
+  const ohPerHr=weeklyHrs>0?fixedOH/4.33/weeklyHrs:0;
+  // v2 uses Services sheet: A=name, B=unit, D=mat, E=hrs, F=wageOverride, G=markupOverride
+  const wsSvc=wb.Sheets['Services']||wb.Sheets['Products'];
+  const products=[];
+  if(wsSvc){
+    for(let r=4;r<=60;r++){
+      const name=strC(wsSvc,'A'+r); if(!name) break;
+      const mat=numC(wsSvc,'D'+r),hrs=numC(wsSvc,'E'+r);
+      const wg=numC(wsSvc,'F'+r)||wage, oMkup=numC(wsSvc,'G'+r)||markupUsed;
+      const unit=strC(wsSvc,'B'+r);
+      const base=(hrs*wg)+mat+(ohPerHr*hrs), price=base*oMkup, profit=price-base;
+      products.push({name,unit,unitsWk:0,sugPrice:price,profitUnit:profit,hrs});
+    }
+  }
+  // Read units/week from Projections sheet col B if available
+  const wsPrj=wb.Sheets['Projections'];
+  if(wsPrj) products.forEach((p,i)=>{ p.unitsWk=numC(wsPrj,'B'+(i+4)); });
+  let weeklyRev=0,weeklyProfit=0,weeklyHrsUsed=0;
+  products.forEach(p=>{weeklyRev+=p.sugPrice*p.unitsWk;weeklyProfit+=p.profitUnit*p.unitsWk;weeklyHrsUsed+=p.hrs*p.unitsWk;});
+  const effHr=weeklyHrsUsed>0?weeklyProfit/weeklyHrsUsed:0;
+  return {wage,markupUsed,weeklyGoal,monthlyOH:fixedOH,weeklyRev,weeklyProfit,effHr,gapToGoal:weeklyProfit-weeklyGoal,products};
+}
+
+function applyRevenueToDashboard(d){
+  const f=n=>'$'+Math.round(Math.abs(n)).toLocaleString();
+  const setText=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  setText('stat-weekly-rev',f(d.weeklyRev));
+  setText('stat-eff-hr',f(d.effHr)+'/hr');
+  setText('stat-gap',(d.gapToGoal>=0?'+':'-')+f(d.gapToGoal));
+  const gapEl=document.getElementById('stat-gap');
+  if(gapEl) gapEl.className='stat-val '+(d.gapToGoal>=0?'sage':'alert');
+  setText('inputs-wage',f(d.wage)+'/hr');
+  setText('inputs-markup',(+(d.markupUsed||0)).toFixed(1)+'×');
+  setText('inputs-goal',f(d.weeklyGoal)+'/wk');
+  setText('inputs-oh',f(d.monthlyOH)+'/mo');
+  const lb=document.getElementById('sync-live-badge'); if(lb) lb.style.display='inline-block';
+  const dz=document.getElementById('drop-title-price'); if(dz) dz.textContent='✓ Synced — drop a new file to update';
+  const lp=document.getElementById('sync-last-price'); if(lp) lp.textContent='Synced: '+new Date().toLocaleString();
+  showSyncStatus('ok','✅ Synced! '+d.products.length+' services loaded — your rate card is now live.'); sfShowToast(d.products.length+' services synced — rate card is live');
+}
+
+function showSyncStatus(type,msg){
+  const el=document.getElementById('sync-status-price');
+  if(el){el.textContent=msg;el.className='sync-status '+type;}
+}
+
+// ── TRACKER SYNC ──────────────────────────────────────────
+window.handleTrackerUpload = function(e){ const file=e.target.files[0]; if(file) processTrackerFile(file); };
+window.handleTrackerDrop = function(e){
+  e.preventDefault();
+  const dz=document.getElementById('drop-zone-track'); if(dz) dz.classList.remove('drag-over');
+  const file=e.dataTransfer.files[0]; if(file) processTrackerFile(file);
+};
+
+function processTrackerFile(file){
+  if(!file.name.match(/\.xlsx?$/i)){ showTrackerStatus('err','Not an Excel file.'); return; }
+  showTrackerStatus('ok','Reading your Money Tracker...');
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array',cellNF:true,cellText:false});
+      if(!wb.Sheets['Income Log']||!wb.Sheets['Expense Log']) throw new Error('Missing Income Log or Expense Log — is this the Money Tracker file?');
+      const data=extractTrackerData(wb);
+      applyTrackerToDashboard(data);
+      localStorage.setItem('lp_tracker_sync',JSON.stringify({filename:file.name,ts:new Date().toLocaleString(),...data}));
+    }catch(err){ showTrackerStatus('err','Could not read: '+err.message); console.error(err); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function numT(ws,addr){ const c=ws[addr]; if(!c) return 0; return typeof c.v==='number'?c.v:(parseFloat(c.v)||0); }
+function strT(ws,addr){ const c=ws[addr]; if(!c) return ''; return String(c.v||'').trim(); }
+
+function extractTrackerData(wb){
+  const wsInc=wb.Sheets['Income Log'], wsExp=wb.Sheets['Expense Log'], wsCust=wb.Sheets['Customer Tracker'];
+  const income=[], expenses=[], customers=[];
+  for(let r=4;r<=500;r++){ const amt=numT(wsInc,'E'+r),cat=strT(wsInc,'D'+r),mo=numT(wsInc,'C'+r),note=strT(wsInc,'F'+r),date=strT(wsInc,'B'+r); if(!amt&&!cat&&!date) break; if(amt>0) income.push({amt,cat,mo,note}); }
+  for(let r=4;r<=500;r++){ const amt=numT(wsExp,'E'+r),cat=strT(wsExp,'D'+r),mo=numT(wsExp,'C'+r),date=strT(wsExp,'B'+r); if(!amt&&!cat&&!date) break; if(amt>0) expenses.push({amt,cat,mo}); }
+  if(wsCust){ for(let r=4;r<=200;r++){ const name=strT(wsCust,'B'+r); if(!name) break; customers.push({name,hood:strT(wsCust,'D'+r),notes:strT(wsCust,'H'+r),spent:numT(wsCust,'G'+r)}); } }
+  const totalIncome=income.reduce((s,i)=>s+i.amt,0), totalExpenses=expenses.reduce((s,i)=>s+i.amt,0);
+  const months=Array.from({length:12},()=>({income:0,expenses:0}));
+  income.forEach(i=>{if(i.mo>=1&&i.mo<=12)months[i.mo-1].income+=i.amt;});
+  expenses.forEach(i=>{if(i.mo>=1&&i.mo<=12)months[i.mo-1].expenses+=i.amt;});
+  const allMo=[...income.map(i=>i.mo),...expenses.map(i=>i.mo)].filter(m=>m>0);
+  const currentMo=allMo.length?Math.max(...allMo):new Date().getMonth()+1;
+  const MO=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return {income,expenses,customers,totalIncome,totalExpenses,totalProfit:totalIncome-totalExpenses,taxReserve:totalIncome*0.15,
+    q1Inc:months.slice(0,3).reduce((s,m)=>s+m.income,0), q2Inc:months.slice(3,6).reduce((s,m)=>s+m.income,0),
+    q3Inc:months.slice(6,9).reduce((s,m)=>s+m.income,0), q4Inc:months.slice(9,12).reduce((s,m)=>s+m.income,0),
+    currentMoName:MO[currentMo-1], currentIncome:months[currentMo-1]?.income||0, currentExpenses:months[currentMo-1]?.expenses||0,
+    currentProfit:(months[currentMo-1]?.income||0)-(months[currentMo-1]?.expenses||0), entryCount:income.length+expenses.length, customerCount:customers.length};
+}
+
+function applyTrackerToDashboard(d){
+  const f=n=>'$'+Math.round(Math.abs(n)).toLocaleString();
+  const setText=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  const setC=(id,cls)=>{const el=document.getElementById(id);if(el)el.className='stat-val '+cls;};
+  setText('stat-track-income',  f(d.currentIncome));
+  setText('stat-track-expenses',f(d.currentExpenses));
+  setText('stat-track-profit',  f(d.currentProfit));
+  setC('stat-track-income','sage'); setC('stat-track-expenses','alert');
+  setC('stat-track-profit', d.currentProfit>=0?'sage':'alert');
+  setText('tax-q1-reserve', d.q1Inc>0?'· reserve '+f(d.q1Inc*0.15):'');
+  setText('tax-q2-reserve', d.q2Inc>0?'· reserve '+f(d.q2Inc*0.15):'');
+  setText('tax-q3-reserve', d.q3Inc>0?'· reserve '+f(d.q3Inc*0.15):'');
+  setText('tax-q4-reserve', d.q4Inc>0?'· reserve '+f(d.q4Inc*0.15):'');
+  setText('annual-income-total', d.totalIncome>0?f(d.totalIncome):'—');
+  setText('annual-profit-total', d.totalProfit!==0?f(d.totalProfit):'—');
+  setText('annual-taxreserve',   d.taxReserve>0?f(d.taxReserve):'—');
+  // Client list
+  if(d.customers.length>0){
+    const custEl=document.getElementById('customer-list-live');
+    const colors=['var(--dust-blue-lt)','var(--sage-lt)','var(--gold-lt)','var(--brown-pale)','var(--alert-lt)'];
+    const tColors=['var(--dust-blue)','var(--sage)','var(--gold)','var(--brown-mid)','var(--alert)'];
+    if(custEl) custEl.innerHTML=d.customers.slice(0,5).map((c,i)=>{
+      const init=c.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+      return `<div class="client-row"><div class="avatar" style="background:${colors[i%5]};color:${tColors[i%5]}">${init}</div><div><div class="client-name">${c.name}</div><div class="client-detail">${c.hood?c.hood+' · ':''}${c.notes||'Client'}</div></div><div class="client-note">${c.spent>0?f(c.spent):''}</div></div>`;
+    }).join('')+(d.customers.length>5?`<div style="text-align:center;padding:10px;font-size:12px;color:var(--text-lt)">+${d.customers.length-5} more</div>`:'');
+    const lb=document.getElementById('client-live-badge'); if(lb) lb.style.display='inline-block';
+  }
+  const lb=document.getElementById('sync-live-badge-track'); if(lb) lb.style.display='inline-block';
+  const dz=document.getElementById('drop-title-track'); if(dz) dz.textContent='✓ Synced — drop a new file to update';
+  showTrackerStatus('ok','✓ Money Tracker synced! '+d.entryCount+' entries, '+d.customerCount+' clients.');
+  const lastEl=document.getElementById('sync-last-tracker'); if(lastEl) lastEl.textContent='Last synced: '+new Date().toLocaleString();
+}
+
+function showTrackerStatus(type,msg){
+  const el=document.getElementById('sync-status-tracker');
+  if(el){el.textContent=msg;el.className='sync-status '+type;}
+}
+
+// ── RESTORE SAVED SYNCS ON LOAD ───────────────────────────
+function restoreSyncs(){
+  const rev=localStorage.getItem('lp_sync');
+  if(rev){ try{ applyRevenueToDashboard(JSON.parse(rev)); }catch(e){} }
+  const tr=localStorage.getItem('lp_tracker_sync');
+  if(tr){ try{ applyTrackerToDashboard(JSON.parse(tr)); }catch(e){} }
+}
+
+// ── RESTORE QB SELECTIONS ─────────────────────────────────
+function restoreQB(){
+  if(S.qb.training){ setQB('training', S.qb.training); }
+  if(S.qb.sub){ setQB('sub', S.qb.sub); }
+}
+
+// ── INIT ─────────────────────────────────────────────────
+renderAll();
+updateAll();
+restoreQB();
+restoreSyncs();
+</script>
+<script>
+function sfToggleMenu(){
+  const h=document.getElementById('sf-hamburger');
+  const d=document.getElementById('sf-drawer');
+  h.classList.toggle('open');
+  d.classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  const h=document.getElementById('sf-hamburger');
+  const d=document.getElementById('sf-drawer');
+  if(h&&d&&!h.contains(e.target)&&!d.contains(e.target)){
+    h.classList.remove('open');d.classList.remove('open');
+  }
+});
+function sfShowToast(msg){
+  const t=document.getElementById('sf-toast');
+  if(!t)return;
+  t.innerHTML='<span>✅</span> '+msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}</script>
+<script>
+// ── Libby Integration ─────────────────────────────────────────
+const LIBBY_URL = 'https://web-production-407fa.up.railway.app';
+const LIBBY_KEY = 'lp_sk_awehq238h23dncdp923nf';
+
+function libbySetStatus(state) {
+  const dot  = document.getElementById('libby-dot');
+  const txt  = document.getElementById('libby-status-text');
+  const msg  = document.getElementById('libby-offline');
+  if(!dot||!txt) return;
+  dot.className = 'libby-status-dot ' + state;
+  if(state==='online'){  txt.textContent='Online'; if(msg) msg.style.display='none'; }
+  if(state==='offline'){ txt.textContent='Offline (may be waking up)'; if(msg) msg.style.display='block'; }
+  if(state==='checking'){ txt.textContent='Checking...'; if(msg) msg.style.display='none'; }
+}
+
+async function libbyCheckHealth() {
+  libbySetStatus('checking');
+  try {
+    const res = await fetch(LIBBY_URL+'/health', {method:'GET', signal: AbortSignal.timeout(8000)});
+    if(res.ok) libbySetStatus('online');
+    else libbySetStatus('offline');
+  } catch(e) {
+    libbySetStatus('offline');
+  }
+}
+
+function libbyHandleDrop(e) {
+  e.preventDefault();
+  document.getElementById('libby-drop').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if(file) libbyProcess(file);
+}
+
+function libbyHandleFile(e) {
+  const file = e.target.files[0];
+  if(file) libbyProcess(file);
+}
+
+function libbyShowStatus(type, msg) {
+  const el = document.getElementById('libby-process-status');
+  if(el){ el.textContent=msg; el.className='sync-status '+type; }
+}
+
+async function libbyProcess(file) {
+  if(!file.name.toLowerCase().endsWith('.pdf')) {
+    libbyShowStatus('err','Please upload a PDF file — bank statements, credit card statements, etc.');
+    return;
+  }
+
+  const drop = document.getElementById('libby-drop');
+  const titleEl = document.getElementById('libby-drop-title');
+  drop.classList.add('processing');
+  titleEl.textContent = '⏳ Processing ' + file.name + '...';
+  libbyShowStatus('ok', 'Sending to Libby — this takes 10–30 seconds for longer statements...');
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('prefix', 'LEDGER');
+
+  try {
+    const res = await fetch(LIBBY_URL+'/process', {
+      method: 'POST',
+      headers: { 'X-API-Key': LIBBY_KEY },
+      body: formData,
+      signal: AbortSignal.timeout(120000),
+    });
+
+    const data = await res.json();
+    if(!res.ok || data.error) {
+      libbyShowStatus('err', 'Error: ' + (data.error||'Unknown error'));
+      drop.classList.remove('processing');
+      titleEl.textContent = 'Drop a bank or credit card statement (PDF)';
+      return;
+    }
+
+    libbySetStatus('online');
+    libbyShowStatus('ok', '✅ Processed! ' + data.count + ' statement(s) found.');
+    drop.classList.remove('processing');
+    titleEl.textContent = '✓ Done — drop another file to process more';
+    libbyRenderResults(data.results);
+
+  } catch(e) {
+    if(e.name==='TimeoutError') {
+      libbyShowStatus('err', 'Timed out — statement may be very large. Try again or split the PDF.');
+    } else {
+      libbyShowStatus('err', 'Could not reach Libby: ' + e.message);
+      libbySetStatus('offline');
+    }
+    drop.classList.remove('processing');
+    titleEl.textContent = 'Drop a bank or credit card statement (PDF)';
+  }
+}
+
+function libbyRenderResults(results) {
+  const container = document.getElementById('libby-results');
+  if(!container) return;
+  container.style.display = 'block';
+  container.innerHTML = '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-lt);margin-bottom:10px">Processed statements</div>';
+
+  results.forEach((r, i) => {
+    const conf = r.confidence || 0;
+    const confClass = conf >= 0.7 ? 'libby-conf-high' : conf >= 0.4 ? 'libby-conf-med' : 'libby-conf-low';
+    const confLabel = conf >= 0.7 ? 'High confidence' : conf >= 0.4 ? 'Review' : 'Low confidence';
+    const row = document.createElement('div');
+    row.className = 'libby-result-row';
+    row.innerHTML = `
+      <div>
+        <div class="libby-result-vendor">${r.vendor} — ${r.date||'unknown date'}</div>
+        <div class="libby-result-meta">${r.transactions} transactions · ${r.pages} page(s)</div>
+      </div>
+      <span class="libby-result-conf ${confClass}">${confLabel} (${Math.round(conf*100)}%)</span>
+      <a href="${r.csv_url}&api_key=${LIBBY_KEY}" download="${r.csv_filename}" class="libby-import-btn">↓ CSV</a>
+      <a href="${r.pdf_url}&api_key=${LIBBY_KEY}" download="${r.filename}" class="libby-import-btn" style="background:var(--brown-mid)">↓ PDF</a>
+    `;
+    container.appendChild(row);
+  });
+
+  sfShowToast(results.reduce((s,r)=>s+r.transactions,0) + ' transactions extracted by Libby');
+}
+
+// Check health when Track tab opens — deferred so main goPage is defined first
+window.addEventListener('DOMContentLoaded', function() {
+  const origGoPage = window.goPage;
+  window.goPage = function(name, el) {
+    if(typeof origGoPage === 'function') origGoPage(name, el);
+    if(name === 'track') libbyCheckHealth();
+  };
+});
+
+// Initial health check after everything loads
+window.addEventListener('load', function() {
+  setTimeout(libbyCheckHealth, 800);
+});
+</script>
+</body>
+</html>

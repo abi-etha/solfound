@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RentalPath — Your assets. Your income. On your terms.</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --slate:      #2C3E50;
+  --slate-mid:  #3D5166;
+  --slate-lt:   #E8EDF2;
+  --slate-pale: #F4F6F8;
+  --stone:      #7F8C8D;
+  --stone-lt:   #ECF0F1;
+  --amber:      #C0892A;
+  --amber-lt:   #FBF4E0;
+  --teal:       #1A6B5C;
+  --teal-lt:    #E3F0EE;
+  --rust:       #B84C3A;
+  --rust-lt:    #FAF0EE;
+  --cream:      #F9F7F4;
+  --parchment:  #EEE9E0;
+  --ink:        #1A1208;
+  --text-dark:  #1C2B38;
+  --text-mid:   #5A6A75;
+  --text-lt:    #96A5AE;
+  --white:      #FFFFFF;
+  --shadow:     0 2px 14px rgba(28,43,56,0.09);
+  --shadow-sm:  0 1px 5px rgba(28,43,56,0.06);
+  --radius:     8px;
+  --radius-sm:  5px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans','Segoe UI',sans-serif;background:var(--cream);color:var(--text-dark);font-size:15px;line-height:1.65}
+h1,h2,h3{font-family:'Libre Baskerville',Georgia,serif;font-weight:700;line-height:1.2}
+h1{font-size:2.5rem} h2{font-size:1.5rem;margin-bottom:10px} h3{font-size:1.15rem;margin-bottom:8px}
+p{color:var(--text-mid);line-height:1.8}
+a{text-decoration:none;color:inherit}
+em{font-family:'Libre Baskerville',Georgia,serif;font-style:italic}
+
+/* ── SolFound global nav ─────────────────────────────────── */
+.sf-nav{background:#0F0A04;padding:0 32px;display:flex;align-items:center;gap:0;border-bottom:1px solid rgba(232,160,32,0.15);position:sticky;top:0;z-index:200}
+.sf-nav-logo{font-family:'Libre Baskerville',Georgia,serif;font-size:16px;font-weight:700;color:white;padding:10px 20px 10px 0;margin-right:8px;border-right:1px solid rgba(255,255,255,0.1);white-space:nowrap;flex-shrink:0}
+.sf-nav-logo span{color:#E8A020}
+.sf-nav-links{display:flex;align-items:center;flex:1}
+.sf-nav-links a{font-size:13px;font-weight:500;color:rgba(255,255,255,0.55);padding:11px 14px;border-bottom:2px solid transparent;transition:all 0.15s;white-space:nowrap}
+.sf-nav-links a:hover{color:white}
+.sf-nav-links a.sf-active{color:#E8A020;border-bottom-color:#E8A020;font-weight:600}
+.sf-hamburger{display:none;background:none;border:none;cursor:pointer;padding:10px 8px;margin-left:auto;flex-direction:column;gap:5px}
+.sf-hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,0.7);border-radius:2px;transition:all 0.2s}
+.sf-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.sf-hamburger.open span:nth-child(2){opacity:0}
+.sf-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.sf-drawer{display:none;position:fixed;top:43px;left:0;right:0;background:#0F0A04;border-bottom:1px solid rgba(232,160,32,0.15);z-index:199;flex-direction:column;padding:8px 0}
+.sf-drawer a{font-size:15px;font-weight:500;color:rgba(255,255,255,0.7);padding:13px 24px;border-left:3px solid transparent;transition:all 0.15s}
+.sf-drawer a:hover{color:white;background:rgba(255,255,255,0.04)}
+.sf-drawer a.sf-active{color:#E8A020;border-left-color:#E8A020;font-weight:600}
+.sf-drawer.open{display:flex}
+.sf-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A3D2A;color:#5DBF8A;border:1px solid rgba(93,191,138,0.3);border-radius:8px;padding:12px 20px;font-size:13px;font-weight:600;white-space:nowrap;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:9999;pointer-events:none;display:flex;align-items:center;gap:8px}
+.sf-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:640px){.sf-nav{padding:0 16px}.sf-nav-links{display:none}.sf-hamburger{display:flex}}
+
+/* ── Header ──────────────────────────────────── */
+.header{background:var(--slate);color:white;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:3px solid var(--amber)}
+.header-left{display:flex;align-items:baseline;gap:18px}
+.logo{font-family:'Libre Baskerville',Georgia,serif;font-size:28px;font-weight:700;color:white;letter-spacing:0.01em}
+.logo span{color:var(--amber)}
+.tagline{font-size:13px;opacity:0.6;font-style:italic;font-family:'Libre Baskerville',serif}
+.progress-pill{background:var(--rust);padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;white-space:nowrap;transition:background 0.4s}
+.progress-pill.mid{background:var(--amber)}.progress-pill.done{background:var(--teal)}
+
+/* ── Nav ────────────────────────────────────── */
+.nav{background:var(--slate-mid);padding:0 32px;display:flex;gap:4px;border-bottom:2px solid var(--slate)}
+.nav a{display:inline-block;padding:11px 16px;font-size:14px;font-weight:500;color:rgba(255,255,255,0.65);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.15s;cursor:pointer}
+.nav a:hover{color:white}
+.nav a.active{color:var(--amber);font-weight:600;border-bottom-color:var(--amber)}
+@media(max-width:680px){.nav{padding:0 16px;overflow-x:auto}}
+
+/* ── Layout ─────────────────────────────────── */
+.container{max-width:1080px;margin:32px auto;padding:0 24px}
+.page{display:none}.page.active{display:block}
+
+/* ── Cards ──────────────────────────────────── */
+.card{background:var(--white);padding:24px;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:20px;border:1px solid rgba(28,43,56,0.06)}
+.card.accent-slate{border-left:4px solid var(--slate)}
+.card.accent-amber{border-left:4px solid var(--amber)}
+.card.accent-teal{border-left:4px solid var(--teal)}
+.card.accent-rust{border-left:4px solid var(--rust)}
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:20px}
+.card-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+@media(max-width:680px){.card-grid,.card-grid-3{grid-template-columns:1fr}h1{font-size:1.9rem}.header{flex-direction:column;align-items:flex-start;gap:10px}.container{padding:0 14px;margin:20px auto}}
+
+/* ── Buttons ────────────────────────────────── */
+.btn{display:inline-block;padding:10px 20px;border-radius:var(--radius-sm);border:none;cursor:pointer;font-family:'DM Sans',inherit;font-size:14px;font-weight:600;margin-top:14px;transition:all 0.15s}
+.btn-primary{background:var(--slate);color:white}.btn-primary:hover{background:var(--slate-mid)}
+.btn-amber{background:var(--amber);color:white}.btn-amber:hover{background:#a87622}
+.btn-teal{background:var(--teal);color:white}.btn-teal:hover{background:#145a4c}
+.btn-outline{background:transparent;color:var(--slate);border:1.5px solid var(--slate)}.btn-outline:hover{background:var(--slate-lt)}
+.btn-sm{padding:7px 14px;font-size:13px;margin-top:10px}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+
+/* ── Badges ─────────────────────────────────── */
+.badge{display:inline-block;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:10px}
+.badge-slate{background:var(--slate);color:white}
+.badge-amber{background:var(--amber-lt);color:#7A5010}
+.badge-teal{background:var(--teal-lt);color:var(--teal)}
+.badge-parchment{background:var(--parchment);color:var(--text-mid)}
+
+/* ── Section label ──────────────────────────── */
+.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-lt);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--parchment)}
+
+/* ── Hero ───────────────────────────────────── */
+.hero-card{background:var(--slate);border-radius:var(--radius);padding:44px 40px;margin-bottom:20px;position:relative;overflow:hidden;border-bottom:4px solid var(--amber)}
+.hero-card::before{content:'';position:absolute;right:-20px;top:-20px;width:260px;height:260px;background:rgba(192,137,42,0.08);border-radius:50%}
+.hero-card::after{content:'';position:absolute;left:-30px;bottom:-40px;width:200px;height:200px;background:rgba(192,137,42,0.05);border-radius:50%}
+.hero-lines{position:absolute;inset:0;opacity:0.03;background:repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,1) 59px,rgba(255,255,255,1) 60px)}
+.hero-card h1{color:white;font-size:2.6rem;margin-bottom:14px;position:relative;z-index:1;line-height:1.1}
+.hero-card h1 em{color:var(--amber);font-style:italic}
+.hero-card > p{color:rgba(255,255,255,0.68);font-size:17px;max-width:520px;margin-bottom:22px;position:relative;z-index:1;font-family:'Libre Baskerville',serif;font-style:italic}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;position:relative;z-index:1}
+.hero-btn{padding:11px 22px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',inherit;transition:all 0.15s}
+.hero-btn-primary{background:var(--amber);color:white}.hero-btn-primary:hover{background:#a87622}
+.hero-btn-ghost{background:rgba(255,255,255,0.1);color:white;border:1.5px solid rgba(255,255,255,0.25)}.hero-btn-ghost:hover{background:rgba(255,255,255,0.18)}
+.hero-meta{margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,0.1);position:relative;z-index:1}
+.r-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.r-label-row span{font-size:13px;color:rgba(255,255,255,0.55)}
+.r-label-row strong{font-size:18px;color:white}
+.r-bar{width:100%;height:8px;background:rgba(255,255,255,0.1);border-radius:8px;overflow:hidden}
+.r-fill{height:100%;background:var(--amber);border-radius:8px;transition:width 0.6s ease}
+.r-sub{margin-top:7px;font-size:12px;color:rgba(255,255,255,0.4)}
+
+/* ── Today card ─────────────────────────────── */
+.today-step{background:var(--slate-pale);border-radius:var(--radius-sm);padding:14px 18px;font-size:13px;color:var(--text-mid);margin-top:14px;border-left:3px solid var(--amber)}
+.today-step strong{color:var(--text-dark);display:block;margin-bottom:2px}
+
+/* ── Steps ──────────────────────────────────── */
+.steps-track{list-style:none;display:flex;flex-direction:column;gap:0}
+.step-item{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--cream)}
+.step-item:last-child{border-bottom:none}
+.step-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.step-dot.done{background:var(--teal);color:white}
+.step-dot.active{background:var(--amber);color:white}
+.step-dot.todo{background:var(--parchment);color:var(--text-mid)}
+.step-text{font-size:14px;font-weight:500}
+.step-text.done{color:var(--teal)}.step-text.active{color:var(--amber);font-weight:600}.step-text.todo{color:var(--text-mid)}
+.step-sub{font-size:11px;color:var(--text-lt);margin-left:auto;white-space:nowrap}
+
+/* ── Asset type cards ───────────────────────── */
+.asset-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
+.asset-card{border:2px solid var(--parchment);border-radius:var(--radius);padding:18px;cursor:pointer;transition:all 0.15s;background:var(--white);text-align:center}
+.asset-card:hover{border-color:var(--amber);background:var(--amber-lt)}
+.asset-card.selected{border-color:var(--amber);background:var(--amber-lt);border-width:2px}
+.asset-icon{font-size:28px;margin-bottom:8px;display:block}
+.asset-name{font-size:14px;font-weight:600;color:var(--text-dark);display:block;margin-bottom:3px}
+.asset-desc{font-size:12px;color:var(--text-mid);line-height:1.4}
+
+/* ── Readiness bar ──────────────────────────── */
+.r-bar-lg{width:100%;height:12px;background:var(--parchment);border-radius:8px;overflow:hidden;margin:10px 0 6px}
+.r-fill-lg{height:100%;background:var(--amber);border-radius:8px;transition:width 0.5s ease}
+
+/* ── Accordion ──────────────────────────────── */
+.accord{border:1.5px solid var(--parchment);border-radius:var(--radius);margin-bottom:14px;overflow:hidden;transition:border-color 0.2s;background:var(--white)}
+.accord.open{border-color:var(--amber)}
+.accord.locked{opacity:0.5}
+.accord-hdr{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;background:var(--white);user-select:none}
+.accord-hdr:hover{background:var(--slate-pale)}
+.accord.locked .accord-hdr{cursor:default}
+.accord-icon{font-size:20px;flex-shrink:0}
+.accord-title{font-size:16px;font-weight:600;color:var(--text-dark);flex:1;font-family:'Libre Baskerville',serif}
+.accord-status{font-size:12px;color:var(--text-lt);white-space:nowrap;margin-right:6px}
+.accord-chevron{font-size:16px;color:var(--text-lt);transition:transform 0.2s;flex-shrink:0}
+.accord.open .accord-chevron{transform:rotate(180deg)}
+.accord-body{display:none;padding:0 20px 20px;background:var(--white)}
+.accord.open .accord-body{display:block}
+.accord-intro{font-size:13px;color:var(--text-mid);margin-bottom:16px;line-height:1.7;padding-top:4px}
+
+/* ── Checklist ──────────────────────────────── */
+.check-list{list-style:none;margin-top:4px}
+.check-item{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--cream)}
+.check-item:last-child{border-bottom:none}
+.check-box{width:22px;height:22px;border-radius:4px;border:2px solid var(--parchment);background:white;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;margin-top:1px}
+.check-box.checked{background:var(--teal);border-color:var(--teal)}
+.check-box.checked::after{content:'✓';color:white;font-size:13px;font-weight:700}
+.check-label{flex:1}
+.check-label strong{font-size:14px;font-weight:600;color:var(--text-dark);display:block;margin-bottom:2px;cursor:pointer}
+.check-label strong.done-txt{color:var(--text-lt);text-decoration:line-through;font-weight:400}
+.check-label span{font-size:12px;color:var(--text-mid);line-height:1.5}
+.check-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--parchment);color:var(--text-mid);flex-shrink:0;margin-top:3px}
+.check-tag.required{background:var(--rust-lt);color:var(--rust)}
+.check-tag.texas{background:var(--amber-lt);color:#7A5010}
+
+/* ── Section CTA ────────────────────────────── */
+.section-cta{background:var(--teal-lt);border:1.5px solid var(--teal);border-radius:var(--radius-sm);padding:16px 20px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.section-cta p{font-size:13px;color:var(--teal);font-weight:500;margin:0}
+.section-cta button{margin-top:0;padding:8px 16px;font-size:13px}
+
+/* ── Price list ─────────────────────────────── */
+.price-list{list-style:none}
+.price-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--cream);font-size:14px}
+.price-item:last-child{border-bottom:none}
+.price-name{flex:1;font-weight:500;color:var(--text-dark)}
+.price-sub{font-size:12px;color:var(--text-lt);font-weight:400}
+.price-val{font-weight:600;color:var(--amber);min-width:80px;text-align:right}
+.price-flag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;flex-shrink:0}
+.flag-ok{background:var(--teal-lt);color:var(--teal)}
+.flag-passive{background:var(--amber-lt);color:#7A5010}
+.flag-warn{background:var(--rust-lt);color:var(--rust)}
+
+/* ── Stat row ───────────────────────────────── */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.stat-box{background:var(--cream);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--parchment)}
+.stat-val{font-size:22px;font-weight:700;font-family:'Libre Baskerville',Georgia,serif;display:block;margin-bottom:3px}
+.stat-lbl{font-size:11px;color:var(--text-lt);font-weight:500;text-transform:uppercase;letter-spacing:0.05em}
+.stat-val.amber{color:var(--amber)}.stat-val.teal{color:var(--teal)}.stat-val.alert{color:var(--rust)}
+@media(max-width:500px){.stat-row{grid-template-columns:1fr 1fr}}
+
+/* ── Ramp ───────────────────────────────────── */
+.ramp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.ramp-col{background:var(--cream);border-radius:var(--radius-sm);padding:16px;text-align:center;border:1px solid var(--parchment)}
+.ramp-col.active{background:var(--teal-lt);border:2px solid var(--teal)}
+.ramp-month{font-size:11px;color:var(--text-mid);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em}
+.ramp-profit{font-size:20px;font-weight:700;display:block;margin-bottom:4px;font-family:'Libre Baskerville',serif}
+.ramp-pct{font-size:11px;color:var(--text-lt)}
+@media(max-width:600px){.ramp-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ── Tenants ─────────────────────────────────── */
+.tenant-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--cream)}
+.tenant-row:last-child{border-bottom:none}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.tenant-name{font-size:14px;font-weight:600;color:var(--text-dark)}
+.tenant-detail{font-size:12px;color:var(--text-mid)}
+.tenant-note{font-size:12px;color:var(--text-lt);margin-left:auto}
+
+/* ── Tax dates ──────────────────────────────── */
+.tax-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--cream);font-size:14px}
+.tax-row:last-child{border-bottom:none}
+.tax-q{font-weight:600;color:var(--text-dark)}
+.tax-due{color:var(--rust);font-weight:600;font-size:13px}
+
+/* ── Guide ──────────────────────────────────── */
+.guide-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--cream);cursor:pointer;transition:background 0.1s;border-radius:var(--radius-sm)}
+.guide-row:last-child{border-bottom:none}
+.guide-icon{width:40px;height:40px;background:var(--slate-lt);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.guide-title{font-size:14px;font-weight:600;color:var(--text-dark);margin-bottom:2px}
+.guide-sub{font-size:12px;color:var(--text-mid)}
+.guide-arrow{font-size:16px;color:var(--text-lt);margin-left:auto;flex-shrink:0}
+
+/* ── Tips ───────────────────────────────────── */
+.tip{background:var(--amber-lt);border-left:4px solid var(--amber);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 16px;font-size:13px;color:var(--text-mid);line-height:1.6;margin-top:12px}
+.tip strong{color:var(--text-dark)}
+.tip-rust{background:var(--rust-lt);border-left-color:var(--rust)}
+.tip-teal{background:var(--teal-lt);border-left-color:var(--teal)}
+.tip-slate{background:var(--slate-lt);border-left-color:var(--slate)}
+
+/* ── Next phase ─────────────────────────────── */
+.next-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:500px){.next-grid{grid-template-columns:1fr}}
+.next-card{background:var(--cream);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--parchment)}
+.next-card h4{font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:5px;font-family:'Libre Baskerville',serif}
+.next-card p{font-size:12px;margin:0}
+
+/* ── Rate guide ─────────────────────────────── */
+.rate-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+.rate-box{padding:16px;border-radius:var(--radius-sm);text-align:center;border:1px solid var(--parchment)}
+.rate-val{font-size:18px;font-weight:700;display:block;margin-bottom:4px;font-family:'Libre Baskerville',serif}
+.rate-lbl{font-size:11px;color:var(--text-mid)}
+
+/* ── Sync ───────────────────────────────────── */
+.sync-drop-zone{border:2px dashed var(--parchment);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:4px}
+.sync-drop-zone:hover,.sync-drop-zone.drag-over{border-color:var(--amber);background:var(--amber-lt)}
+.sync-drop-zone p{font-size:13px;color:var(--text-mid);margin:0}
+.sync-drop-zone strong{display:block;font-size:15px;color:var(--text-dark);margin-bottom:6px}
+.sync-drop-icon{font-size:28px;margin-bottom:10px}
+.sync-status{display:none;padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;margin-top:10px;font-weight:500}
+.sync-status.ok{background:var(--teal-lt);color:var(--teal);display:block}
+.sync-status.err{background:var(--rust-lt);color:var(--rust);display:block}
+.sync-last{font-size:11px;color:var(--text-lt);margin-top:6px}
+.live-badge{display:inline-block;background:var(--teal);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px;vertical-align:middle}
+
+/* ── Download card ──────────────────────────── */
+.dl-card{display:flex;align-items:center;gap:16px;padding:16px;background:var(--cream);border-radius:var(--radius-sm);margin-bottom:10px;cursor:pointer;transition:background 0.15s;text-decoration:none;border:1.5px solid transparent}
+.dl-card:hover{background:var(--teal-lt);border-color:var(--teal)}
+.dl-icon{width:44px;height:44px;background:var(--slate);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.dl-info{flex:1}
+.dl-name{font-size:14px;font-weight:600;color:var(--text-dark);display:block;margin-bottom:2px}
+.dl-desc{font-size:12px;color:var(--text-mid)}
+.dl-arrow{font-size:18px;color:var(--text-lt)}
+
+/* ── Milestone ──────────────────────────────── */
+.r-milestone{text-align:center}
+.rm-dot{width:28px;height:28px;border-radius:50%;background:var(--parchment);margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-lt);transition:all 0.3s}
+.rm-dot.done{background:var(--teal);color:white}
+.rm-dot.active{background:var(--amber);color:white}
+.rm-lbl{font-size:10px;color:var(--text-lt);font-weight:500}
+.card-footer{margin-top:14px;padding-top:12px;border-top:1px solid var(--cream);font-size:12px;color:var(--text-lt)}
+</style>
+</head>
+<body>
+
+<div class="sf-nav">
+  <div class="sf-nav-logo">Sol<span>Found</span></div>
+  <div class="sf-nav-links">
+    <a href="index.html">Home</a>
+    <a href="rootpath_final.html">RootPath</a>
+    <a href="ledgerpath.html">LedgerPath</a>
+    <a href="boutiquepath.html">BoutiquePath</a>
+    <a href="rentalpath.html" class="sf-active">RentalPath</a>
+    <a href="libby.html">Libby</a>
+  </div>
+  <button class="sf-hamburger" id="sf-hamburger" aria-label="Menu" onclick="sfToggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+<div class="sf-drawer" id="sf-drawer">
+  <a href="index.html">Home</a>
+  <a href="rootpath_final.html">RootPath</a>
+  <a href="ledgerpath.html">LedgerPath</a>
+  <a href="boutiquepath.html">BoutiquePath</a>
+  <a href="rentalpath.html" class="sf-active">RentalPath</a>
+  <a href="libby.html">Libby</a>
+</div>
+<div class="sf-toast" id="sf-toast"></div>
+
+<header class="header">
+  <div class="header-left">
+    <div class="logo">Rental<span>Path</span></div>
+    <div class="tagline">Your assets. Your income. On your terms.</div>
+  </div>
+  <div class="progress-pill" id="global-pill">Ready to start</div>
+</header>
+
+<nav class="nav">
+  <a class="active" onclick="goPage('home',this)">Home</a>
+  <a onclick="goPage('readiness',this)">Readiness</a>
+  <a onclick="goPage('price',this)">Income</a>
+  <a onclick="goPage('track',this)">Track</a>
+  <a onclick="goPage('grow',this)">Grow</a>
+  <a onclick="goPage('learn',this)">Learn</a>
+</nav>
+
+<div class="container">
+
+<!-- ══ HOME ══════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <div class="hero-card">
+    <div class="hero-lines"></div>
+    <h1>What you already own<br>can <em>pay you every month.</em></h1>
+    <p>No new skills. No startup costs. No second job. RentalPath turns idle assets — a driveway, a spare room, a shed, a tool — into steady, passive income.</p>
+    <div class="hero-actions">
+      <button class="hero-btn hero-btn-primary" onclick="goPage('readiness',document.querySelector('.nav a:nth-child(2)'))">Start my readiness checklist →</button>
+      <button class="hero-btn hero-btn-ghost" onclick="goPage('price',document.querySelector('.nav a:nth-child(3)'))">See my income potential</button>
+    </div>
+    <div class="hero-meta">
+      <div class="r-label-row">
+        <span>Readiness</span>
+        <strong id="hero-pct">0% complete</strong>
+      </div>
+      <div class="r-bar"><div class="r-fill" id="hero-bar" style="width:0%"></div></div>
+      <div class="r-sub">Complete the readiness checklist to unlock each step</div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card accent-amber">
+      <div class="section-label">Your path at a glance</div>
+      <ul class="steps-track">
+        <li class="step-item"><div class="step-dot active">1</div><div class="step-text active">Identify your asset</div><div class="step-sub">Today</div></li>
+        <li class="step-item"><div class="step-dot todo">2</div><div class="step-text todo">Legal & insurance</div><div class="step-sub">This week</div></li>
+        <li class="step-item"><div class="step-dot todo">3</div><div class="step-text todo">Set your rates</div><div class="step-sub">Week 1</div></li>
+        <li class="step-item"><div class="step-dot todo">4</div><div class="step-text todo">First booking</div><div class="step-sub">Week 2–4</div></li>
+        <li class="step-item"><div class="step-dot todo">5</div><div class="step-text todo">Steady passive income</div><div class="step-sub">Month 2+</div></li>
+      </ul>
+    </div>
+    <div class="card accent-teal">
+      <div class="section-label">Why RentalPath works</div>
+      <div class="today-step" style="margin-top:0;margin-bottom:12px">
+        <strong>You already own the asset</strong>
+        No capital required. Your driveway, shed, spare room, or tool is sitting there right now — not earning anything.
+      </div>
+      <div class="today-step" style="margin-top:0;margin-bottom:12px">
+        <strong>Truly passive once set up</strong>
+        Unlike RootPath or BoutiquePath, rental income doesn't require your time every week. Set the terms, screen tenants once, collect monthly.
+      </div>
+      <div class="today-step" style="margin-top:0">
+        <strong>No middleman required</strong>
+        No Airbnb cut, no property management fees. Direct relationships with your neighbors and community.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">What kind of asset do you have?</div>
+    <div class="card-grid-3" style="margin-bottom:0">
+      <div style="background:var(--slate-pale);border-radius:var(--radius-sm);padding:14px;text-align:center;border:1px solid var(--parchment)">
+        <div style="font-size:26px;margin-bottom:6px">🏠</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:2px">Space</div>
+        <div style="font-size:11px;color:var(--text-mid)">Room, ADU, garage, driveway, storage</div>
+      </div>
+      <div style="background:var(--slate-pale);border-radius:var(--radius-sm);padding:14px;text-align:center;border:1px solid var(--parchment)">
+        <div style="font-size:26px;margin-bottom:6px">🔧</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:2px">Equipment</div>
+        <div style="font-size:11px;color:var(--text-mid)">Tools, trailer, lawn equipment, RV spot</div>
+      </div>
+      <div style="background:var(--slate-pale);border-radius:var(--radius-sm);padding:14px;text-align:center;border:1px solid var(--parchment)">
+        <div style="font-size:26px;margin-bottom:6px">🌿</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:2px">Land</div>
+        <div style="font-size:11px;color:var(--text-mid)">Backyard, lot, parking, garden plot</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card accent-amber">
+    <div class="section-label">Today's focus</div>
+    <div class="today-step" style="margin-top:0">
+      <strong>Identify your highest-value idle asset and price it</strong>
+      Download the Revenue Model → enter your asset type and market rate → check the monthly income projection. A San Antonio driveway near a stadium earns $80–200/mo with zero work. A furnished spare room earns $600–1,200/mo. Know your number before listing anything.
+    </div>
+    <button class="btn btn-amber btn-sm" onclick="goPage('readiness',document.querySelector('.nav a:nth-child(2)'))">Start readiness checklist →</button>
+  </div>
+
+</div><!-- /home -->
+
+
+<!-- ══ READINESS ══════════════════════════════════════════ -->
+<div class="page" id="page-readiness">
+
+  <div class="card accent-amber">
+    <div class="section-label">Your launch readiness</div>
+    <h2>Five steps to your first rental income.</h2>
+    <p style="margin-bottom:16px">Rental income feels passive once it's running — but the setup matters. A lease agreement and the right insurance protect everything you've built. Don't skip the legal step.</p>
+    <div class="r-bar-lg"><div class="r-fill-lg" id="r-bar-lg" style="width:0%"></div></div>
+    <div style="font-size:13px;color:var(--text-mid)" id="r-pct-lbl">0 of 5 steps complete</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px">
+      <div class="r-milestone"><div class="rm-dot active" id="m1">1</div><div class="rm-lbl">Asset</div></div>
+      <div class="r-milestone"><div class="rm-dot todo" id="m2">2</div><div class="rm-lbl">Legal</div></div>
+      <div class="r-milestone"><div class="rm-dot todo" id="m3">3</div><div class="rm-lbl">Rates</div></div>
+      <div class="r-milestone"><div class="rm-dot todo" id="m4">4</div><div class="rm-lbl">Listing</div></div>
+      <div class="r-milestone"><div class="rm-dot todo" id="m5">5</div><div class="rm-lbl">Tracker</div></div>
+    </div>
+  </div>
+
+  <div class="accord open" id="acc1">
+    <div class="accord-hdr" onclick="toggleAccord('acc1')">
+      <span class="accord-icon">🏠</span>
+      <span class="accord-title">Step 1 — Identify your asset</span>
+      <span class="accord-status" id="acc1-status">Complete to unlock Step 2</span>
+      <span class="accord-chevron">▾</span>
+    </div>
+    <div class="accord-body">
+      <p class="accord-intro">Pick your primary rental asset. You can always add more — start with the one that's easiest to list. Space rentals (parking, storage, rooms) are the lowest-friction entry point.</p>
+      <div class="asset-grid">
+        <div class="asset-card" onclick="selectAsset('space',this)">
+          <span class="asset-icon">🚗</span>
+          <span class="asset-name">Parking / Driveway</span>
+          <span class="asset-desc">$50–200/mo. Zero work after listing. Great near stadiums, downtown, hospitals.</span>
+        </div>
+        <div class="asset-card" onclick="selectAsset('storage',this)">
+          <span class="asset-icon">📦</span>
+          <span class="asset-name">Storage / Shed</span>
+          <span class="asset-desc">$60–150/mo. Demand is huge in Texas — people are always moving or downsizing.</span>
+        </div>
+        <div class="asset-card" onclick="selectAsset('room',this)">
+          <span class="asset-icon">🛏️</span>
+          <span class="asset-name">Spare Room / ADU</span>
+          <span class="asset-desc">$600–1,400/mo. Highest income, more setup. Short or long-term options.</span>
+        </div>
+        <div class="asset-card" onclick="selectAsset('equipment',this)">
+          <span class="asset-icon">🔧</span>
+          <span class="asset-name">Equipment / Tools</span>
+          <span class="asset-desc">$20–150/day. Trailers, lawn equipment, ladders. Peer-to-peer rental is growing fast.</span>
+        </div>
+      </div>
+      <ul class="check-list" id="cl-asset"></ul>
+      <div class="section-cta" id="cta1" style="display:none">
+        <p>Asset identified! Now let's protect it legally.</p>
+        <button class="btn btn-teal btn-sm" onclick="openAccord('acc2')">Set up legal protection →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="accord locked" id="acc2">
+    <div class="accord-hdr" onclick="toggleAccord('acc2')">
+      <span class="accord-icon">🏛️</span>
+      <span class="accord-title">Step 2 — Legal & insurance</span>
+      <span class="accord-status" id="acc2-status">Identify your asset first</span>
+      <span class="accord-chevron">▾</span>
+    </div>
+    <div class="accord-body">
+      <p class="accord-intro">This is the step most people skip — and the one that protects everything. A simple lease or rental agreement and a landlord rider on your homeowner's policy covers 95% of what can go wrong.</p>
+      <div class="tip tip-rust" style="margin-bottom:16px"><strong>Texas-specific:</strong> San Antonio and most Texas cities require a city registration for STRs (short-term rentals). It's usually $50–150/year and takes 30 minutes online. Skip it and you risk a $500+ fine.</div>
+      <ul class="check-list" id="cl-legal"></ul>
+      <div class="section-cta" id="cta2" style="display:none">
+        <p>Legal covered! Now price your asset correctly.</p>
+        <button class="btn btn-teal btn-sm" onclick="openAccord('acc3')">Set my rates →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="accord locked" id="acc3">
+    <div class="accord-hdr" onclick="toggleAccord('acc3')">
+      <span class="accord-icon">💰</span>
+      <span class="accord-title">Step 3 — Price your asset</span>
+      <span class="accord-status" id="acc3-status">Complete legal first</span>
+      <span class="accord-chevron">▾</span>
+    </div>
+    <div class="accord-body">
+      <p class="accord-intro">Check what comparable listings charge in your specific neighborhood — not just the city average. A driveway two blocks from the AT&T Center earns 3× more than one six blocks away.</p>
+      <ul class="check-list" id="cl-rates"></ul>
+      <div class="section-cta" id="cta3" style="display:none">
+        <p>Rates set! Now build your listing.</p>
+        <button class="btn btn-teal btn-sm" onclick="openAccord('acc4')">Build my listing →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="accord locked" id="acc4">
+    <div class="accord-hdr" onclick="toggleAccord('acc4')">
+      <span class="accord-icon">📋</span>
+      <span class="accord-title">Step 4 — Build your listing</span>
+      <span class="accord-status" id="acc4-status">Complete pricing first</span>
+      <span class="accord-chevron">▾</span>
+    </div>
+    <div class="accord-body">
+      <p class="accord-intro">A good photo and a clear description is 80% of the work. Be specific about access, rules, and what's included. Renters want certainty — give it to them upfront.</p>
+      <ul class="check-list" id="cl-listing"></ul>
+      <div class="section-cta" id="cta4" style="display:none">
+        <p>Listing ready! Set up your tracker before the first payment arrives.</p>
+        <button class="btn btn-teal btn-sm" onclick="openAccord('acc5')">Set up my tracker →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="accord locked" id="acc5">
+    <div class="accord-hdr" onclick="toggleAccord('acc5')">
+      <span class="accord-icon">📊</span>
+      <span class="accord-title">Step 5 — Set up your tracker</span>
+      <span class="accord-status" id="acc5-status">Complete listing first</span>
+      <span class="accord-chevron">▾</span>
+    </div>
+    <div class="accord-body">
+      <p class="accord-intro">Rental income is Schedule E (passive) not Schedule C — taxed differently than other income. Track it separately from day one so your tax prep is clean.</p>
+      <ul class="check-list" id="cl-tracker"></ul>
+      <div class="section-cta" id="cta5" style="display:none">
+        <p>🎉 You're ready. Go list your asset — your first renter is out there.</p>
+        <button class="btn btn-teal btn-sm" onclick="goPage('grow',null)">See my growth plan →</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /readiness -->
+
+
+<!-- ══ INCOME ═════════════════════════════════════════════ -->
+<div class="page" id="page-price">
+
+  <div class="card accent-amber">
+    <div class="section-label">Your income potential <span class="live-badge" id="sync-live-badge" style="display:none">LIVE</span></div>
+    <h2>Know what your asset is worth.</h2>
+    <p style="margin-bottom:16px">These are real San Antonio market rates — not national averages. Your numbers depend on your specific location, condition, and how you list it. Download the Revenue Model to calculate yours.</p>
+    <div class="stat-row">
+      <div class="stat-box"><span class="stat-val amber" id="stat-weekly-rev">$640</span><div class="stat-lbl">Monthly income</div></div>
+      <div class="stat-box"><span class="stat-val" id="stat-eff-hr">$7,680</span><div class="stat-lbl">Annual income</div></div>
+      <div class="stat-box"><span class="stat-val teal" id="stat-gap">+$240</span><div class="stat-lbl">Above goal</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px">
+      <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--parchment)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Your wage</div><div style="font-size:14px;font-weight:600;color:var(--text-dark)" id="inputs-wage">$30/hr</div></div>
+      <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--parchment)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Markup</div><div style="font-size:14px;font-weight:600;color:var(--text-dark)" id="inputs-markup">1.7×</div></div>
+      <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--parchment)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Monthly goal</div><div style="font-size:14px;font-weight:600;color:var(--text-dark)" id="inputs-goal">$400/mo</div></div>
+      <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--parchment)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Overhead</div><div style="font-size:14px;font-weight:600;color:var(--text-dark)" id="inputs-oh">$260/mo</div></div>
+    </div>
+    <div class="card-footer" id="sync-last-price">Sample numbers shown — sync your Revenue Model below to see your real data</div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">San Antonio market rates — what assets actually earn</div>
+    <ul class="price-list" id="price-product-list">
+      <li class="price-item"><div class="price-name">Driveway / parking spot <span class="price-sub">Near AT&T Center or downtown</span></div><div class="price-val">$80–200/mo</div><div class="price-flag flag-passive">Passive</div></li>
+      <li class="price-item"><div class="price-name">Driveway / parking spot <span class="price-sub">Suburban, general use</span></div><div class="price-val">$40–80/mo</div><div class="price-flag flag-passive">Passive</div></li>
+      <li class="price-item"><div class="price-name">Storage / shed space <span class="price-sub">Per unit, secured access</span></div><div class="price-val">$60–150/mo</div><div class="price-flag flag-passive">Passive</div></li>
+      <li class="price-item"><div class="price-name">Spare room — long-term <span class="price-sub">Furnished, utilities included</span></div><div class="price-val">$700–1,100/mo</div><div class="price-flag flag-ok">Strong</div></li>
+      <li class="price-item"><div class="price-name">ADU / garage apartment <span class="price-sub">Long-term furnished</span></div><div class="price-val">$900–1,400/mo</div><div class="price-flag flag-ok">Strong</div></li>
+      <li class="price-item"><div class="price-name">Short-term rental (STR) <span class="price-sub">Nightly, furnished + managed</span></div><div class="price-val">$65–150/night</div><div class="price-flag flag-ok">Strong</div></li>
+      <li class="price-item"><div class="price-name">Tool / equipment rental <span class="price-sub">Trailer, mower, ladder etc.</span></div><div class="price-val">$25–150/day</div><div class="price-flag flag-passive">Passive</div></li>
+      <li class="price-item"><div class="price-name">Washer / dryer access <span class="price-sub">Per load or monthly</span></div><div class="price-val">$6–30/use</div><div class="price-flag flag-passive">Passive</div></li>
+    </ul>
+    <div class="tip tip-rust" style="margin-top:14px"><strong>STR vs long-term:</strong> Short-term rentals earn more per night but require more management — cleaning, turnovers, guest comms. Long-term rentals are truly passive after screening. Start long-term, add STR later if you want to.</div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Your Revenue Model</div>
+    <div style="background:var(--cream);border-radius:8px;padding:18px 20px;margin-bottom:16px;border:1px solid rgba(0,0,0,0.06)">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-lt);margin-bottom:14px">How it works — 3 steps</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:14px;font-size:13px">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--amber);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0">1</div>
+          <div><strong style="color:var(--text-dark)">Download the template</strong> — open in Excel or Google Sheets<br><a href="RentalPath_Revenue_Model.xlsx" download style="font-size:12px;color:var(--amber);font-weight:600;text-decoration:none">↓ RentalPath Revenue Model</a></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;font-size:13px">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--amber);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0">2</div>
+          <div><strong style="color:var(--text-dark)">Enter your assets and market rates</strong> — gold cells only. Each asset type has a suggested market rate to start from.</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;font-size:13px">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--amber);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0">3</div>
+          <div><strong style="color:var(--text-dark)">Drop it below</strong> — your monthly income projection updates live across the dashboard.</div>
+        </div>
+      </div>
+    </div>
+    <div class="sync-drop-zone" id="drop-zone-price"
+         onclick="document.getElementById('sync-file-input-price').click()"
+         ondragover="event.preventDefault();this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')"
+         ondrop="window.handleDrop(event)">
+      <div class="sync-drop-icon">📊</div>
+      <strong id="drop-title-price">Drop your filled Revenue Model here</strong>
+      <p>or click to browse · <em>RentalPath_Revenue_Model.xlsx</em></p>
+      <input type="file" id="sync-file-input-price" accept=".xlsx,.xls" style="display:none" onchange="window.handleFileUpload(event)">
+    </div>
+    <div class="sync-status" id="sync-status-price"></div>
+    <p class="sync-last" id="sync-last-price2"></p>
+  </div>
+
+</div><!-- /price -->
+
+
+<!-- ══ TRACK ══════════════════════════════════════════════ -->
+<div class="page" id="page-track">
+
+  <div class="card accent-amber">
+    <div class="section-label">Monthly snapshot — <span id="track-month-label">this month</span></div>
+    <h2>Rental income tracked. Taxes ready.</h2>
+    <p style="margin-bottom:16px">Rental income is Schedule E — taxed differently than earned income. Track it separately from day one. Your Money Tracker handles the categorization automatically.</p>
+    <div class="stat-row">
+      <div class="stat-box"><span class="stat-val teal" id="stat-track-income">$0</span><div class="stat-lbl">Income</div></div>
+      <div class="stat-box"><span class="stat-val alert" id="stat-track-expenses">$0</span><div class="stat-lbl">Expenses</div></div>
+      <div class="stat-box"><span class="stat-val" id="stat-track-profit">$0</span><div class="stat-lbl">Net</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-amber btn-sm">Log rent received →</button>
+      <button class="btn btn-outline btn-sm">Log an expense →</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Open your money tracker</div>
+    <a class="dl-card" href="RentalPath_Money_Tracker.xlsx" download>
+      <div class="dl-icon">💰</div>
+      <div class="dl-info"><span class="dl-name">RentalPath Money Tracker</span><span class="dl-desc">Income · Expenses · Tax reserve · Quarterly estimates · Tenants</span></div>
+      <span class="dl-arrow">↓</span>
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Sync your tracker <span class="live-badge" id="sync-live-badge-track" style="display:none">LIVE</span></div>
+    <p style="font-size:13px;color:var(--text-mid);margin-bottom:16px">Drop your Money Tracker here and your monthly numbers update instantly.</p>
+    <div class="sync-drop-zone" id="drop-zone-track"
+         onclick="document.getElementById('sync-file-input-track').click()"
+         ondragover="event.preventDefault();this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')"
+         ondrop="window.handleTrackerDrop(event)">
+      <div class="sync-drop-icon">💰</div>
+      <strong id="drop-title-track">Drop your Money Tracker here</strong>
+      <p>or click to browse · <em>RentalPath_Money_Tracker.xlsx</em></p>
+      <input type="file" id="sync-file-input-track" accept=".xlsx,.xls" style="display:none" onchange="window.handleTrackerUpload(event)">
+    </div>
+    <div class="sync-status" id="sync-status-tracker"></div>
+    <p class="sync-last" id="sync-last-tracker"></p>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="section-label">Quarterly tax dates</div>
+      <div class="tax-row"><span class="tax-q">Q1 (Jan–Mar)</span><span class="tax-due">Apr 15</span></div>
+      <div class="tax-row"><span class="tax-q">Q2 (Apr–Jun)</span><span class="tax-due">Jun 15</span></div>
+      <div class="tax-row"><span class="tax-q">Q3 (Jul–Sep)</span><span class="tax-due">Sep 15</span></div>
+      <div class="tax-row"><span class="tax-q">Q4 (Oct–Dec)</span><span class="tax-due">Jan 15</span></div>
+      <div class="tip" style="margin-top:12px"><strong>Schedule E reminder:</strong> Rental income goes on Schedule E, not Schedule C. Your deductions include mortgage interest, insurance, repairs, depreciation, and management costs.</div>
+    </div>
+    <div class="card">
+      <div class="section-label">The rental income rule</div>
+      <h3 style="font-size:1.1rem;margin-bottom:10px">"Separate account. 25% to tax reserve. Every payment."</h3>
+      <p style="font-size:13px">Rental income has favorable tax treatment but still gets taxed. Keep it in a dedicated account, reserve 25% for taxes, and track every repair and upgrade — they're all deductible.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px">
+        <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--parchment)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">YTD Income</div><div style="font-size:14px;font-weight:600;color:var(--teal)" id="annual-income-total">—</div></div>
+        <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--parchment)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">YTD Net</div><div style="font-size:14px;font-weight:600;color:var(--text-dark)" id="annual-profit-total">—</div></div>
+        <div style="background:var(--cream);border-radius:5px;padding:10px;text-align:center;border:1px solid var(--parchment)"><div style="font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Tax reserve</div><div style="font-size:14px;font-weight:600;color:var(--rust)" id="annual-taxreserve">—</div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /track -->
+
+
+<!-- ══ GROW ═══════════════════════════════════════════════ -->
+<div class="page" id="page-grow">
+
+  <div class="card accent-amber">
+    <div class="section-label">Income ramp — your first 4 months</div>
+    <h2>Rental income is slow to start, stable forever.</h2>
+    <p style="margin-bottom:16px">The ramp is different from active businesses. Month 1 you're setting up and screening. Month 2 you have your first renter. Month 3+ it just runs.</p>
+    <div class="ramp-grid">
+      <div class="ramp-col" id="ramp-m1"><div class="ramp-month">Month 1</div><span class="ramp-profit" style="color:var(--rust)">$0</span><div class="ramp-pct">Setup + listing</div></div>
+      <div class="ramp-col" id="ramp-m2"><div class="ramp-month">Month 2</div><span class="ramp-profit" style="color:var(--amber)">$400</span><div class="ramp-pct">First renter</div></div>
+      <div class="ramp-col active" id="ramp-m3"><div class="ramp-month">Month 3</div><span class="ramp-profit" style="color:var(--teal)">$640</span><div class="ramp-pct">Full occupancy</div></div>
+      <div class="ramp-col" id="ramp-m4"><div class="ramp-month">Month 4+</div><span class="ramp-profit" style="color:var(--teal)">$640+</span><div class="ramp-pct">Passive & steady</div></div>
+    </div>
+    <div class="tip tip-teal"><strong>The real magic starts Month 3.</strong> Once you have a reliable renter in place, this income requires almost no time. One check-in per month, one deposit per month. That's it.</div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="section-label">Your renters</div>
+      <p style="font-size:13px;margin-bottom:14px">Reliable, long-term renters are worth more than a slightly higher rate. Screen well once — save yourself a year of headaches.</p>
+      <div id="tenant-list-live">
+        <div class="tenant-row">
+          <div class="avatar" style="background:var(--slate-lt);color:var(--slate)">MR</div>
+          <div><div class="tenant-name">Marcus R.</div><div class="tenant-detail">Parking spot · $95/mo</div></div>
+          <div class="tenant-note">Month 3</div>
+        </div>
+        <div class="tenant-row">
+          <div class="avatar" style="background:var(--amber-lt);color:var(--amber)">JL</div>
+          <div><div class="tenant-name">James L.</div><div class="tenant-detail">Storage · $80/mo</div></div>
+          <div class="tenant-note">New</div>
+        </div>
+        <div class="tenant-row" style="opacity:0.4">
+          <div class="avatar" style="background:var(--parchment);color:var(--text-lt)">+</div>
+          <div><div class="tenant-name" style="color:var(--text-lt)">Add your first renter</div></div>
+        </div>
+      </div>
+      <a class="dl-card" href="RentalPath_Money_Tracker.xlsx" download style="margin-top:14px">
+        <div class="dl-icon" style="width:36px;height:36px;font-size:16px">👥</div>
+        <div class="dl-info"><span class="dl-name" style="font-size:13px">Open tenant tracker</span><span class="dl-desc">Inside Money Tracker → Tenant Tracker tab</span></div>
+        <span class="dl-arrow">↓</span>
+      </a>
+    </div>
+    <div class="card">
+      <div class="section-label">Next-phase opportunities</div>
+      <div class="next-grid">
+        <div class="next-card"><h4>Add a second asset</h4><p>Once your first rental runs smoothly, listing a second asset takes 2 hours. Two parking spots = 2× the income, zero extra work.</p></div>
+        <div class="next-card"><h4>STR upgrade</h4><p>Convert long-term to short-term when demand warrants it. SA events — Spurs games, Fiesta, SXSW overflow — spike nightly rates dramatically.</p></div>
+        <div class="next-card"><h4>ADU build-out</h4><p>San Antonio ADU permits are relatively simple. A converted garage can generate $900–1,200/mo and increase property value by $40–80K.</p></div>
+        <div class="next-card"><h4>Peer-to-peer tools</h4><p>List on Neighbor.com (storage), SpotHero (parking), or Fat Llama (equipment) for additional discovery alongside your direct listings.</p></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /grow -->
+
+
+<!-- ══ LEARN ═══════════════════════════════════════════════ -->
+<div class="page" id="page-learn">
+
+  <div class="card accent-amber">
+    <div class="section-label">Skills for landlords</div>
+    <h2>The short list. Learn these, ignore the rest.</h2>
+    <p>Rental income is simple once you understand the legal layer. These five topics cover 95% of what you need.</p>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Core knowledge</div>
+    <div class="guide-row" onclick="this.style.background='var(--slate-pale)'">
+      <div class="guide-icon">📝</div>
+      <div><div class="guide-title">Texas lease agreements</div><div class="guide-sub">Texas law favors landlords but requires specific disclosures. Use a Texas-specific template — not a generic one. Texas State Law Library has free templates.</div></div>
+      <div class="guide-arrow">→</div>
+    </div>
+    <div class="guide-row" onclick="this.style.background='var(--slate-pale)'">
+      <div class="guide-icon">🔍</div>
+      <div><div class="guide-title">Tenant screening basics</div><div class="guide-sub">ID verification, income check (3× rent), and a reference call. For storage/parking, a simple agreement and a security deposit is enough.</div></div>
+      <div class="guide-arrow">→</div>
+    </div>
+    <div class="guide-row" onclick="this.style.background='var(--slate-pale)'">
+      <div class="guide-icon">🛡️</div>
+      <div><div class="guide-title">Landlord insurance in Texas</div><div class="guide-sub">Add a "landlord rider" or "dwelling fire policy" to your homeowner's insurance. Usually $15–40/mo. Covers liability and property damage from tenants.</div></div>
+      <div class="guide-arrow">→</div>
+    </div>
+    <div class="guide-row" onclick="this.style.background='var(--slate-pale)'">
+      <div class="guide-icon">🏛️</div>
+      <div><div class="guide-title">San Antonio STR registration</div><div class="guide-sub">Required for any rental under 30 days. Register at sanantonio.gov. $50–150/year. Required before your first STR booking.</div></div>
+      <div class="guide-arrow">→</div>
+    </div>
+    <div class="guide-row" onclick="this.style.background='var(--slate-pale)'">
+      <div class="guide-icon">💸</div>
+      <div><div class="guide-title">Schedule E vs Schedule C</div><div class="guide-sub">Rental income = Schedule E (passive). More favorable tax treatment than earned income. Track repairs, depreciation, insurance, and mortgage interest — all deductible.</div></div>
+      <div class="guide-arrow">→</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Your RentalPath toolbox</div>
+    <a class="dl-card" href="RentalPath_Revenue_Model.xlsx" download>
+      <div class="dl-icon">📊</div>
+      <div class="dl-info"><span class="dl-name">Revenue Model</span><span class="dl-desc">Assets · Market rates · Income projections · Ramp-Up</span></div>
+      <span class="dl-arrow">↓</span>
+    </a>
+    <a class="dl-card" href="RentalPath_Money_Tracker.xlsx" download>
+      <div class="dl-icon">💰</div>
+      <div class="dl-info"><span class="dl-name">Money Tracker</span><span class="dl-desc">Rent income · Expenses · Tax reserve · Tenants</span></div>
+      <span class="dl-arrow">↓</span>
+    </a>
+  </div>
+
+</div><!-- /learn -->
+
+</div><!-- /container -->
+
+<script>
+const LISTS = {
+  asset: [
+    {id:'a1',text:'Primary rental asset identified',detail:'Pick the one with highest income potential and lowest setup friction. Parking first if you have it.',tag:'Asset',req:true},
+    {id:'a2',text:'Asset condition assessed — ready to rent as-is?',detail:'Parking: just needs to be clear. Storage: clean and dry. Room: clean, furnished or unfurnished decision made.',tag:'Asset',req:true},
+    {id:'a3',text:'Comparable listings researched in your specific neighborhood',detail:'Check Craigslist, Neighbor.com, SpotHero, Facebook Marketplace, and Zillow for your exact zip code.',tag:'Research',req:true},
+    {id:'a4',text:'Monthly income target set',detail:'What would make this worth doing? $200/mo changes the game for most people.',tag:'Goal',req:true},
+  ],
+  legal: [
+    {id:'l1',text:'Rental agreement or lease template sourced',detail:'Texas-specific template only. Texas State Law Library (tsl.texas.gov) has free ones. For parking/storage, a 1-page agreement is fine.',tag:'Legal',req:true},
+    {id:'l2',text:'Homeowner or renter insurance updated',detail:'Call your insurer — add a landlord rider or confirm your policy covers rental activity. Usually $15–40/mo.',tag:'Insurance',req:true},
+    {id:'l3',text:'San Antonio STR registration checked (if short-term)',detail:'Only required for rentals under 30 days. Register at sanantonio.gov. Skip if long-term only.',tag:'Texas',req:false},
+    {id:'l4',text:'Security deposit amount decided',detail:'Texas law allows up to 2 months rent as security deposit. Parking/storage: $50–100. Room: 1 month rent.',tag:'Legal',req:true},
+    {id:'l5',text:'EIN obtained and separate bank account opened',detail:'Free at irs.gov/ein. Keep rental income completely separate from personal accounts.',tag:'Finance',req:true},
+  ],
+  rates: [
+    {id:'r1',text:'Revenue Model downloaded and opened',detail:'Download from the Income tab. Enter your asset type and local market rates.',tag:'Tool',req:true},
+    {id:'r2',text:'Market rate entered for your asset',detail:'Use the rate you found in comparable listings — not the national average. Yours depends on exact location.',tag:'Pricing',req:true},
+    {id:'r3',text:'Monthly income projection reviewed',detail:'Check the Projections tab. Does it hit your goal? If not, consider adding a second asset or adjusting the rate.',tag:'Review',req:true},
+    {id:'r4',text:'Seasonal pricing considered (if STR)',detail:'SA events spike demand: Spurs playoffs, Fiesta (April), Rodeo (Feb), SXSW overflow (March). Raise rates 2–3× during these.',tag:'Pricing',req:false},
+  ],
+  listing: [
+    {id:'li1',text:'Photos taken — at least 3 clear shots',detail:'Daylight, clean space. For parking: show access and dimensions. For rooms: show every angle. Phone camera is fine.',tag:'Photos',req:true},
+    {id:'li2',text:'Listing description written',detail:'Be specific: dimensions, access hours, rules, what\'s included. Renters hate surprises — prevent them upfront.',tag:'Listing',req:true},
+    {id:'li3',text:'Listing posted (Craigslist, Nextdoor, Facebook, or platform)',detail:'Craigslist still works well for local storage and parking. Nextdoor for neighbors. Neighbor.com for storage specifically.',tag:'Launch',req:true},
+    {id:'li4',text:'Response template ready for inquiries',detail:'A quick "thanks for your interest — here are the details and next steps" message. Saves time, looks professional.',tag:'Setup',req:false},
+  ],
+  tracker: [
+    {id:'t1',text:'Money Tracker downloaded and set up',detail:'Download from the Track tab. Rental income goes in Income Log, repairs and insurance go in Expense Log.',tag:'Tool',req:true},
+    {id:'t2',text:'25% tax reserve account created',detail:'Name a savings account "Rental Tax Reserve." Move 25% of every rent payment there immediately.',tag:'Finance',req:true},
+    {id:'t3',text:'Rent payment method decided',detail:'Zelle or Venmo Business for direct. Or cash with a written receipt. Never verbal-only.',tag:'Setup',req:true},
+    {id:'t4',text:'Maintenance log started',detail:'Every repair, no matter how small, is a tax deduction. A note in your phone is enough to start.',tag:'Tax',req:false},
+  ],
+};
+
+const ACCORD_MAP = ['acc1','acc2','acc3','acc4','acc5'];
+const LIST_KEYS  = ['asset','legal','rates','listing','tracker'];
+const CTA_IDS    = ['cta1','cta2','cta3','cta4','cta5'];
+const MILESTONE  = ['m1','m2','m3','m4','m5'];
+
+let state = JSON.parse(localStorage.getItem('rpath_state')||'{}');
+function saveState(){ localStorage.setItem('rpath_state',JSON.stringify(state)); }
+
+function renderLists(){
+  LIST_KEYS.forEach((key,i) => {
+    const ul = document.getElementById('cl-'+key); if(!ul) return;
+    ul.innerHTML = '';
+    LISTS[key].forEach(item => {
+      const checked = state[item.id];
+      const li = document.createElement('li'); li.className='check-item';
+      li.innerHTML=`<div class="check-box${checked?' checked':''}" onclick="toggle('${item.id}',this)"></div><div class="check-label"><strong class="${checked?'done-txt':''}" onclick="toggle('${item.id}',this.previousElementSibling)">${item.text}</strong><span>${item.detail}</span></div><div class="check-tag${item.req?' required':' '}">${item.tag}</div>`;
+      ul.appendChild(li);
+    });
+  });
+  updateProgress();
+}
+
+function toggle(id, box){
+  state[id] = !state[id];
+  saveState();
+  box.classList.toggle('checked', state[id]);
+  const lbl = box.closest('.check-item').querySelector('strong');
+  if(lbl) lbl.classList.toggle('done-txt', state[id]);
+  updateProgress();
+}
+
+function updateProgress(){
+  const all = Object.values(LISTS).flat();
+  const req = all.filter(i=>i.req);
+  const done = req.filter(i=>state[i.id]).length;
+  const pct = Math.round(done/req.length*100);
+  document.getElementById('hero-bar').style.width = pct+'%';
+  document.getElementById('hero-pct').textContent = pct+'% complete';
+  document.getElementById('r-bar-lg').style.width = pct+'%';
+  document.getElementById('r-pct-lbl').textContent = done+' of '+req.length+' required steps complete';
+  const pill = document.getElementById('global-pill');
+  pill.textContent = pct+'% ready';
+  pill.className = 'progress-pill'+(pct>=100?' done':pct>=50?' mid':'');
+
+  LIST_KEYS.forEach((key,i) => {
+    const accId = ACCORD_MAP[i];
+    const el = document.getElementById(accId); if(!el) return;
+    const keyDone = LISTS[key].filter(it=>it.req).every(it=>state[it.id]);
+    const cta = document.getElementById(CTA_IDS[i]);
+    if(cta) cta.style.display = keyDone ? 'flex' : 'none';
+    const m = document.getElementById(MILESTONE[i]);
+    if(m) m.className = 'rm-dot'+(keyDone?' done':i===0?' active':state[Object.values(LISTS).flat().find(it=>it.id)?.[0]]?' active':' todo');
+    if(i===0){ el.classList.remove('locked'); }
+    else {
+      const prevDone = LISTS[LIST_KEYS[i-1]].filter(it=>it.req).every(it=>state[it.id]);
+      el.classList.toggle('locked', !prevDone);
+      const status = el.querySelector('.accord-status');
+      if(status){
+        if(keyDone) status.textContent = '✓ Complete';
+        else if(!prevDone) status.textContent = 'Complete '+(i===1?'asset identification':i===2?'legal setup':i===3?'pricing':'listing')+' first';
+        else status.textContent = 'In progress';
+      }
+    }
+  });
+  // Milestone dots
+  LIST_KEYS.forEach((key,i) => {
+    const m = document.getElementById(MILESTONE[i]);
+    if(!m) return;
+    const keyDone = LISTS[key].filter(it=>it.req).every(it=>state[it.id]);
+    const prevDone = i===0 || LISTS[LIST_KEYS[i-1]].filter(it=>it.req).every(it=>state[it.id]);
+    m.className = 'rm-dot'+(keyDone?' done':prevDone?' active':' todo');
+  });
+}
+
+function toggleAccord(id){
+  const el=document.getElementById(id); if(!el||el.classList.contains('locked')) return;
+  el.classList.toggle('open');
+}
+function openAccord(id){
+  const el=document.getElementById(id); if(!el||el.classList.contains('locked')) return;
+  el.classList.add('open');
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function selectAsset(type, card){
+  document.querySelectorAll('.asset-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  state['asset_type'] = type;
+  saveState();
+}
+
+function goPage(name, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const labels={home:'Home',readiness:'Readiness',price:'Income',track:'Track',grow:'Grow',learn:'Learn'};
+  document.querySelectorAll('.nav a').forEach(a=>{if(a.textContent.trim()===labels[name])a.classList.add('active');});
+  window.scrollTo(0,0);
+}
+
+// ── REVENUE MODEL SYNC ───────────────────────────────────
+window.handleFileUpload = function(e){ const file=e.target.files[0]; if(file) processFile(file); };
+window.handleDrop = function(e){
+  e.preventDefault();
+  const dz=document.getElementById('drop-zone-price'); if(dz) dz.classList.remove('drag-over');
+  const file=e.dataTransfer.files[0]; if(file) processFile(file);
+};
+
+function processFile(file){
+  if(!file.name.match(/\.xlsx?$/i)){ showSyncStatus('err','Not an Excel file. Upload RentalPath_Revenue_Model.xlsx'); return; }
+  showSyncStatus('ok','Reading your Revenue Model...');
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array',cellNF:true,cellText:false});
+      const data=extractRevenueData(wb);
+      applyRevenueToDashboard(data);
+      localStorage.setItem('rpath_sync',JSON.stringify({filename:file.name,ts:new Date().toLocaleString(),...data}));
+    }catch(err){ showSyncStatus('err','Could not read file: '+err.message); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function numC(ws,addr){ const c=ws[addr]; if(!c) return 0; return typeof c.v==='number'?c.v:(parseFloat(c.v)||0); }
+function strC(ws,addr){ const c=ws[addr]; if(!c) return ''; return String(c.v||'').trim(); }
+
+function extractRevenueData(wb){
+  if(!wb.Sheets['Inputs']) throw new Error('Missing Inputs sheet — is this the Revenue Model?');
+  const wsIn=wb.Sheets['Inputs'], wsOH=wb.Sheets['Overhead'], wsPr=wb.Sheets['Products'];
+  const wage=numC(wsIn,'B5'), markupUsed=numC(wsIn,'B8'), weeklyHrs=numC(wsIn,'B10');
+  const weeklyGoal=numC(wsIn,'B11');
+  let fixedOH=0;
+  if(wsOH)[5,6,7,8,9,10,13,14,15,16].forEach(r=>fixedOH+=numC(wsOH,'B'+r));
+  const products=[];
+  if(wsPr){
+    for(let r=4;r<=30;r++){
+      const name=strC(wsPr,'A'+r); if(!name) break;
+      const mat=numC(wsPr,'C'+r), hrs=numC(wsPr,'D'+r);
+      const oMkup=numC(wsPr,'F'+r)||markupUsed, unitsWk=numC(wsPr,'G'+r), unit=strC(wsPr,'B'+r);
+      const mktPrice=numC(wsPr,'K'+r)||0;
+      products.push({name,unit,unitsWk,mktPrice,hrs});
+    }
+  }
+  const monthlyIncome = products.reduce((s,p)=>s+(p.mktPrice*(p.unitsWk||1)*4.33),0);
+  const annualIncome = monthlyIncome*12;
+  const monthlyGoal = weeklyGoal*4.33;
+  return {wage,markupUsed,weeklyGoal,monthlyOH:fixedOH,monthlyIncome,annualIncome,monthlyGoal,gapToGoal:monthlyIncome-monthlyGoal,products};
+}
+
+function applyRevenueToDashboard(d){
+  const f=n=>'$'+Math.round(Math.abs(n)).toLocaleString();
+  const setText=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  setText('stat-weekly-rev',f(d.monthlyIncome));
+  setText('stat-eff-hr',f(d.annualIncome));
+  setText('stat-gap',(d.gapToGoal>=0?'+':'-')+f(d.gapToGoal));
+  const gapEl=document.getElementById('stat-gap');
+  if(gapEl) gapEl.className='stat-val '+(d.gapToGoal>=0?'teal':'alert');
+  setText('inputs-wage',f(d.wage)+'/hr');
+  setText('inputs-markup',(+(d.markupUsed||0)).toFixed(1)+'×');
+  setText('inputs-goal',f(d.monthlyGoal)+'/mo');
+  setText('inputs-oh',f(d.monthlyOH)+'/mo');
+  const lb=document.getElementById('sync-live-badge'); if(lb) lb.style.display='inline-block';
+  const dz=document.getElementById('drop-title-price'); if(dz) dz.textContent='✓ Synced — drop a new file to update';
+  const lp=document.getElementById('sync-last-price'); if(lp) lp.textContent='Synced: '+new Date().toLocaleString();
+  showSyncStatus('ok','✅ Synced! '+d.products.length+' assets loaded — income projection is now live.');
+  sfShowToast(d.products.length+' assets synced — income projection is live');
+  if(d.products.length>0){
+    const ul=document.getElementById('price-product-list');
+    if(ul){
+      ul.innerHTML='';
+      d.products.forEach(p=>{
+        const li=document.createElement('li'); li.className='price-item';
+        const val = p.mktPrice>0?'$'+p.mktPrice.toFixed(0)+'/'+p.unit:'—';
+        li.innerHTML=`<div class="price-name">${p.name}</div><div class="price-val">${val}</div><div class="price-flag flag-passive">Your asset</div>`;
+        ul.appendChild(li);
+      });
+    }
+  }
+}
+
+function showSyncStatus(type,msg){
+  const el=document.getElementById('sync-status-price');
+  if(el){el.textContent=msg;el.className='sync-status '+type;}
+}
+
+// ── TRACKER SYNC ─────────────────────────────────────────
+window.handleTrackerUpload=function(e){const file=e.target.files[0];if(file)processTrackerFile(file);};
+window.handleTrackerDrop=function(e){
+  e.preventDefault();
+  const dz=document.getElementById('drop-zone-track');if(dz)dz.classList.remove('drag-over');
+  const file=e.dataTransfer.files[0];if(file)processTrackerFile(file);
+};
+
+function processTrackerFile(file){
+  if(!file.name.match(/\.xlsx?$/i)){showTrackerStatus('err','Not an Excel file.');return;}
+  showTrackerStatus('ok','Reading your Money Tracker...');
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array',cellNF:true,cellText:false});
+      if(!wb.Sheets['Income Log']||!wb.Sheets['Expense Log']) throw new Error('Missing Income Log or Expense Log sheets.');
+      const data=extractTrackerData(wb);
+      applyTrackerToDashboard(data);
+    }catch(err){showTrackerStatus('err','Could not read file: '+err.message);}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function extractTrackerData(wb){
+  const wsI=wb.Sheets['Income Log'],wsE=wb.Sheets['Expense Log'];
+  const now=new Date(),curMo=now.getMonth()+1,curYr=now.getFullYear();
+  let moIncome=0,moExpenses=0,ytdIncome=0,ytdExpenses=0;
+  for(let r=2;r<=500;r++){
+    const d=wsI['A'+r];if(!d)break;
+    const dt=new Date(Math.round((d.v-25569)*86400*1000));
+    const amt=numC(wsI,'E'+r);
+    ytdIncome+=amt;
+    if(dt.getMonth()+1===curMo&&dt.getFullYear()===curYr)moIncome+=amt;
+  }
+  for(let r=2;r<=500;r++){
+    const d=wsE['A'+r];if(!d)break;
+    const dt=new Date(Math.round((d.v-25569)*86400*1000));
+    const amt=numC(wsE,'E'+r);
+    ytdExpenses+=amt;
+    if(dt.getMonth()+1===curMo&&dt.getFullYear()===curYr)moExpenses+=amt;
+  }
+  return{moIncome,moExpenses,moProfit:moIncome-moExpenses,ytdIncome,ytdExpenses,ytdProfit:ytdIncome-ytdExpenses,taxReserve:ytdIncome*0.25};
+}
+
+function applyTrackerToDashboard(d){
+  const f=n=>'$'+Math.round(Math.abs(n)).toLocaleString();
+  const setText=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  setText('stat-track-income',f(d.moIncome));
+  setText('stat-track-expenses',f(d.moExpenses));
+  setText('stat-track-profit',f(d.moProfit));
+  setText('annual-income-total',f(d.ytdIncome));
+  setText('annual-profit-total',f(d.ytdProfit));
+  setText('annual-taxreserve',f(d.taxReserve));
+  const lb=document.getElementById('sync-live-badge-track');if(lb)lb.style.display='inline-block';
+  const dz=document.getElementById('drop-title-track');if(dz)dz.textContent='✓ Synced — drop a new file to update';
+  showTrackerStatus('ok','✅ Tracker synced!');
+  const now=new Date();
+  const lbl=document.getElementById('track-month-label');
+  if(lbl)lbl.textContent=now.toLocaleString('default',{month:'long',year:'numeric'});
+}
+
+function showTrackerStatus(type,msg){
+  const el=document.getElementById('sync-status-tracker');
+  if(el){el.textContent=msg;el.className='sync-status '+type;}
+}
+
+// ── NAV & TOAST ──────────────────────────────────────────
+function sfToggleMenu(){
+  const h=document.getElementById('sf-hamburger');
+  const d=document.getElementById('sf-drawer');
+  h.classList.toggle('open');d.classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  const h=document.getElementById('sf-hamburger');
+  const d=document.getElementById('sf-drawer');
+  if(h&&d&&!h.contains(e.target)&&!d.contains(e.target)){h.classList.remove('open');d.classList.remove('open');}
+});
+function sfShowToast(msg){
+  const t=document.getElementById('sf-toast');if(!t)return;
+  t.innerHTML='<span>✅</span> '+msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ── INIT ─────────────────────────────────────────────────
+renderLists();
+if(state.asset_type){
+  document.querySelectorAll('.asset-card').forEach(c=>{
+    if(c.getAttribute('onclick')&&c.getAttribute('onclick').includes("'"+state.asset_type+"'"))c.classList.add('selected');
+  });
+}
+const saved=JSON.parse(localStorage.getItem('rpath_sync')||'null');
+if(saved&&saved.products){ applyRevenueToDashboard(saved); }
+</script>
+</body>
+</html>

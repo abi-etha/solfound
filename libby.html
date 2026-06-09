@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Libby — AI Bookkeeping Assistant · SolFound</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* SolFound base */
+  --ink:        #0F0A04;
+  --ink-mid:    #1C1208;
+  --warm:       #2A1F12;
+  --sun:        #E8A020;
+  --cream:      #FAF6F0;
+  --parchment:  #F2EAD8;
+  --dust:       #8C7B6A;
+  /* Libby's palette — sage + lavender */
+  --sage:       #4A6B50;
+  --sage-lt:    #E4EDE8;
+  --sage-mid:   #6B8F71;
+  --sage-dark:  #2E4D34;
+  --lav:        #7A6A9E;
+  --lav-lt:     #EEE9F8;
+  --lav-dark:   #5A4C7E;
+  --brown:      #8B6F5E;
+  --gold:       #C8A84B;
+  --gold-lt:    #FBF5E0;
+  --alert:      #C05A3A;
+  --alert-lt:   #FAF0EC;
+  --white:      #FFFFFF;
+  --text:       #3D2E22;
+  --text-mid:   #7A6055;
+  --text-lt:    #AFA098;
+  --shadow:     0 4px 24px rgba(44,32,24,0.12);
+  --shadow-sm:  0 2px 10px rgba(44,32,24,0.07);
+  --radius:     14px;
+  --radius-sm:  8px;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line-height: 1.2; }
+
+/* ── SolFound global nav ──────────────────────────── */
+.sf-nav { background: var(--ink); padding: 0 32px; display: flex; align-items: center; border-bottom: 1px solid rgba(232,160,32,0.15); position: sticky; top: 0; z-index: 200; }
+.sf-nav-logo { font-family: 'Crimson Pro', Georgia, serif; font-size: 16px; font-weight: 600; color: white; padding: 10px 20px 10px 0; margin-right: 8px; border-right: 1px solid rgba(255,255,255,0.1); white-space: nowrap; flex-shrink: 0; text-decoration: none; }
+.sf-nav-logo span { color: var(--sun); }
+.sf-nav-links { display: flex; align-items: center; flex: 1; }
+.sf-nav-links a { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.55); padding: 11px 14px; border-bottom: 2px solid transparent; transition: all 0.15s; white-space: nowrap; text-decoration: none; }
+.sf-nav-links a:hover { color: white; }
+.sf-nav-links a.sf-active { color: var(--sage-mid); border-bottom-color: var(--sage-mid); font-weight: 600; }
+.sf-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 10px 8px; margin-left: auto; flex-direction: column; gap: 5px; }
+.sf-hamburger span { display: block; width: 22px; height: 2px; background: rgba(255,255,255,0.7); border-radius: 2px; transition: all 0.2s; }
+.sf-drawer { display: none; position: fixed; top: 43px; left: 0; right: 0; background: var(--ink); border-bottom: 1px solid rgba(232,160,32,0.15); z-index: 199; flex-direction: column; padding: 8px 0; }
+.sf-drawer a { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.7); padding: 13px 24px; border-left: 3px solid transparent; transition: all 0.15s; text-decoration: none; display: block; }
+.sf-drawer a:hover { color: white; background: rgba(255,255,255,0.04); }
+.sf-drawer a.sf-active { color: var(--sage-mid); border-left-color: var(--sage-mid); font-weight: 600; }
+.sf-drawer.open { display: flex; }
+.sf-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--sage-dark); color: #8FD4A0; border: 1px solid rgba(143,212,160,0.3); border-radius: 8px; padding: 12px 20px; font-size: 13px; font-weight: 600; white-space: nowrap; opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 9999; pointer-events: none; display: flex; align-items: center; gap: 8px; }
+.sf-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@media(max-width:640px) {
+  .sf-nav { padding: 0 16px; }
+  .sf-nav-links { display: none; }
+  .sf-hamburger { display: flex; }
+}
+
+/* ── Hero ─────────────────────────────────────────── */
+.hero {
+  background: var(--ink-mid);
+  border-bottom: 1px solid rgba(107,143,113,0.2);
+  padding: 52px 32px 44px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(107,143,113,0.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(107,143,113,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+.hero-glow {
+  position: absolute; width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(74,107,80,0.15) 0%, transparent 70%);
+  top: -150px; right: -100px; pointer-events: none;
+}
+.hero-inner {
+  max-width: 1000px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 32px; align-items: center; position: relative; z-index: 1;
+}
+.hero-text { position: relative; z-index: 2; }
+.hero-mascot { position: relative; z-index: 1; }
+.hero-text { }
+.hero-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--sage-mid); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.hero-eyebrow::before { content: ''; display: inline-block; width: 28px; height: 1px; background: var(--sage-mid); }
+.hero h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); color: white; margin-bottom: 14px; }
+.hero h1 em { color: var(--sage-mid); font-style: italic; }
+.hero-sub { font-size: 17px; color: rgba(255,255,255,0.5); max-width: 480px; margin-bottom: 28px; line-height: 1.7; font-family: 'Crimson Pro', serif; font-style: italic; }
+.api-status { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 5px 14px; }
+.api-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.api-dot.connected { background: var(--sage-mid); animation: pulse 2s infinite; }
+.api-dot.disconnected { background: var(--alert); }
+.api-dot.checking { background: var(--gold); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+.api-status-text { color: rgba(255,255,255,0.55); }
+
+/* Hero mascot duo */
+.hero-mascot {
+  display: flex; align-items: flex-end; gap: 0;
+  position: relative; flex-shrink: 0; z-index: 1;
+  max-width: 240px;
+  align-self: stretch;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+.hero-mascot img {
+  width: 220px; max-width: 100%; height: auto;
+  object-fit: contain;
+  object-position: bottom right;
+  animation: float 4s ease-in-out infinite;
+  mix-blend-mode: lighten;
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.hero-speech {
+  position: absolute; top: -16px; left: -160px;
+  background: white; border: 2px solid var(--sage-lt); border-radius: 12px;
+  padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--sage-dark);
+  white-space: nowrap; box-shadow: var(--shadow-sm);
+  animation: speech-bob 4s ease-in-out infinite;
+}
+@keyframes speech-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.hero-speech::after {
+  content: ''; position: absolute; bottom: -10px; right: 28px;
+  width: 0; height: 0;
+  border-left: 8px solid transparent; border-right: 8px solid transparent;
+  border-top: 10px solid white;
+}
+.hero-speech::before {
+  content: ''; position: absolute; bottom: -12px; right: 27px;
+  width: 0; height: 0;
+  border-left: 9px solid transparent; border-right: 9px solid transparent;
+  border-top: 11px solid var(--sage-lt);
+}
+@media(max-width: 680px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-mascot { justify-content: center; }
+  .hero-mascot img { width: 160px; }
+  .hero-speech { left: 50%; transform: translateX(-50%); top: -52px; white-space: normal; width: 200px; text-align: center; }
+}
+
+/* ── Main content ─────────────────────────────────── */
+.main { max-width: 780px; margin: 0 auto; padding: 36px 24px 64px; }
+
+/* ── Card ─────────────────────────────────────────── */
+.card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 28px; margin-bottom: 20px; border: 1px solid rgba(107,143,113,0.1); }
+.card-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-lt); margin-bottom: 16px; }
+
+/* ── Upload zone ──────────────────────────────────── */
+.upload-zone {
+  border: 2.5px dashed rgba(107,143,113,0.4);
+  border-radius: var(--radius); padding: 44px 28px;
+  text-align: center; cursor: pointer;
+  transition: all 0.2s; background: var(--sage-lt);
+  position: relative;
+}
+.upload-zone:hover, .upload-zone.drag-over { border-color: var(--sage); background: #dceee0; }
+.upload-zone.has-file { border-color: var(--sage-mid); border-style: solid; background: #e8f3ea; }
+.upload-icon { font-size: 44px; margin-bottom: 14px; display: block; transition: transform 0.2s; }
+.upload-zone:hover .upload-icon { transform: translateY(-4px); }
+.upload-title { font-size: 18px; font-weight: 700; color: var(--sage-dark); margin-bottom: 5px; font-family: 'Crimson Pro', serif; }
+.upload-sub { font-size: 13px; color: var(--text-mid); }
+.upload-sub em { color: var(--sage-dark); font-style: normal; font-weight: 600; }
+#file-input { display: none; }
+
+/* ── Prefix + button row ──────────────────────────── */
+.controls-row { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: flex-end; margin-top: 20px; }
+.field label { display: block; font-size: 11px; font-weight: 700; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 7px; }
+.field input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--parchment); border-radius: var(--radius-sm); font-family: inherit; font-size: 14px; color: var(--text); background: var(--cream); transition: border-color 0.15s; }
+.field input:focus { outline: none; border-color: var(--sage-mid); }
+.field input::placeholder { color: var(--text-lt); }
+@media(max-width:540px) { .controls-row { grid-template-columns: 1fr; } }
+
+/* ── Buttons ──────────────────────────────────────── */
+.btn { padding: 11px 22px; border-radius: var(--radius-sm); border: none; cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 600; transition: all 0.15s; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 7px; }
+.btn-sage { background: var(--sage-dark); color: white; }
+.btn-sage:hover { background: var(--sage); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(46,77,52,0.3); }
+.btn-sage:disabled { background: var(--text-lt); cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-lav { background: var(--lav); color: white; }
+.btn-lav:hover { background: var(--lav-dark); transform: translateY(-1px); }
+.btn-ghost { background: var(--sage-lt); color: var(--sage-dark); }
+.btn-ghost:hover { background: #d6e8d9; }
+.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+/* ── Bookie tip ───────────────────────────────────── */
+.bookie-tip {
+  display: flex; align-items: flex-start; gap: 16px;
+  background: var(--lav-lt); border-radius: var(--radius-sm);
+  padding: 18px; margin-top: 18px;
+  border: 1px solid rgba(122,106,158,0.15);
+}
+.bookie-tip-text { font-size: 13px; color: var(--text-mid); line-height: 1.65; }
+.bookie-tip-text strong { color: var(--text); }
+.bookie-img { flex-shrink: 0; width: 48px; height: auto; }
+
+/* ── Processing ───────────────────────────────────── */
+.processing-card { text-align: center; padding: 44px 28px; }
+.processing-mascot { display: inline-block; animation: bob 1.4s ease-in-out infinite; margin-bottom: 20px; }
+@keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.progress-wrap { background: var(--sage-lt); border-radius: 100px; height: 7px; margin: 18px 0 8px; overflow: hidden; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--sage-mid), var(--sage-dark)); border-radius: 100px; transition: width 0.5s ease; }
+.step-list { list-style: none; margin-top: 20px; text-align: left; display: inline-block; min-width: 260px; }
+.step-list li { font-size: 13px; color: var(--text-lt); padding: 5px 0; display: flex; align-items: center; gap: 10px; transition: all 0.3s; }
+.step-list li.done { color: var(--sage-dark); font-weight: 600; }
+.step-list li.active { color: var(--text); font-weight: 700; }
+.step-icon { width: 20px; text-align: center; flex-shrink: 0; }
+
+/* ── Results ──────────────────────────────────────── */
+.results-header { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+.results-emoji { font-size: 38px; animation: pop 0.5s ease; }
+@keyframes pop { 0%{transform:scale(0.5)rotate(-15deg)} 70%{transform:scale(1.15)rotate(3deg)} 100%{transform:scale(1)rotate(0)} }
+.results-info h2 { font-size: 22px; color: var(--ink); margin-bottom: 3px; }
+.results-info p { font-size: 13px; color: var(--text-mid); }
+.stmt-list { list-style: none; }
+.stmt-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--sage-lt); }
+.stmt-item:last-child { border-bottom: none; }
+.stmt-icon { width: 38px; height: 38px; border-radius: 9px; background: var(--sage-lt); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.stmt-info { flex: 1; min-width: 0; }
+.stmt-name { font-size: 13px; font-weight: 700; color: var(--text); display: block; margin-bottom: 2px; font-family: monospace; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stmt-meta { font-size: 11px; color: var(--text-lt); }
+.stmt-conf { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; flex-shrink: 0; }
+.conf-high { background: var(--sage-lt); color: var(--sage-dark); }
+.conf-mid  { background: var(--gold-lt); color: #7A5C1E; }
+.conf-low  { background: var(--alert-lt); color: var(--alert); }
+.stmt-actions { display: flex; gap: 5px; flex-shrink: 0; }
+.dl-btn { font-size: 12px; padding: 5px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; border: none; font-family: inherit; text-decoration: none; display: inline-block; transition: all 0.15s; }
+.dl-pdf { background: var(--sage-lt); color: var(--sage-dark); }
+.dl-pdf:hover { background: #d2e8d6; }
+.dl-csv { background: var(--lav-lt); color: var(--lav-dark); }
+.dl-csv:hover { background: #e0d9f4; }
+
+/* ── Error ────────────────────────────────────────── */
+.error-card { background: var(--alert-lt); border: 1px solid rgba(192,90,58,0.18); border-radius: var(--radius); padding: 22px 24px; display: flex; gap: 16px; align-items: flex-start; }
+.error-icon { font-size: 26px; flex-shrink: 0; }
+.error-text h3 { font-size: 16px; font-weight: 700; color: var(--alert); margin-bottom: 4px; }
+.error-text p { font-size: 13px; color: var(--text-mid); }
+
+/* ── States ───────────────────────────────────────── */
+.state { display: none; }
+.state.active { display: block; }
+
+/* ── Info strip ───────────────────────────────────── */
+.info-strip {
+  background: var(--ink-mid); border-top: 1px solid rgba(107,143,113,0.15);
+  padding: 36px 24px; margin-top: 40px;
+}
+.info-strip-inner { max-width: 780px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.info-item { text-align: center; }
+.info-icon { font-size: 28px; margin-bottom: 10px; }
+.info-item h4 { font-family: 'Crimson Pro', serif; font-size: 17px; color: white; margin-bottom: 5px; }
+.info-item p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+@media(max-width:580px) { .info-strip-inner { grid-template-columns: 1fr; gap: 28px; } }
+
+/* ── Footer ───────────────────────────────────────── */
+.footer { background: var(--ink); border-top: 1px solid rgba(232,160,32,0.1); padding: 32px 24px; text-align: center; }
+.footer p { font-size: 12px; color: rgba(255,255,255,0.25); }
+.footer a { color: var(--sage-mid); text-decoration: none; font-weight: 600; }
+.footer a:hover { color: var(--sage-lt); }
+
+/* ── Fade-up animation ────────────────────────────── */
+.fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ── "Back to LedgerPath" link ────────────────────── */
+.back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; padding: 11px 0; margin-left: auto; transition: color 0.15s; }
+.back-link:hover { color: rgba(255,255,255,0.8); }
+</style>
+</head>
+<body>
+
+<!-- ── SolFound nav ──────────────────────────────── -->
+<div class="sf-nav">
+  <a href="index.html" class="sf-nav-logo">Sol<span>Found</span></a>
+  <div class="sf-nav-links">
+    <a href="index.html">Home</a>
+    <a href="rootpath_final.html">RootPath</a>
+    <a href="ledgerpath.html">LedgerPath</a>
+    <a href="boutiquepath.html">BoutiquePath</a>
+    <a href="rentalpath.html">RentalPath</a>
+    <a href="libby.html" class="sf-active">Libby</a>
+  </div>
+  <a href="ledgerpath.html" class="back-link">← LedgerPath</a>
+  <button class="sf-hamburger" id="sf-hamburger" aria-label="Menu" onclick="sfToggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+<div class="sf-drawer" id="sf-drawer">
+  <a href="index.html">Home</a>
+  <a href="rootpath_final.html">RootPath</a>
+  <a href="ledgerpath.html">LedgerPath</a>
+  <a href="boutiquepath.html">BoutiquePath</a>
+  <a href="rentalpath.html">RentalPath</a>
+  <a href="libby.html" class="sf-active">Libby</a>
+</div>
+<div class="sf-toast" id="sf-toast"></div>
+
+<!-- ── Hero ─────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">AI Bookkeeping Assistant</div>
+      <h1>Hi, I'm <em>Libby.</em><br>Let's tidy those books.</h1>
+      <p class="hero-sub">Drop me a messy bank statement and I'll sort it into clean, named files — ready for QuickBooks in under a minute. Bookie keeps me honest.</p>
+      <div class="api-status" id="api-status">
+        <div class="api-dot checking" id="api-dot"></div>
+        <span class="api-status-text" id="api-status-text">Checking connection…</span>
+      </div>
+    </div>
+    <div class="hero-mascot">
+      <div class="hero-speech" id="libby-speech">Hello! Ready to tidy your books? 📚</div>
+      <img src="https://web-production-407fa.up.railway.app/static/libby-bookie.png"
+           alt="Libby the bookkeeping bird with Bookie the bookworm"
+           id="mascot-img"
+           onerror="this.style.display='none'">
+    </div>
+  </div>
+</section>
+
+<!-- ── Main ─────────────────────────────────────────── -->
+<main class="main">
+
+  <!-- ── UPLOAD STATE ──────────────────────────────── -->
+  <div class="state active" id="state-upload">
+
+    <div class="card fade-up">
+      <div class="card-title">Step 1 — Upload your statement</div>
+      <div class="upload-zone" id="upload-zone"
+           onclick="document.getElementById('file-input').click()"
+           ondragover="event.preventDefault();this.classList.add('drag-over')"
+           ondragleave="this.classList.remove('drag-over')"
+           ondrop="handleDrop(event)">
+        <span class="upload-icon" id="upload-icon">📄</span>
+        <div class="upload-title" id="upload-title">Drop your PDF bank statement here</div>
+        <div class="upload-sub" id="upload-sub">or click to browse · <em>Bank, credit card, utility statements</em></div>
+        <input type="file" id="file-input" accept=".pdf" onchange="handleFileSelect(event)">
+      </div>
+
+      <div class="controls-row">
+        <div class="field">
+          <label>Client / folder prefix</label>
+          <input type="text" id="prefix-input" placeholder="e.g. SMITH_2025 or MONTROSE_SALON" value="">
+        </div>
+        <button class="btn btn-sage" id="process-btn" onclick="startProcessing()" disabled>
+          Let Libby work ✨
+        </button>
+      </div>
+    </div>
+
+    <div class="bookie-tip fade-up" style="transition-delay:0.1s">
+      <img class="bookie-img"
+           src="https://web-production-407fa.up.railway.app/static/bookie.png"
+           alt="Bookie the bookworm"
+           onerror="this.style.display='none'">
+      <div class="bookie-tip-text">
+        <strong>Bookie says:</strong> Make sure your PDF is a scanned statement — not a digital export. Libby reads scanned pages best at 150 DPI or higher. Got multiple statements in one PDF? No problem — I split them automatically!
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROCESSING STATE ──────────────────────────── -->
+  <div class="state" id="state-processing">
+    <div class="card processing-card">
+      <div class="processing-mascot">
+        <!-- Bookie animated while working -->
+        <svg width="80" height="90" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg">
+          <!-- books base -->
+          <rect x="8" y="72" width="64" height="10" rx="3" fill="#8B6F5E"/>
+          <rect x="4" y="62" width="72" height="11" rx="3" fill="#A07850"/>
+          <rect x="10" y="52" width="60" height="11" rx="3" fill="#6B8F71"/>
+          <text x="40" y="60" text-anchor="middle" font-size="6" font-family="serif" fill="#F2EAD8" opacity="0.9">LEDGER</text>
+          <!-- Bookie body emerging from books -->
+          <ellipse cx="40" cy="40" rx="22" ry="19" fill="#90C870"/>
+          <!-- belly lighter -->
+          <ellipse cx="40" cy="46" rx="13" ry="11" fill="#B0DC90"/>
+          <!-- eyes -->
+          <circle cx="32" cy="37" r="5" fill="white"/>
+          <circle cx="48" cy="37" r="5" fill="white"/>
+          <circle cx="32" cy="37" r="3.2" fill="#1C1208"/>
+          <circle cx="48" cy="37" r="3.2" fill="#1C1208"/>
+          <circle cx="33.2" cy="35.8" r="1.2" fill="white"/>
+          <circle cx="49.2" cy="35.8" r="1.2" fill="white"/>
+          <!-- glasses -->
+          <circle cx="32" cy="37" r="5.5" fill="none" stroke="#5C3D2E" stroke-width="1.5"/>
+          <circle cx="48" cy="37" r="5.5" fill="none" stroke="#5C3D2E" stroke-width="1.5"/>
+          <line x1="37.5" y1="37" x2="42.5" y2="37" stroke="#5C3D2E" stroke-width="1.5"/>
+          <line x1="26.5" y1="35.5" x2="22" y2="34" stroke="#5C3D2E" stroke-width="1.2"/>
+          <line x1="53.5" y1="35.5" x2="58" y2="34" stroke="#5C3D2E" stroke-width="1.2"/>
+          <!-- antennae -->
+          <line x1="34" y1="21" x2="30" y2="14" stroke="#6DB850" stroke-width="2"/>
+          <line x1="46" y1="21" x2="50" y2="14" stroke="#6DB850" stroke-width="2"/>
+          <circle cx="30" cy="13" r="3" fill="#90C870"/>
+          <circle cx="50" cy="13" r="3" fill="#90C870"/>
+          <!-- pencil in hand -->
+          <rect x="58" y="40" width="4" height="24" rx="1.5" fill="#F2EAD8" transform="rotate(20 58 40)"/>
+          <polygon points="58,64 62,64 60,70" fill="#D4A44C" transform="rotate(20 58 40)"/>
+          <rect x="58" y="40" width="4" height="5" rx="1" fill="#C65A3A" transform="rotate(20 58 40)"/>
+          <!-- smile -->
+          <path d="M33 48 Q40 54 47 48" fill="none" stroke="#4A8C30" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h2 style="font-size:22px;color:var(--ink);margin-bottom:8px">Libby is working her magic…</h2>
+      <p style="font-size:13px;color:var(--text-mid);margin-bottom:0" id="processing-msg">Loading your PDF…</p>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progress-bar" style="width:4%"></div>
+      </div>
+      <p style="font-size:12px;color:var(--text-lt);margin-bottom:20px" id="progress-label">Starting…</p>
+      <ul class="step-list" id="step-list">
+        <li id="step-load"><span class="step-icon">📄</span> Loading your PDF</li>
+        <li id="step-split"><span class="step-icon">✂️</span> Identifying statement boundaries</li>
+        <li id="step-vendor"><span class="step-icon">🔍</span> Recognising vendors</li>
+        <li id="step-name"><span class="step-icon">🏷️</span> Building file names</li>
+        <li id="step-conf"><span class="step-icon">📊</span> Computing confidence scores</li>
+        <li id="step-save"><span class="step-icon">💾</span> Saving organised files</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── RESULTS STATE ─────────────────────────────── -->
+  <div class="state" id="state-results">
+    <div class="card">
+      <div class="results-header">
+        <div class="results-emoji">🎉</div>
+        <div class="results-info">
+          <h2 id="results-title">All done! Your books are looking lovely.</h2>
+          <p id="results-sub">Statements found and sorted.</p>
+        </div>
+        <!-- Bookie celebrating with checkmark flag -->
+        <svg width="52" height="60" viewBox="0 0 52 60" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;animation:pop 0.5s ease">
+          <ellipse cx="26" cy="36" rx="18" ry="15" fill="#90C870"/>
+          <ellipse cx="26" cy="42" rx="11" ry="9" fill="#B0DC90"/>
+          <circle cx="19" cy="32" r="4" fill="white"/><circle cx="33" cy="32" r="4" fill="white"/>
+          <circle cx="19" cy="32" r="2.5" fill="#1C1208"/><circle cx="33" cy="32" r="2.5" fill="#1C1208"/>
+          <circle cx="19" cy="32" r="4.5" fill="none" stroke="#5C3D2E" stroke-width="1.2"/>
+          <circle cx="33" cy="32" r="4.5" fill="none" stroke="#5C3D2E" stroke-width="1.2"/>
+          <line x1="23.5" y1="32" x2="28.5" y2="32" stroke="#5C3D2E" stroke-width="1.2"/>
+          <path d="M19 47 Q26 52 33 47" fill="none" stroke="#4A8C30" stroke-width="2" stroke-linecap="round"/>
+          <line x1="40" y1="16" x2="40" y2="32" stroke="#6B8F71" stroke-width="2"/>
+          <path d="M40 16 L50 20 L40 24 Z" fill="#6B8F71"/>
+          <path d="M42 19.5 L48 21.5" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="10" cy="14" r="2.5" fill="#9B8BB4" opacity="0.8"/>
+          <circle cx="46" cy="8" r="2" fill="#D4A44C" opacity="0.8"/>
+          <circle cx="6" cy="26" r="2" fill="#C65A3A" opacity="0.6"/>
+          <rect x="44" y="22" width="4" height="4" rx="0.5" fill="#6B8F71" opacity="0.7" transform="rotate(30 44 22)"/>
+          <line x1="18" y1="15" x2="20" y2="8" stroke="#6B8F71" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="8" y1="18" x2="12" y2="14" stroke="#9B8BB4" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <ul class="stmt-list" id="stmt-list"></ul>
+
+      <div class="btn-row">
+        <button class="btn btn-sage" onclick="downloadAll()">⬇ Download all files</button>
+        <button class="btn btn-lav" onclick="exportQB()">📤 Export to QuickBooks</button>
+        <button class="btn btn-ghost" onclick="resetApp()">Process another PDF</button>
+      </div>
+    </div>
+
+    <div class="bookie-tip" id="confidence-tip" style="display:none">
+      <img class="bookie-img"
+           src="https://web-production-407fa.up.railway.app/static/bookie.png"
+           alt="Bookie concerned"
+           style="filter:hue-rotate(20deg)"
+           onerror="this.style.display='none'">
+      <div class="bookie-tip-text" id="confidence-tip-text">
+        <strong>Bookie notices:</strong> Some statements have lower confidence scores. This usually means scan quality was lower on those pages. Double-check those files before importing to QuickBooks.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ERROR STATE ───────────────────────────────── -->
+  <div class="state" id="state-error">
+    <div class="error-card">
+      <span class="error-icon">😬</span>
+      <div class="error-text">
+        <h3 id="error-title">Oops, that one was tricky!</h3>
+        <p id="error-msg">Something went wrong processing your PDF. Try a different file or check that it's a valid bank statement.</p>
+      </div>
+    </div>
+    <div style="margin-top:16px;text-align:center">
+      <button class="btn btn-ghost" onclick="resetApp()">Try again</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Info strip ─────────────────────────────────── -->
+<div class="info-strip">
+  <div class="info-strip-inner">
+    <div class="info-item fade-up">
+      <div class="info-icon">⚡</div>
+      <h4>Under 60 seconds</h4>
+      <p>Libby reads, splits, names, and exports your statements faster than you could find the first page.</p>
+    </div>
+    <div class="info-item fade-up" style="transition-delay:0.1s">
+      <div class="info-icon">🔒</div>
+      <h4>Your data, your files</h4>
+      <p>No account needed. Files are processed and returned to you — nothing stored on our end.</p>
+    </div>
+    <div class="info-item fade-up" style="transition-delay:0.2s">
+      <div class="info-icon">📊</div>
+      <h4>QuickBooks ready</h4>
+      <p>Every statement comes with a CSV built for direct import into QuickBooks, Xero, or your Money Tracker.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ────────────────────────────────────── -->
+<footer class="footer">
+  <p>Libby is part of <a href="index.html">SolFound</a> · Lives inside <a href="ledgerpath.html">LedgerPath</a> · Powered by the Statement Engine on Railway</p>
+  <p style="margin-top:6px">Built with 🐛 by Bookie and 🐦 by Libby</p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  LIBBY — SolFound Dedicated Page
+//  Production Railway backend
+// ═══════════════════════════════════════════════════════
+
+const LIBBY_URL = 'https://web-production-407fa.up.railway.app';
+const LIBBY_KEY = 'lp_sk_awehq238h23dncdp923nf';
+
+let selectedFile = null;
+let processedResults = [];
+
+// ── Libby speech lines ─────────────────────────────
+const GREETINGS = [
+  "Hello! Ready to tidy your books? 📚",
+  "Drop me a PDF and I'll sort it out!",
+  "Bookie and I are standing by — let's go!",
+  "I love organising statements. Bring it on!",
+  "Hi there! Messy statements are my favourite. 🐛",
+];
+const PROCESSING_MSGS = [
+  "Scanning your PDF and sorting the pages…",
+  "Bookie's helping me spot the vendor patterns!",
+  "Ooh, interesting statement structure here…",
+  "Almost there — naming everything nicely…",
+  "Crunching the confidence scores…",
+];
+
+function randomLine(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+// ── SolFound nav ───────────────────────────────────
+function sfToggleMenu(){
+  const h = document.getElementById('sf-hamburger');
+  const d = document.getElementById('sf-drawer');
+  h.classList.toggle('open');
+  d.classList.toggle('open');
+}
+document.addEventListener('click', function(e){
+  const h = document.getElementById('sf-hamburger');
+  const d = document.getElementById('sf-drawer');
+  if(h && d && !h.contains(e.target) && !d.contains(e.target)){
+    h.classList.remove('open'); d.classList.remove('open');
+  }
+});
+
+function sfShowToast(msg){
+  const t = document.getElementById('sf-toast');
+  if(!t) return;
+  t.innerHTML = '<span>✅</span> ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── API health check ───────────────────────────────
+async function checkAPI(){
+  const dot = document.getElementById('api-dot');
+  const txt = document.getElementById('api-status-text');
+  try {
+    const r = await fetch(LIBBY_URL + '/health', {
+      signal: AbortSignal.timeout(5000)
+    });
+    if(r.ok){
+      dot.className = 'api-dot connected';
+      txt.textContent = 'Statement engine connected and ready';
+    } else { throw new Error('non-200'); }
+  } catch(e){
+    dot.className = 'api-dot disconnected';
+    txt.textContent = 'Engine offline — may be waking up (try uploading anyway)';
+  }
+}
+
+// ── File handling ──────────────────────────────────
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if(file) setFile(file);
+}
+function handleFileSelect(e){
+  const file = e.target.files[0];
+  if(file) setFile(file);
+}
+function setFile(file){
+  if(!file.name.match(/\.pdf$/i)){
+    alert('Please upload a PDF file.');
+    return;
+  }
+  selectedFile = file;
+  document.getElementById('upload-icon').textContent = '✅';
+  document.getElementById('upload-title').textContent = file.name;
+  document.getElementById('upload-sub').textContent = (file.size/1024/1024).toFixed(2) + ' MB · PDF ready to process';
+  document.getElementById('upload-zone').classList.add('has-file');
+  document.getElementById('process-btn').disabled = false;
+  setLibbySpeech("Great choice! Set your prefix and I'll get started.");
+}
+
+function setLibbySpeech(text){
+  const el = document.getElementById('libby-speech');
+  if(el) el.textContent = text;
+}
+
+// ── Processing ─────────────────────────────────────
+async function startProcessing(){
+  if(!selectedFile) return;
+  const prefix = (document.getElementById('prefix-input').value.trim() || 'CLIENT').toUpperCase();
+
+  showState('processing');
+  setLibbySpeech("Scanning… Bookie's on it too! 🐛");
+
+  const steps = ['step-load','step-split','step-vendor','step-name','step-conf','step-save'];
+  const pcts  = [10, 26, 48, 66, 82, 94];
+  let stepIdx = 0;
+
+  const stepTimer = setInterval(() => {
+    if(stepIdx > 0){
+      const prev = document.getElementById(steps[stepIdx-1]);
+      if(prev) prev.className = 'done';
+    }
+    if(stepIdx < steps.length){
+      const cur = document.getElementById(steps[stepIdx]);
+      if(cur) cur.className = 'active';
+      document.getElementById('progress-bar').style.width = pcts[stepIdx] + '%';
+      document.getElementById('progress-label').textContent = pcts[stepIdx] + '% complete';
+      document.getElementById('processing-msg').textContent = randomLine(PROCESSING_MSGS);
+      stepIdx++;
+    }
+  }, 900);
+
+  try {
+    const form = new FormData();
+    form.append('file', selectedFile);
+    form.append('prefix', prefix);
+
+    const resp = await fetch(LIBBY_URL + '/process', {
+      method: 'POST',
+      headers: { 'X-API-Key': LIBBY_KEY },
+      body: form,
+      signal: AbortSignal.timeout(120000),
+    });
+
+    clearInterval(stepTimer);
+
+    if(!resp.ok){
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error || 'Server error ' + resp.status);
+    }
+
+    const data = await resp.json();
+    processedResults = data.results || [];
+    showResults(processedResults);
+    sfShowToast(processedResults.reduce((s,r)=>s+r.transactions,0) + ' transactions extracted by Libby');
+
+  } catch(e){
+    clearInterval(stepTimer);
+    if(e.name === 'TimeoutError'){
+      showError('Timed out', 'The statement may be very large. Try again or split the PDF into smaller chunks.');
+    } else {
+      showError('Processing failed', e.message);
+    }
+    setLibbySpeech("Oops, that one was tricky — but I know what happened!");
+  }
+}
+
+// ── Results rendering ──────────────────────────────
+function showResults(results){
+  document.getElementById('progress-bar').style.width = '100%';
+
+  const hasLowConf = results.some(r => (r.confidence || 0) < 0.5);
+  const list = document.getElementById('stmt-list');
+
+  const vendorIcon = v => {
+    if(!v) return '📄';
+    const u = v.toUpperCase();
+    if(u.includes('CHASE') || u.includes('BANK') || u.includes('WELLS') || u.includes('BOA')) return '🏦';
+    if(u.includes('AMEX') || u.includes('VISA') || u.includes('CARD') || u.includes('CREDIT')) return '💳';
+    if(u.includes('WATER') || u.includes('SAWS') || u.includes('CPS') || u.includes('ENERGY')) return '💡';
+    if(u.includes('ATT') || u.includes('SPECTRUM') || u.includes('VERIZON')) return '📡';
+    return '📄';
+  };
+
+  list.innerHTML = results.map(r => {
+    const conf = Math.round((r.confidence || 0) * 100);
+    const confClass = conf >= 75 ? 'conf-high' : conf >= 50 ? 'conf-mid' : 'conf-low';
+    const txnLabel = r.transactions > 0 ? `${r.transactions} transaction${r.transactions>1?'s':''}` : 'no transactions';
+    const csvFilename = (r.csv_filename || (r.filename||'').replace('.pdf','.csv'));
+    return `<li class="stmt-item">
+      <div class="stmt-icon">${vendorIcon(r.vendor)}</div>
+      <div class="stmt-info">
+        <span class="stmt-name">${r.filename || r.csv_filename || 'Statement'}</span>
+        <span class="stmt-meta">${r.vendor||'Unknown'} · ${r.date||''} · ${r.pages||'?'} page${(r.pages||1)>1?'s':''} · ${txnLabel}</span>
+      </div>
+      <span class="stmt-conf ${confClass}">${conf}%</span>
+      <div class="stmt-actions">
+        ${r.pdf_url ? `<a class="dl-btn dl-pdf" href="${r.pdf_url}?api_key=${LIBBY_KEY}" download="${r.filename}">PDF ↓</a>` : ''}
+        ${r.csv_url && r.transactions > 0 ? `<a class="dl-btn dl-csv" href="${r.csv_url}?api_key=${LIBBY_KEY}" download="${csvFilename}">CSV ↓</a>` : ''}
+      </div>
+    </li>`;
+  }).join('');
+
+  const n = results.length;
+  const totalTxn = results.reduce((s,r)=>s+(r.transactions||0),0);
+  document.getElementById('results-title').textContent =
+    n === 1 ? 'All done! Your books are looking lovely.' : `All done! ${n} statements sorted and named.`;
+  document.getElementById('results-sub').textContent =
+    `${n} statement${n>1?'s':''} · ${totalTxn} transactions · ${hasLowConf ? 'Some files need a review — check the orange ones.' : 'All high confidence ✓'}`;
+
+  if(hasLowConf) document.getElementById('confidence-tip').style.display = 'flex';
+
+  setLibbySpeech(n === 1 ? 'All done! Everything looks lovely.' : `${n} statements sorted! Ready to download. 🎉`);
+  showState('results');
+}
+
+function downloadAll(){
+  processedResults.forEach((r, i) => {
+    if(r.pdf_url){
+      setTimeout(() => {
+        const a = document.createElement('a');
+        a.href = r.pdf_url + '?api_key=' + LIBBY_KEY;
+        a.download = r.filename || 'statement.pdf';
+        a.click();
+      }, i * 400);
+    }
+    if(r.csv_url && r.transactions > 0){
+      setTimeout(() => {
+        const a = document.createElement('a');
+        a.href = r.csv_url + '?api_key=' + LIBBY_KEY;
+        a.download = r.csv_filename || 'transactions.csv';
+        a.click();
+      }, i * 400 + 200);
+    }
+  });
+}
+
+function exportQB(){
+  alert("QuickBooks export coming in Phase 2! For now, download your CSV files and import via QuickBooks Online → Transactions → Import.");
+}
+
+// ── Error ──────────────────────────────────────────
+function showError(title, msg){
+  document.getElementById('error-title').textContent = title;
+  document.getElementById('error-msg').textContent = msg;
+  showState('error');
+}
+
+// ── State management ───────────────────────────────
+function showState(name){
+  document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
+  document.getElementById('state-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function resetApp(){
+  selectedFile = null;
+  processedResults = [];
+  document.getElementById('file-input').value = '';
+  document.getElementById('upload-icon').textContent = '📄';
+  document.getElementById('upload-title').textContent = 'Drop your PDF bank statement here';
+  document.getElementById('upload-sub').innerHTML = 'or click to browse · <em>Bank, credit card, utility statements</em>';
+  document.getElementById('upload-zone').classList.remove('has-file');
+  document.getElementById('process-btn').disabled = true;
+  document.getElementById('confidence-tip').style.display = 'none';
+  setLibbySpeech(randomLine(GREETINGS));
+  showState('upload');
+}
+
+// ── Fade-up scroll animations ──────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ── Init ───────────────────────────────────────────
+setLibbySpeech(randomLine(GREETINGS));
+checkAPI();
+setInterval(checkAPI, 30000);
+</script>
+</body>
+</html>
