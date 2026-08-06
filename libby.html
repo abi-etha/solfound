@@ -513,6 +513,16 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
   <p style="margin-top:6px">Built with 🐛 by Bookie and 🐦 by Libby</p>
 </footer>
 
+<div id="expired-modal" style="display:none;position:fixed;inset:0;background:rgba(15,10,4,0.7);z-index:9000;align-items:center;justify-content:center">
+  <div style="background:white;border-radius:16px;padding:36px 32px;max-width:420px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.2)">
+    <div style="font-size:40px;margin-bottom:16px">🔒</div>
+    <h3 style="font-family:'Crimson Pro',serif;font-size:22px;color:#0F0A04;margin-bottom:10px">Files deleted for your security</h3>
+    <p style="font-size:14px;color:#7A6055;line-height:1.6;margin-bottom:24px">For your data security, all processed files are permanently deleted from our servers immediately after download. To get another copy, simply re-upload your PDF — Libby will process it again in seconds.</p>
+    <button onclick="document.getElementById('expired-modal').style.display='none';resetApp()" style="background:#2E4D34;color:white;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-right:8px">Process again</button>
+    <button onclick="document.getElementById('expired-modal').style.display='none'" style="background:#E4EDE8;color:#2E4D34;border:none;border-radius:8px;padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Close</button>
+  </div>
+</div>
+  
 <script>
 // ═══════════════════════════════════════════════════════
 //  LIBBY v2 — Multi-stack structured workflow
@@ -886,8 +896,8 @@ function showResults(results){
       </div>
       <span class="stmt-conf ${confClass}">${conf}%</span>
       <div class="stmt-actions">
-        ${r.pdf_url?`<a class="dl-btn dl-pdf" href="${r.pdf_url}?api_key=${LIBBY_KEY}" download="${r.filename}">PDF ↓</a>`:''}
-        ${r.csv_url&&r.transactions>0?`<a class="dl-btn dl-csv" href="${r.csv_url}?api_key=${LIBBY_KEY}" download="${csvFilename}">CSV ↓</a>`:''}
+        ${r.pdf_url?`<button class="dl-btn dl-pdf" onclick="safeDownload('${r.filename}','${r.pdf_url}')">PDF ↓</button>`:''}
+        ${r.csv_url&&r.transactions>0?`<button class="dl-btn dl-csv" onclick="safeDownload('${csvFilename}','${r.csv_url}')">CSV ↓</button>`:''}
       </div>
     </li>`;
   }).join('');
@@ -913,6 +923,22 @@ function showResults(results){
   showState('results');
 }
 
+async function safeDownload(filename, url){
+  try {
+    const resp = await fetch(url + '?api_key=' + LIBBY_KEY, { method: 'HEAD' });
+    if(resp.ok){
+      const a = document.createElement('a');
+      a.href = url + '?api_key=' + LIBBY_KEY;
+      a.download = filename;
+      a.click();
+    } else {
+      document.getElementById('expired-modal').style.display = 'flex';
+    }
+  } catch(e) {
+    document.getElementById('expired-modal').style.display = 'flex';
+  }
+}
+  
 function downloadAll(){
   processedResults.forEach((r,i)=>{
     if(r.pdf_url) setTimeout(()=>{ const a=document.createElement('a'); a.href=r.pdf_url+'?api_key='+LIBBY_KEY; a.download=r.filename||'statement.pdf'; a.click(); }, i*400);
