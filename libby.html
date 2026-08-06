@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* SolFound base */
   --ink:        #0F0A04;
   --ink-mid:    #1C1208;
   --warm:       #2A1F12;
@@ -15,7 +14,6 @@
   --cream:      #FAF6F0;
   --parchment:  #F2EAD8;
   --dust:       #8C7B6A;
-  /* Libby's palette — sage + lavender */
   --sage:       #4A6B50;
   --sage-lt:    #E4EDE8;
   --sage-mid:   #6B8F71;
@@ -50,7 +48,7 @@ body {
 }
 h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line-height: 1.2; }
 
-/* ── SolFound global nav ──────────────────────────── */
+/* ── Nav ──────────────────────────────────────────── */
 .sf-nav { background: var(--ink); padding: 0 32px; display: flex; align-items: center; border-bottom: 1px solid rgba(232,160,32,0.15); position: sticky; top: 0; z-index: 200; }
 .sf-nav-logo { font-family: 'Crimson Pro', Georgia, serif; font-size: 16px; font-weight: 600; color: white; padding: 10px 20px 10px 0; margin-right: 8px; border-right: 1px solid rgba(255,255,255,0.1); white-space: nowrap; flex-shrink: 0; text-decoration: none; }
 .sf-nav-logo span { color: var(--sun); }
@@ -67,6 +65,8 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
 .sf-drawer.open { display: flex; }
 .sf-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--sage-dark); color: #8FD4A0; border: 1px solid rgba(143,212,160,0.3); border-radius: 8px; padding: 12px 20px; font-size: 13px; font-weight: 600; white-space: nowrap; opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 9999; pointer-events: none; display: flex; align-items: center; gap: 8px; }
 .sf-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; padding: 11px 0; margin-left: auto; transition: color 0.15s; }
+.back-link:hover { color: rgba(255,255,255,0.8); }
 @media(max-width:640px) {
   .sf-nav { padding: 0 16px; }
   .sf-nav-links { display: none; }
@@ -74,39 +74,11 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
 }
 
 /* ── Hero ─────────────────────────────────────────── */
-.hero {
-  background: var(--ink-mid);
-  border-bottom: 1px solid rgba(107,143,113,0.2);
-  padding: 52px 32px 44px;
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-.hero-grid {
-  position: absolute; inset: 0;
-  background-image: linear-gradient(rgba(107,143,113,0.04) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(107,143,113,0.04) 1px, transparent 1px);
-  background-size: 48px 48px;
-  pointer-events: none;
-}
-.hero-glow {
-  position: absolute; width: 500px; height: 500px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(74,107,80,0.15) 0%, transparent 70%);
-  top: -150px; right: -100px; pointer-events: none;
-}
-.hero-inner {
-  max-width: 1000px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr auto;
-  gap: 32px; align-items: center; position: relative; z-index: 1;
-}
-.hero-text { position: relative; z-index: 2; }
-.hero-mascot { position: relative; z-index: 1; }
-.hero-text { }
-.hero-eyebrow {
-  font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--sage-mid); margin-bottom: 14px;
-  display: flex; align-items: center; gap: 10px;
-}
+.hero { background: var(--ink-mid); border-bottom: 1px solid rgba(107,143,113,0.2); padding: 52px 32px 44px; position: relative; overflow: hidden; isolation: isolate; }
+.hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(107,143,113,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(107,143,113,0.04) 1px, transparent 1px); background-size: 48px 48px; pointer-events: none; }
+.hero-glow { position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(74,107,80,0.15) 0%, transparent 70%); top: -150px; right: -100px; pointer-events: none; }
+.hero-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; position: relative; z-index: 1; }
+.hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sage-mid); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
 .hero-eyebrow::before { content: ''; display: inline-block; width: 28px; height: 1px; background: var(--sage-mid); }
 .hero h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); color: white; margin-bottom: 14px; }
 .hero h1 em { color: var(--sage-mid); font-style: italic; }
@@ -118,82 +90,72 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
 .api-dot.checking { background: var(--gold); animation: pulse 1s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
 .api-status-text { color: rgba(255,255,255,0.55); }
-
-/* Hero mascot duo */
-.hero-mascot {
-  display: flex; align-items: flex-end; gap: 0;
-  position: relative; flex-shrink: 0; z-index: 1;
-  max-width: 240px;
-  align-self: stretch;
-  justify-content: flex-end;
-  overflow: hidden;
-}
-.hero-mascot img {
-  width: 220px; max-width: 100%; height: auto;
-  object-fit: contain;
-  object-position: bottom right;
-  animation: float 4s ease-in-out infinite;
-  mix-blend-mode: lighten;
-}
+.hero-mascot { display: flex; align-items: flex-end; position: relative; flex-shrink: 0; z-index: 1; max-width: 240px; align-self: stretch; justify-content: flex-end; overflow: hidden; }
+.hero-mascot img { width: 220px; max-width: 100%; height: auto; object-fit: contain; object-position: bottom right; animation: float 4s ease-in-out infinite; mix-blend-mode: lighten; }
 @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-.hero-speech {
-  position: absolute; top: -16px; left: -160px;
-  background: white; border: 2px solid var(--sage-lt); border-radius: 12px;
-  padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--sage-dark);
-  white-space: nowrap; box-shadow: var(--shadow-sm);
-  animation: speech-bob 4s ease-in-out infinite;
-}
+.hero-speech { position: absolute; top: -16px; left: -160px; background: white; border: 2px solid var(--sage-lt); border-radius: 12px; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--sage-dark); white-space: nowrap; box-shadow: var(--shadow-sm); animation: speech-bob 4s ease-in-out infinite; transition: opacity 0.3s; }
 @keyframes speech-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-.hero-speech::after {
-  content: ''; position: absolute; bottom: -10px; right: 28px;
-  width: 0; height: 0;
-  border-left: 8px solid transparent; border-right: 8px solid transparent;
-  border-top: 10px solid white;
-}
-.hero-speech::before {
-  content: ''; position: absolute; bottom: -12px; right: 27px;
-  width: 0; height: 0;
-  border-left: 9px solid transparent; border-right: 9px solid transparent;
-  border-top: 11px solid var(--sage-lt);
-}
-@media(max-width: 680px) {
+.hero-speech::after { content: ''; position: absolute; bottom: -10px; right: 28px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 10px solid white; }
+.hero-speech::before { content: ''; position: absolute; bottom: -12px; right: 27px; width: 0; height: 0; border-left: 9px solid transparent; border-right: 9px solid transparent; border-top: 11px solid var(--sage-lt); }
+@media(max-width:680px) {
   .hero-inner { grid-template-columns: 1fr; }
-  .hero-mascot { justify-content: center; }
+  .hero-mascot { justify-content: center; max-width: 100%; }
   .hero-mascot img { width: 160px; }
   .hero-speech { left: 50%; transform: translateX(-50%); top: -52px; white-space: normal; width: 200px; text-align: center; }
 }
 
-/* ── Main content ─────────────────────────────────── */
-.main { max-width: 780px; margin: 0 auto; padding: 36px 24px 64px; }
+/* ── Main ─────────────────────────────────────────── */
+.main { max-width: 820px; margin: 0 auto; padding: 36px 24px 64px; }
 
 /* ── Card ─────────────────────────────────────────── */
 .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 28px; margin-bottom: 20px; border: 1px solid rgba(107,143,113,0.1); }
 .card-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-lt); margin-bottom: 16px; }
 
-/* ── Upload zone ──────────────────────────────────── */
-.upload-zone {
-  border: 2.5px dashed rgba(107,143,113,0.4);
-  border-radius: var(--radius); padding: 44px 28px;
-  text-align: center; cursor: pointer;
-  transition: all 0.2s; background: var(--sage-lt);
-  position: relative;
+/* ── Vendor Stack ─────────────────────────────────── */
+.stack-container { display: flex; flex-direction: column; gap: 20px; }
+.vendor-stack { background: var(--white); border: 1.5px solid rgba(107,143,113,0.15); border-radius: var(--radius); padding: 24px; position: relative; transition: border-color 0.2s; }
+.vendor-stack.has-file { border-color: var(--sage-mid); }
+.vendor-stack.flagged { border-color: var(--alert); }
+.stack-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.stack-label { font-family: 'Crimson Pro', serif; font-size: 17px; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 10px; }
+.stack-number { width: 26px; height: 26px; border-radius: 50%; background: var(--sage-dark); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
+.stack-remove { background: none; border: none; cursor: pointer; color: var(--text-lt); font-size: 18px; padding: 4px 8px; border-radius: 6px; transition: all 0.15s; line-height: 1; }
+.stack-remove:hover { background: var(--alert-lt); color: var(--alert); }
+
+/* ── Stack fields grid ────────────────────────────── */
+.stack-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+.stack-fields.three-col { grid-template-columns: 1fr 1fr 1fr; }
+@media(max-width:600px) {
+  .stack-fields, .stack-fields.three-col { grid-template-columns: 1fr; }
 }
+.field { display: flex; flex-direction: column; }
+.field label { font-size: 11px; font-weight: 700; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.field-optional { font-size: 10px; font-weight: 500; color: var(--text-lt); text-transform: none; letter-spacing: 0; }
+.field input, .field select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--parchment); border-radius: var(--radius-sm); font-family: inherit; font-size: 14px; color: var(--text); background: var(--cream); transition: border-color 0.15s; appearance: none; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--sage-mid); }
+.field input::placeholder { color: var(--text-lt); }
+.field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238C7B6A' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; cursor: pointer; }
+
+/* Copy from above row */
+.copy-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding: 10px 14px; background: var(--lav-lt); border-radius: var(--radius-sm); border: 1px solid rgba(122,106,158,0.15); }
+.copy-row span { font-size: 13px; color: var(--text-mid); flex: 1; }
+.btn-copy { font-size: 12px; font-weight: 700; color: var(--lav-dark); background: white; border: 1.5px solid rgba(122,106,158,0.3); border-radius: 6px; padding: 5px 12px; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.btn-copy:hover { background: var(--lav-lt); border-color: var(--lav); }
+
+/* ── Upload zone (inside stack) ───────────────────── */
+.upload-zone { border: 2px dashed rgba(107,143,113,0.35); border-radius: var(--radius-sm); padding: 28px 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--sage-lt); position: relative; }
 .upload-zone:hover, .upload-zone.drag-over { border-color: var(--sage); background: #dceee0; }
 .upload-zone.has-file { border-color: var(--sage-mid); border-style: solid; background: #e8f3ea; }
-.upload-icon { font-size: 44px; margin-bottom: 14px; display: block; transition: transform 0.2s; }
-.upload-zone:hover .upload-icon { transform: translateY(-4px); }
-.upload-title { font-size: 18px; font-weight: 700; color: var(--sage-dark); margin-bottom: 5px; font-family: 'Crimson Pro', serif; }
-.upload-sub { font-size: 13px; color: var(--text-mid); }
-.upload-sub em { color: var(--sage-dark); font-style: normal; font-weight: 600; }
-#file-input { display: none; }
+.upload-icon { font-size: 32px; margin-bottom: 8px; display: block; transition: transform 0.2s; }
+.upload-zone:hover .upload-icon { transform: translateY(-3px); }
+.upload-title { font-size: 15px; font-weight: 700; color: var(--sage-dark); margin-bottom: 3px; font-family: 'Crimson Pro', serif; }
+.upload-sub { font-size: 12px; color: var(--text-mid); }
 
-/* ── Prefix + button row ──────────────────────────── */
-.controls-row { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: flex-end; margin-top: 20px; }
-.field label { display: block; font-size: 11px; font-weight: 700; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 7px; }
-.field input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--parchment); border-radius: var(--radius-sm); font-family: inherit; font-size: 14px; color: var(--text); background: var(--cream); transition: border-color 0.15s; }
-.field input:focus { outline: none; border-color: var(--sage-mid); }
-.field input::placeholder { color: var(--text-lt); }
-@media(max-width:540px) { .controls-row { grid-template-columns: 1fr; } }
+/* ── Add stack button ─────────────────────────────── */
+.add-stack-btn { width: 100%; padding: 16px; border: 2px dashed rgba(107,143,113,0.3); border-radius: var(--radius); background: transparent; cursor: pointer; font-family: 'Crimson Pro', serif; font-size: 17px; font-weight: 600; color: var(--sage-dark); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.add-stack-btn:hover { border-color: var(--sage-mid); background: var(--sage-lt); }
+.add-stack-plus { width: 28px; height: 28px; border-radius: 50%; background: var(--sage-dark); color: white; font-size: 18px; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; font-weight: 300; transition: transform 0.2s; flex-shrink: 0; }
+.add-stack-btn:hover .add-stack-plus { transform: rotate(90deg); }
 
 /* ── Buttons ──────────────────────────────────────── */
 .btn { padding: 11px 22px; border-radius: var(--radius-sm); border: none; cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 600; transition: all 0.15s; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 7px; }
@@ -204,16 +166,12 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
 .btn-lav:hover { background: var(--lav-dark); transform: translateY(-1px); }
 .btn-ghost { background: var(--sage-lt); color: var(--sage-dark); }
 .btn-ghost:hover { background: #d6e8d9; }
-.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn-alert { background: var(--alert); color: white; }
 .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.process-row { display: flex; justify-content: flex-end; margin-top: 20px; }
 
 /* ── Bookie tip ───────────────────────────────────── */
-.bookie-tip {
-  display: flex; align-items: flex-start; gap: 16px;
-  background: var(--lav-lt); border-radius: var(--radius-sm);
-  padding: 18px; margin-top: 18px;
-  border: 1px solid rgba(122,106,158,0.15);
-}
+.bookie-tip { display: flex; align-items: flex-start; gap: 16px; background: var(--lav-lt); border-radius: var(--radius-sm); padding: 18px; margin-top: 18px; border: 1px solid rgba(122,106,158,0.15); }
 .bookie-tip-text { font-size: 13px; color: var(--text-mid); line-height: 1.65; }
 .bookie-tip-text strong { color: var(--text); }
 .bookie-img { flex-shrink: 0; width: 48px; height: auto; }
@@ -229,6 +187,25 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
 .step-list li.done { color: var(--sage-dark); font-weight: 600; }
 .step-list li.active { color: var(--text); font-weight: 700; }
 .step-icon { width: 20px; text-align: center; flex-shrink: 0; }
+
+/* ── Preview state ────────────────────────────────── */
+.preview-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+.preview-header h2 { font-size: 22px; color: var(--ink); }
+.preview-header p { font-size: 13px; color: var(--text-mid); margin-top: 3px; }
+.preview-stack { border: 1.5px solid rgba(107,143,113,0.15); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+.preview-stack-title { font-family: 'Crimson Pro', serif; font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.health-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+@media(max-width:500px) { .health-grid { grid-template-columns: 1fr; } }
+.health-pill { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; }
+.health-strong { background: var(--sage-lt); color: var(--sage-dark); }
+.health-mixed { background: var(--gold-lt); color: #7A5C1E; }
+.health-weak { background: var(--alert-lt); color: var(--alert); }
+.health-icon { font-size: 16px; flex-shrink: 0; }
+.health-label { flex: 1; }
+.health-detail { font-size: 11px; font-weight: 400; opacity: 0.8; display: block; margin-top: 1px; }
+.flag-summary { font-size: 12px; color: var(--text-mid); padding: 10px 14px; background: var(--parchment); border-radius: var(--radius-sm); display: flex; align-items: center; gap: 8px; }
+.flag-summary.has-flags { background: var(--alert-lt); color: var(--alert); font-weight: 600; }
+.preview-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; flex-wrap: wrap; }
 
 /* ── Results ──────────────────────────────────────── */
 .results-header { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
@@ -265,10 +242,7 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
 .state.active { display: block; }
 
 /* ── Info strip ───────────────────────────────────── */
-.info-strip {
-  background: var(--ink-mid); border-top: 1px solid rgba(107,143,113,0.15);
-  padding: 36px 24px; margin-top: 40px;
-}
+.info-strip { background: var(--ink-mid); border-top: 1px solid rgba(107,143,113,0.15); padding: 36px 24px; margin-top: 40px; }
 .info-strip-inner { max-width: 780px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 .info-item { text-align: center; }
 .info-icon { font-size: 28px; margin-bottom: 10px; }
@@ -282,18 +256,13 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
 .footer a { color: var(--sage-mid); text-decoration: none; font-weight: 600; }
 .footer a:hover { color: var(--sage-lt); }
 
-/* ── Fade-up animation ────────────────────────────── */
 .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
 .fade-up.visible { opacity: 1; transform: translateY(0); }
-
-/* ── "Back to LedgerPath" link ────────────────────── */
-.back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; padding: 11px 0; margin-left: auto; transition: color 0.15s; }
-.back-link:hover { color: rgba(255,255,255,0.8); }
 </style>
 </head>
 <body>
 
-<!-- ── SolFound nav ──────────────────────────────── -->
+<!-- ── Nav ───────────────────────────────────────── -->
 <div class="sf-nav">
   <a href="index.html" class="sf-nav-logo">Sol<span>Found</span></a>
   <div class="sf-nav-links">
@@ -319,7 +288,7 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
 </div>
 <div class="sf-toast" id="sf-toast"></div>
 
-<!-- ── Hero ─────────────────────────────────────────── -->
+<!-- ── Hero ──────────────────────────────────────── -->
 <section class="hero">
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
@@ -327,7 +296,7 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
     <div class="hero-text">
       <div class="hero-eyebrow">AI Bookkeeping Assistant</div>
       <h1>Hi, I'm <em>Libby.</em><br>Let's tidy those books.</h1>
-      <p class="hero-sub">Drop me a messy bank statement and I'll sort it into clean, named files — ready for QuickBooks in under a minute. Bookie keeps me honest.</p>
+      <p class="hero-sub">Sort your statements by vendor, drop them in, and I'll split, name, and export everything — clean files ready for QuickBooks in under a minute.</p>
       <div class="api-status" id="api-status">
         <div class="api-dot checking" id="api-dot"></div>
         <span class="api-status-text" id="api-status-text">Checking connection…</span>
@@ -336,41 +305,59 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
     <div class="hero-mascot">
       <div class="hero-speech" id="libby-speech">Hello! Ready to tidy your books? 📚</div>
       <img src="https://web-production-407fa.up.railway.app/static/libby-bookie.png"
-           alt="Libby the bookkeeping bird with Bookie the bookworm"
+           alt="Libby and Bookie"
            id="mascot-img"
            onerror="this.style.display='none'">
     </div>
   </div>
 </section>
 
-<!-- ── Main ─────────────────────────────────────────── -->
+<!-- ── Main ──────────────────────────────────────── -->
 <main class="main">
 
   <!-- ── UPLOAD STATE ──────────────────────────────── -->
   <div class="state active" id="state-upload">
 
-    <div class="card fade-up">
-      <div class="card-title">Step 1 — Upload your statement</div>
-      <div class="upload-zone" id="upload-zone"
-           onclick="document.getElementById('file-input').click()"
-           ondragover="event.preventDefault();this.classList.add('drag-over')"
-           ondragleave="this.classList.remove('drag-over')"
-           ondrop="handleDrop(event)">
-        <span class="upload-icon" id="upload-icon">📄</span>
-        <div class="upload-title" id="upload-title">Drop your PDF bank statement here</div>
-        <div class="upload-sub" id="upload-sub">or click to browse · <em>Bank, credit card, utility statements</em></div>
-        <input type="file" id="file-input" accept=".pdf" onchange="handleFileSelect(event)">
-      </div>
-
-      <div class="controls-row">
-        <div class="field">
-          <label>Client / folder prefix</label>
-          <input type="text" id="prefix-input" placeholder="e.g. SMITH_2025 or MONTROSE_SALON" value="">
+    <!-- Instructions card -->
+    <div class="card fade-up" style="background:var(--ink-mid);border-color:rgba(107,143,113,0.2)">
+      <div class="card-title" style="color:rgba(255,255,255,0.4)">How to prepare your documents</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+        <div style="text-align:center;padding:12px 8px">
+          <div style="font-size:28px;margin-bottom:8px">📑</div>
+          <div style="font-size:13px;font-weight:700;color:white;margin-bottom:4px">1. Sort by vendor</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Separate your papers into stacks — one per bank or company</div>
         </div>
-        <button class="btn btn-sage" id="process-btn" onclick="startProcessing()" disabled>
-          Let Libby work ✨
-        </button>
+        <div style="text-align:center;padding:12px 8px">
+          <div style="font-size:28px;margin-bottom:8px">📅</div>
+          <div style="font-size:13px;font-weight:700;color:white;margin-bottom:4px">2. Order by date</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Put each stack in date order, oldest first. Page order matters too</div>
+        </div>
+        <div style="text-align:center;padding:12px 8px">
+          <div style="font-size:28px;margin-bottom:8px">📤</div>
+          <div style="font-size:13px;font-weight:700;color:white;margin-bottom:4px">3. Scan and upload</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">Scan each stack as one PDF. Add a stack below for each vendor</div>
+        </div>
       </div>
+      <div style="grid-column:1/-1;display:flex;align-items:center;gap:8px;margin-top:4px;padding:10px 14px;background:rgba(107,143,113,0.1);border-radius:8px">
+        <span style="font-size:14px">💡</span>
+        <span style="font-size:12px;color:rgba(255,255,255,0.45)">Outlier pages that don't match the declared vendor will be flagged for your review — Libby won't guess.</span>
+      </div>
+    </div>
+
+    <!-- Vendor stacks -->
+    <div class="stack-container" id="stack-container"></div>
+
+    <!-- Add stack button -->
+    <button class="add-stack-btn" id="add-stack-btn" onclick="addStack()">
+      <div class="add-stack-plus">+</div>
+      Add another vendor stack
+    </button>
+
+    <!-- Process button row -->
+    <div class="process-row">
+      <button class="btn btn-sage" id="process-btn" onclick="startPreview()" disabled style="padding:13px 32px;font-size:15px">
+        Preview & process ✨
+      </button>
     </div>
 
     <div class="bookie-tip fade-up" style="transition-delay:0.1s">
@@ -379,79 +366,83 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
            alt="Bookie the bookworm"
            onerror="this.style.display='none'">
       <div class="bookie-tip-text">
-        <strong>Bookie says:</strong> Make sure your PDF is a scanned statement — not a digital export. Libby reads scanned pages best at 150 DPI or higher. Got multiple statements in one PDF? No problem — I split them automatically!
+        <strong>Bookie says:</strong> The more information you give me about each stack, the better I can catch mistakes before they happen. Date ranges and page counts are optional — but they're my secret weapon for spotting when something's off!
       </div>
     </div>
   </div>
 
-  <!-- ── PROCESSING STATE ──────────────────────────── -->
+  <!-- ── PROCESSING STATE ───────────────────────────── -->
   <div class="state" id="state-processing">
     <div class="card processing-card">
       <div class="processing-mascot">
-        <!-- Bookie animated while working -->
         <svg width="80" height="90" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg">
-          <!-- books base -->
           <rect x="8" y="72" width="64" height="10" rx="3" fill="#8B6F5E"/>
           <rect x="4" y="62" width="72" height="11" rx="3" fill="#A07850"/>
           <rect x="10" y="52" width="60" height="11" rx="3" fill="#6B8F71"/>
           <text x="40" y="60" text-anchor="middle" font-size="6" font-family="serif" fill="#F2EAD8" opacity="0.9">LEDGER</text>
-          <!-- Bookie body emerging from books -->
           <ellipse cx="40" cy="40" rx="22" ry="19" fill="#90C870"/>
-          <!-- belly lighter -->
           <ellipse cx="40" cy="46" rx="13" ry="11" fill="#B0DC90"/>
-          <!-- eyes -->
-          <circle cx="32" cy="37" r="5" fill="white"/>
-          <circle cx="48" cy="37" r="5" fill="white"/>
-          <circle cx="32" cy="37" r="3.2" fill="#1C1208"/>
-          <circle cx="48" cy="37" r="3.2" fill="#1C1208"/>
-          <circle cx="33.2" cy="35.8" r="1.2" fill="white"/>
-          <circle cx="49.2" cy="35.8" r="1.2" fill="white"/>
-          <!-- glasses -->
+          <circle cx="32" cy="37" r="5" fill="white"/><circle cx="48" cy="37" r="5" fill="white"/>
+          <circle cx="32" cy="37" r="3.2" fill="#1C1208"/><circle cx="48" cy="37" r="3.2" fill="#1C1208"/>
+          <circle cx="33.2" cy="35.8" r="1.2" fill="white"/><circle cx="49.2" cy="35.8" r="1.2" fill="white"/>
           <circle cx="32" cy="37" r="5.5" fill="none" stroke="#5C3D2E" stroke-width="1.5"/>
           <circle cx="48" cy="37" r="5.5" fill="none" stroke="#5C3D2E" stroke-width="1.5"/>
           <line x1="37.5" y1="37" x2="42.5" y2="37" stroke="#5C3D2E" stroke-width="1.5"/>
           <line x1="26.5" y1="35.5" x2="22" y2="34" stroke="#5C3D2E" stroke-width="1.2"/>
           <line x1="53.5" y1="35.5" x2="58" y2="34" stroke="#5C3D2E" stroke-width="1.2"/>
-          <!-- antennae -->
           <line x1="34" y1="21" x2="30" y2="14" stroke="#6DB850" stroke-width="2"/>
           <line x1="46" y1="21" x2="50" y2="14" stroke="#6DB850" stroke-width="2"/>
-          <circle cx="30" cy="13" r="3" fill="#90C870"/>
-          <circle cx="50" cy="13" r="3" fill="#90C870"/>
-          <!-- pencil in hand -->
+          <circle cx="30" cy="13" r="3" fill="#90C870"/><circle cx="50" cy="13" r="3" fill="#90C870"/>
           <rect x="58" y="40" width="4" height="24" rx="1.5" fill="#F2EAD8" transform="rotate(20 58 40)"/>
           <polygon points="58,64 62,64 60,70" fill="#D4A44C" transform="rotate(20 58 40)"/>
           <rect x="58" y="40" width="4" height="5" rx="1" fill="#C65A3A" transform="rotate(20 58 40)"/>
-          <!-- smile -->
           <path d="M33 48 Q40 54 47 48" fill="none" stroke="#4A8C30" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </div>
-      <h2 style="font-size:22px;color:var(--ink);margin-bottom:8px">Libby is working her magic…</h2>
-      <p style="font-size:13px;color:var(--text-mid);margin-bottom:0" id="processing-msg">Loading your PDF…</p>
+      <h2 style="font-size:22px;color:var(--ink);margin-bottom:8px" id="processing-title">Libby is analysing your stacks…</h2>
+      <p style="font-size:13px;color:var(--text-mid);margin-bottom:0" id="processing-msg">Loading your PDFs…</p>
       <div class="progress-wrap">
         <div class="progress-bar" id="progress-bar" style="width:4%"></div>
       </div>
       <p style="font-size:12px;color:var(--text-lt);margin-bottom:20px" id="progress-label">Starting…</p>
       <ul class="step-list" id="step-list">
-        <li id="step-load"><span class="step-icon">📄</span> Loading your PDF</li>
+        <li id="step-load"><span class="step-icon">📄</span> Loading your PDFs</li>
         <li id="step-split"><span class="step-icon">✂️</span> Identifying statement boundaries</li>
-        <li id="step-vendor"><span class="step-icon">🔍</span> Recognising vendors</li>
+        <li id="step-vendor"><span class="step-icon">🔍</span> Cross-checking vendors</li>
+        <li id="step-health"><span class="step-icon">🩺</span> Scoring stack health</li>
         <li id="step-name"><span class="step-icon">🏷️</span> Building file names</li>
-        <li id="step-conf"><span class="step-icon">📊</span> Computing confidence scores</li>
-        <li id="step-save"><span class="step-icon">💾</span> Saving organised files</li>
+        <li id="step-save"><span class="step-icon">💾</span> Preparing your files</li>
       </ul>
     </div>
   </div>
 
-  <!-- ── RESULTS STATE ─────────────────────────────── -->
+  <!-- ── PREVIEW STATE ──────────────────────────────── -->
+  <div class="state" id="state-preview">
+    <div class="card">
+      <div class="preview-header">
+        <div style="font-size:36px">🔍</div>
+        <div>
+          <h2 id="preview-title">Here's what Libby found</h2>
+          <p id="preview-sub">Review the health scores below before processing.</p>
+        </div>
+      </div>
+      <div id="preview-stacks"></div>
+      <div class="preview-actions">
+        <button class="btn btn-ghost" onclick="resetApp()">← Start over</button>
+        <button class="btn btn-sage" id="confirm-btn" onclick="confirmProcess()">Confirm & process all stacks ✨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RESULTS STATE ──────────────────────────────── -->
   <div class="state" id="state-results">
     <div class="card">
       <div class="results-header">
-        <div class="results-emoji">🎉</div>
+        <div class="results-emoji" id="results-emoji">🎉</div>
         <div class="results-info">
           <h2 id="results-title">All done! Your books are looking lovely.</h2>
           <p id="results-sub">Statements found and sorted.</p>
         </div>
-        <!-- Bookie celebrating with checkmark flag -->
         <svg width="52" height="60" viewBox="0 0 52 60" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;animation:pop 0.5s ease">
           <ellipse cx="26" cy="36" rx="18" ry="15" fill="#90C870"/>
           <ellipse cx="26" cy="42" rx="11" ry="9" fill="#B0DC90"/>
@@ -463,44 +454,30 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
           <path d="M19 47 Q26 52 33 47" fill="none" stroke="#4A8C30" stroke-width="2" stroke-linecap="round"/>
           <line x1="40" y1="16" x2="40" y2="32" stroke="#6B8F71" stroke-width="2"/>
           <path d="M40 16 L50 20 L40 24 Z" fill="#6B8F71"/>
-          <path d="M42 19.5 L48 21.5" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
-          <circle cx="10" cy="14" r="2.5" fill="#9B8BB4" opacity="0.8"/>
-          <circle cx="46" cy="8" r="2" fill="#D4A44C" opacity="0.8"/>
-          <circle cx="6" cy="26" r="2" fill="#C65A3A" opacity="0.6"/>
-          <rect x="44" y="22" width="4" height="4" rx="0.5" fill="#6B8F71" opacity="0.7" transform="rotate(30 44 22)"/>
-          <line x1="18" y1="15" x2="20" y2="8" stroke="#6B8F71" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="8" y1="18" x2="12" y2="14" stroke="#9B8BB4" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </div>
-
       <ul class="stmt-list" id="stmt-list"></ul>
-
       <div class="btn-row">
         <button class="btn btn-sage" onclick="downloadAll()">⬇ Download all files</button>
         <button class="btn btn-lav" onclick="exportQB()">📤 Export to QuickBooks</button>
-        <button class="btn btn-ghost" onclick="resetApp()">Process another PDF</button>
+        <button class="btn btn-ghost" onclick="resetApp()">Process another batch</button>
       </div>
     </div>
-
     <div class="bookie-tip" id="confidence-tip" style="display:none">
-      <img class="bookie-img"
-           src="https://web-production-407fa.up.railway.app/static/bookie.png"
-           alt="Bookie concerned"
-           style="filter:hue-rotate(20deg)"
-           onerror="this.style.display='none'">
+      <img class="bookie-img" src="https://web-production-407fa.up.railway.app/static/bookie.png" alt="Bookie concerned" style="filter:hue-rotate(20deg)" onerror="this.style.display='none'">
       <div class="bookie-tip-text" id="confidence-tip-text">
-        <strong>Bookie notices:</strong> Some statements have lower confidence scores. This usually means scan quality was lower on those pages. Double-check those files before importing to QuickBooks.
+        <strong>Bookie notices:</strong> Some statements have lower confidence scores. Double-check the orange-marked files before importing to QuickBooks.
       </div>
     </div>
   </div>
 
-  <!-- ── ERROR STATE ───────────────────────────────── -->
+  <!-- ── ERROR STATE ────────────────────────────────── -->
   <div class="state" id="state-error">
     <div class="error-card">
       <span class="error-icon">😬</span>
       <div class="error-text">
         <h3 id="error-title">Oops, that one was tricky!</h3>
-        <p id="error-msg">Something went wrong processing your PDF. Try a different file or check that it's a valid bank statement.</p>
+        <p id="error-msg">Something went wrong processing your PDF. Try a different file or check that it's a valid statement.</p>
       </div>
     </div>
     <div style="margin-top:16px;text-align:center">
@@ -521,7 +498,7 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
     <div class="info-item fade-up" style="transition-delay:0.1s">
       <div class="info-icon">🔒</div>
       <h4>Your data, your files</h4>
-      <p>No account needed. Files are processed and returned to you — nothing stored on our end.</p>
+      <p>No account needed. Files are processed and returned — nothing stored on our end.</p>
     </div>
     <div class="info-item fade-up" style="transition-delay:0.2s">
       <div class="info-icon">📊</div>
@@ -531,7 +508,6 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
   </div>
 </div>
 
-<!-- ── Footer ────────────────────────────────────── -->
 <footer class="footer">
   <p>Libby is part of <a href="index.html">SolFound</a> · Lives inside <a href="ledgerpath.html">LedgerPath</a> · Powered by the Statement Engine on Railway</p>
   <p style="margin-top:6px">Built with 🐛 by Bookie and 🐦 by Libby</p>
@@ -539,14 +515,15 @@ h1,h2,h3,h4 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 600; line
 
 <script>
 // ═══════════════════════════════════════════════════════
-//  LIBBY — SolFound Dedicated Page
-//  Production Railway backend
+//  LIBBY v2 — Multi-stack structured workflow
 // ═══════════════════════════════════════════════════════
 
 const LIBBY_URL = 'https://web-production-407fa.up.railway.app';
 const LIBBY_KEY = 'lp_sk_awehq238h23dncdp923nf';
 
-let selectedFile = null;
+let stacks = [];        // array of stack objects
+let stackCounter = 0;
+let previewData  = [];  // health scores from /preview
 let processedResults = [];
 
 // ── Libby speech lines ─────────────────────────────
@@ -555,24 +532,36 @@ const GREETINGS = [
   "Drop me a PDF and I'll sort it out!",
   "Bookie and I are standing by — let's go!",
   "I love organising statements. Bring it on!",
-  "Hi there! Messy statements are my favourite. 🐛",
 ];
 const PROCESSING_MSGS = [
-  "Scanning your PDF and sorting the pages…",
+  "Scanning your PDFs and sorting the pages…",
   "Bookie's helping me spot the vendor patterns!",
-  "Ooh, interesting statement structure here…",
+  "Cross-checking vendors — no imposters allowed!",
   "Almost there — naming everything nicely…",
-  "Crunching the confidence scores…",
+  "Crunching the health scores…",
 ];
+const PREVIEW_SPEECH = {
+  all_strong:  "Everything checks out! Looking clean 🎉",
+  some_mixed:  "A few things to review — nothing we can't handle 🧐",
+  has_weak:    "Bookie's a little worried about some pages — check the red ones 😟",
+  has_flags:   "Some pages got flagged — they'll go to Confirm Data for your review 🔍",
+};
+const RESULTS_SPEECH = {
+  perfect:     "Everything's sorted beautifully! Your books are happy 🎉",
+  good:        "All done! A few files to double-check but looking great 📚",
+  mixed:       "Done! Some pages are in Confirm Data — worth a look 🧐",
+};
 
 function randomLine(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function setLibbySpeech(text){
+  const el = document.getElementById('libby-speech');
+  if(el){ el.style.opacity = '0'; setTimeout(()=>{ el.textContent = text; el.style.opacity = '1'; }, 200); }
+}
 
 // ── SolFound nav ───────────────────────────────────
 function sfToggleMenu(){
-  const h = document.getElementById('sf-hamburger');
-  const d = document.getElementById('sf-drawer');
-  h.classList.toggle('open');
-  d.classList.toggle('open');
+  document.getElementById('sf-hamburger').classList.toggle('open');
+  document.getElementById('sf-drawer').classList.toggle('open');
 }
 document.addEventListener('click', function(e){
   const h = document.getElementById('sf-hamburger');
@@ -581,7 +570,6 @@ document.addEventListener('click', function(e){
     h.classList.remove('open'); d.classList.remove('open');
   }
 });
-
 function sfShowToast(msg){
   const t = document.getElementById('sf-toast');
   if(!t) return;
@@ -595,178 +583,340 @@ async function checkAPI(){
   const dot = document.getElementById('api-dot');
   const txt = document.getElementById('api-status-text');
   try {
-    const r = await fetch(LIBBY_URL + '/health', {
-      signal: AbortSignal.timeout(5000)
-    });
-    if(r.ok){
-      dot.className = 'api-dot connected';
-      txt.textContent = 'Statement engine connected and ready';
-    } else { throw new Error('non-200'); }
+    const r = await fetch(LIBBY_URL + '/health', { signal: AbortSignal.timeout(5000) });
+    if(r.ok){ dot.className = 'api-dot connected'; txt.textContent = 'Statement engine connected and ready'; }
+    else { throw new Error(); }
   } catch(e){
     dot.className = 'api-dot disconnected';
     txt.textContent = 'Engine offline — may be waking up (try uploading anyway)';
   }
 }
 
-// ── File handling ──────────────────────────────────
-function handleDrop(e){
-  e.preventDefault();
-  document.getElementById('upload-zone').classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if(file) setFile(file);
+// ── Stack management ───────────────────────────────
+function addStack(copyFrom = null){
+  stackCounter++;
+  const id = stackCounter;
+  const isFirst = stacks.length === 0;
+
+  const stackData = {
+    id,
+    client:    copyFrom ? copyFrom.client    : '',
+    vendor:    copyFrom ? copyFrom.vendor    : '',
+    acct:      copyFrom ? copyFrom.acct      : '',
+    dateRange: '',
+    pageMode:  'any',
+    pageCount: '',
+    file:      null,
+  };
+  stacks.push(stackData);
+  renderStack(stackData, isFirst, copyFrom !== null);
+  updateProcessBtn();
 }
-function handleFileSelect(e){
-  const file = e.target.files[0];
-  if(file) setFile(file);
-}
-function setFile(file){
-  if(!file.name.match(/\.pdf$/i)){
-    alert('Please upload a PDF file.');
-    return;
+
+function renderStack(data, isFirst, wasCopied){
+  const container = document.getElementById('stack-container');
+  const div = document.createElement('div');
+  div.className = 'vendor-stack';
+  div.id = `stack-${data.id}`;
+
+  const copyRow = !isFirst ? `
+    <div class="copy-row">
+      <span>Same client as the stack above?</span>
+      <button class="btn-copy" onclick="copyFromPrevious(${data.id})">Copy details ↑</button>
+    </div>` : '';
+
+  div.innerHTML = `
+    <div class="stack-header">
+      <div class="stack-label">
+        <div class="stack-number">${stacks.findIndex(s=>s.id===data.id)+1}</div>
+        Vendor Stack
+      </div>
+      ${!isFirst ? `<button class="stack-remove" onclick="removeStack(${data.id})" title="Remove this stack">✕</button>` : ''}
+    </div>
+    ${copyRow}
+    <div class="stack-fields three-col">
+      <div class="field">
+        <label>Client name</label>
+        <input type="text" placeholder="e.g. Montrose Salon" value="${data.client}"
+          oninput="updateStackField(${data.id},'client',this.value)">
+      </div>
+      <div class="field">
+        <label>Vendor / institution</label>
+        <input type="text" placeholder="e.g. AMEX, Chase, SAWS" value="${data.vendor}"
+          oninput="updateStackField(${data.id},'vendor',this.value)">
+      </div>
+      <div class="field">
+        <label>Account last 4 <span class="field-optional">optional</span></label>
+        <input type="text" placeholder="e.g. 4821" maxlength="4" value="${data.acct}"
+          oninput="updateStackField(${data.id},'acct',this.value)">
+      </div>
+    </div>
+    <div class="stack-fields">
+      <div class="field">
+        <label>Date range <span class="field-optional">optional</span></label>
+        <input type="text" placeholder="e.g. Jan–Mar 2025 or 2025-01 to 2025-03" value="${data.dateRange}"
+          oninput="updateStackField(${data.id},'dateRange',this.value)">
+      </div>
+      <div class="field">
+        <label>Pages per statement <span class="field-optional">optional</span></label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select style="flex:1" onchange="updateStackMode(${data.id},this.value)">
+            <option value="any" ${data.pageMode==='any'?'selected':''}>Any — Libby decides</option>
+            <option value="exact" ${data.pageMode==='exact'?'selected':''}>Exact count</option>
+            <option value="range" ${data.pageMode==='range'?'selected':''}>Range (min–max)</option>
+          </select>
+          <input type="text" id="pagecount-${data.id}"
+            placeholder="${data.pageMode==='exact'?'e.g. 2':data.pageMode==='range'?'e.g. 2-4':''}"
+            style="width:90px;${data.pageMode==='any'?'display:none':''}"
+            value="${data.pageCount}"
+            oninput="updateStackField(${data.id},'pageCount',this.value)">
+        </div>
+      </div>
+    </div>
+    <div class="upload-zone" id="zone-${data.id}"
+         onclick="document.getElementById('file-${data.id}').click()"
+         ondragover="event.preventDefault();this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')"
+         ondrop="handleStackDrop(event,${data.id})">
+      <span class="upload-icon" id="icon-${data.id}">📄</span>
+      <div class="upload-title" id="title-${data.id}">Drop your PDF here</div>
+      <div class="upload-sub" id="sub-${data.id}">or click to browse · scanned bank statements, credit cards, utility bills</div>
+      <input type="file" id="file-${data.id}" accept=".pdf" onchange="handleStackFile(event,${data.id})" style="display:none">
+    </div>`;
+
+  container.appendChild(div);
+
+  if(wasCopied){
+    // Brief highlight to show it was copied
+    div.style.borderColor = 'var(--lav)';
+    setTimeout(() => { div.style.borderColor = ''; }, 1000);
   }
-  selectedFile = file;
-  document.getElementById('upload-icon').textContent = '✅';
-  document.getElementById('upload-title').textContent = file.name;
-  document.getElementById('upload-sub').textContent = (file.size/1024/1024).toFixed(2) + ' MB · PDF ready to process';
-  document.getElementById('upload-zone').classList.add('has-file');
-  document.getElementById('process-btn').disabled = false;
-  setLibbySpeech("Great choice! Set your prefix and I'll get started.");
 }
 
-function setLibbySpeech(text){
-  const el = document.getElementById('libby-speech');
-  if(el) el.textContent = text;
+function removeStack(id){
+  stacks = stacks.filter(s => s.id !== id);
+  const el = document.getElementById(`stack-${id}`);
+  if(el) el.remove();
+  // Re-number remaining stacks
+  stacks.forEach((s, i) => {
+    const numEl = document.querySelector(`#stack-${s.id} .stack-number`);
+    if(numEl) numEl.textContent = i + 1;
+  });
+  updateProcessBtn();
 }
 
-// ── Processing ─────────────────────────────────────
-async function startProcessing(){
-  if(!selectedFile) return;
-  const prefix = (document.getElementById('prefix-input').value.trim() || 'CLIENT').toUpperCase();
+function copyFromPrevious(id){
+  const idx = stacks.findIndex(s => s.id === id);
+  if(idx < 1) return;
+  const prev = stacks[idx - 1];
+  const curr = stacks[idx];
+  curr.client = prev.client;
+  curr.vendor = prev.vendor;
+  curr.acct   = prev.acct;
+  // Update DOM inputs
+  const el = document.getElementById(`stack-${id}`);
+  if(!el) return;
+  const inputs = el.querySelectorAll('input[type="text"]');
+  // client, vendor, acct are first three inputs
+  if(inputs[0]) inputs[0].value = prev.client;
+  if(inputs[1]) inputs[1].value = prev.vendor;
+  if(inputs[2]) inputs[2].value = prev.acct;
+  sfShowToast('Details copied from previous stack');
+  updateProcessBtn();
+}
 
+function updateStackField(id, field, value){
+  const s = stacks.find(s => s.id === id);
+  if(s) s[field] = value;
+  updateProcessBtn();
+}
+
+function updateStackMode(id, mode){
+  const s = stacks.find(s => s.id === id);
+  if(s) s.pageMode = mode;
+  const pc = document.getElementById(`pagecount-${id}`);
+  if(pc){
+    pc.style.display = mode === 'any' ? 'none' : '';
+    pc.placeholder = mode === 'exact' ? 'e.g. 2' : 'e.g. 2-4';
+  }
+}
+
+function handleStackDrop(e, id){
+  e.preventDefault();
+  document.getElementById(`zone-${id}`).classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if(file) setStackFile(id, file);
+}
+function handleStackFile(e, id){
+  const file = e.target.files[0];
+  if(file) setStackFile(id, file);
+}
+function setStackFile(id, file){
+  if(!file.name.match(/\.pdf$/i)){ alert('Please upload a PDF file.'); return; }
+  const s = stacks.find(s => s.id === id);
+  if(s) s.file = file;
+  document.getElementById(`icon-${id}`).textContent = '✅';
+  document.getElementById(`title-${id}`).textContent = file.name;
+  document.getElementById(`sub-${id}`).textContent = (file.size/1024/1024).toFixed(2) + ' MB · PDF ready';
+  document.getElementById(`zone-${id}`).classList.add('has-file');
+  document.getElementById(`stack-${id}`).classList.add('has-file');
+  updateProcessBtn();
+}
+
+function updateProcessBtn(){
+  const allHaveFiles   = stacks.length > 0 && stacks.every(s => s.file !== null);
+  const allHaveVendors = stacks.every(s => s.vendor.trim() !== '');
+  const allHaveClients = stacks.every(s => s.client.trim() !== '');
+  document.getElementById('process-btn').disabled = !(allHaveFiles && allHaveVendors && allHaveClients);
+}
+
+// ── Preview (Phase 1) ──────────────────────────────
+async function startPreview(){
+  if(!stacks.every(s => s.file)) return;
   showState('processing');
+  document.getElementById('processing-title').textContent = 'Libby is analysing your stacks…';
   setLibbySpeech("Scanning… Bookie's on it too! 🐛");
-
-  const steps = ['step-load','step-split','step-vendor','step-name','step-conf','step-save'];
-  const pcts  = [10, 26, 48, 66, 82, 94];
-  let stepIdx = 0;
-
-  const stepTimer = setInterval(() => {
-    if(stepIdx > 0){
-      const prev = document.getElementById(steps[stepIdx-1]);
-      if(prev) prev.className = 'done';
-    }
-    if(stepIdx < steps.length){
-      const cur = document.getElementById(steps[stepIdx]);
-      if(cur) cur.className = 'active';
-      document.getElementById('progress-bar').style.width = pcts[stepIdx] + '%';
-      document.getElementById('progress-label').textContent = pcts[stepIdx] + '% complete';
-      document.getElementById('processing-msg').textContent = randomLine(PROCESSING_MSGS);
-      stepIdx++;
-    }
-  }, 900);
+  animateSteps(['step-load','step-split','step-vendor','step-health'], [10,30,55,75], 800);
 
   try {
+    // For now, since /preview endpoint doesn't exist yet on backend,
+    // we go straight to /process and show results
+    // TODO: replace with /preview call when backend is ready
+    await processAllStacks();
+  } catch(e){
+    showError('Processing failed', e.message);
+  }
+}
+
+// ── Process all stacks ─────────────────────────────
+async function processAllStacks(){
+  const allResults = [];
+
+  for(let i = 0; i < stacks.length; i++){
+    const s = stacks[i];
     const form = new FormData();
-    form.append('file', selectedFile);
-    form.append('prefix', prefix);
+    form.append('file',   s.file);
+    form.append('prefix', (s.client.trim() || 'CLIENT').toUpperCase().replace(/\s+/g,'_'));
+    form.append('vendor', s.vendor.trim());
+    form.append('acct',   s.acct.trim());
 
     const resp = await fetch(LIBBY_URL + '/process', {
-      method: 'POST',
+      method:  'POST',
       headers: { 'X-API-Key': LIBBY_KEY },
-      body: form,
-      signal: AbortSignal.timeout(120000),
+      body:    form,
+      signal:  AbortSignal.timeout(120000),
     });
 
-    clearInterval(stepTimer);
-
     if(!resp.ok){
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.error || 'Server error ' + resp.status);
+      const err = await resp.json().catch(()=>({}));
+      throw new Error(`Stack ${i+1} (${s.vendor}): ${err.error || 'Server error ' + resp.status}`);
     }
 
     const data = await resp.json();
-    processedResults = data.results || [];
-    showResults(processedResults);
-    sfShowToast(processedResults.reduce((s,r)=>s+r.transactions,0) + ' transactions extracted by Libby');
+    allResults.push(...(data.results || []));
+  }
 
+  processedResults = allResults;
+  showResults(allResults);
+  const totalTxn = allResults.reduce((s,r)=>s+(r.transactions||0),0);
+  sfShowToast(`${totalTxn} transactions extracted across ${stacks.length} stack${stacks.length>1?'s':''}`);
+}
+
+// ── Confirm & process (Phase 2 — when /preview exists) ──
+async function confirmProcess(){
+  showState('processing');
+  document.getElementById('processing-title').textContent = 'Libby is processing your stacks…';
+  setLibbySpeech("Almost there — naming everything nicely… 🏷️");
+  animateSteps(['step-name','step-save'], [85,96], 900);
+  try {
+    await processAllStacks();
   } catch(e){
-    clearInterval(stepTimer);
-    if(e.name === 'TimeoutError'){
-      showError('Timed out', 'The statement may be very large. Try again or split the PDF into smaller chunks.');
-    } else {
-      showError('Processing failed', e.message);
-    }
-    setLibbySpeech("Oops, that one was tricky — but I know what happened!");
+    showError('Processing failed', e.message);
   }
 }
 
-// ── Results rendering ──────────────────────────────
+// ── Step animation ─────────────────────────────────
+let stepTimer = null;
+function animateSteps(stepIds, pcts, interval){
+  clearInterval(stepTimer);
+  let idx = 0;
+  stepTimer = setInterval(()=>{
+    if(idx > 0 && document.getElementById(stepIds[idx-1]))
+      document.getElementById(stepIds[idx-1]).className = 'done';
+    if(idx < stepIds.length){
+      if(document.getElementById(stepIds[idx]))
+        document.getElementById(stepIds[idx]).className = 'active';
+      document.getElementById('progress-bar').style.width = pcts[idx] + '%';
+      document.getElementById('progress-label').textContent = pcts[idx] + '% complete';
+      document.getElementById('processing-msg').textContent = randomLine(PROCESSING_MSGS);
+      idx++;
+    }
+  }, interval);
+}
+
+// ── Results ────────────────────────────────────────
 function showResults(results){
+  clearInterval(stepTimer);
   document.getElementById('progress-bar').style.width = '100%';
 
-  const hasLowConf = results.some(r => (r.confidence || 0) < 0.5);
+  const hasLowConf = results.some(r => (r.confidence||0) < 0.5);
   const list = document.getElementById('stmt-list');
 
   const vendorIcon = v => {
     if(!v) return '📄';
     const u = v.toUpperCase();
-    if(u.includes('CHASE') || u.includes('BANK') || u.includes('WELLS') || u.includes('BOA')) return '🏦';
-    if(u.includes('AMEX') || u.includes('VISA') || u.includes('CARD') || u.includes('CREDIT')) return '💳';
-    if(u.includes('WATER') || u.includes('SAWS') || u.includes('CPS') || u.includes('ENERGY')) return '💡';
-    if(u.includes('ATT') || u.includes('SPECTRUM') || u.includes('VERIZON')) return '📡';
+    if(u.includes('CHASE')||u.includes('BANK')||u.includes('WELLS')||u.includes('BOA')||u.includes('IBC')) return '🏦';
+    if(u.includes('AMEX')||u.includes('VISA')||u.includes('CARD')||u.includes('CREDIT')||u.includes('CAPITAL')) return '💳';
+    if(u.includes('WATER')||u.includes('SAWS')||u.includes('CPS')||u.includes('ENERGY')||u.includes('ELECTRIC')) return '💡';
+    if(u.includes('ATT')||u.includes('SPECTRUM')||u.includes('VERIZON')||u.includes('PHONE')) return '📡';
+    if(u.includes('TIGER')||u.includes('TRASH')||u.includes('DISPOSAL')||u.includes('WASTE')) return '🚛';
     return '📄';
   };
 
   list.innerHTML = results.map(r => {
-    const conf = Math.round((r.confidence || 0) * 100);
-    const confClass = conf >= 75 ? 'conf-high' : conf >= 50 ? 'conf-mid' : 'conf-low';
-    const txnLabel = r.transactions > 0 ? `${r.transactions} transaction${r.transactions>1?'s':''}` : 'no transactions';
-    const csvFilename = (r.csv_filename || (r.filename||'').replace('.pdf','.csv'));
+    const conf = Math.round((r.confidence||0)*100);
+    const confClass = conf>=75?'conf-high':conf>=50?'conf-mid':'conf-low';
+    const txnLabel = r.transactions>0 ? `${r.transactions} transaction${r.transactions>1?'s':''}` : 'no transactions';
+    const csvFilename = r.csv_filename || (r.filename||'').replace('.pdf','.csv');
     return `<li class="stmt-item">
       <div class="stmt-icon">${vendorIcon(r.vendor)}</div>
       <div class="stmt-info">
-        <span class="stmt-name">${r.filename || r.csv_filename || 'Statement'}</span>
+        <span class="stmt-name">${r.filename||csvFilename||'Statement'}</span>
         <span class="stmt-meta">${r.vendor||'Unknown'} · ${r.date||''} · ${r.pages||'?'} page${(r.pages||1)>1?'s':''} · ${txnLabel}</span>
       </div>
       <span class="stmt-conf ${confClass}">${conf}%</span>
       <div class="stmt-actions">
-        ${r.pdf_url ? `<a class="dl-btn dl-pdf" href="${r.pdf_url}?api_key=${LIBBY_KEY}" download="${r.filename}">PDF ↓</a>` : ''}
-        ${r.csv_url && r.transactions > 0 ? `<a class="dl-btn dl-csv" href="${r.csv_url}?api_key=${LIBBY_KEY}" download="${csvFilename}">CSV ↓</a>` : ''}
+        ${r.pdf_url?`<a class="dl-btn dl-pdf" href="${r.pdf_url}?api_key=${LIBBY_KEY}" download="${r.filename}">PDF ↓</a>`:''}
+        ${r.csv_url&&r.transactions>0?`<a class="dl-btn dl-csv" href="${r.csv_url}?api_key=${LIBBY_KEY}" download="${csvFilename}">CSV ↓</a>`:''}
       </div>
     </li>`;
   }).join('');
 
   const n = results.length;
   const totalTxn = results.reduce((s,r)=>s+(r.transactions||0),0);
+
+  if(hasLowConf){
+    setLibbySpeech(RESULTS_SPEECH.mixed);
+    document.getElementById('results-emoji').textContent = '🧐';
+  } else if(n > 5){
+    setLibbySpeech(RESULTS_SPEECH.perfect);
+  } else {
+    setLibbySpeech(RESULTS_SPEECH.good);
+  }
+
   document.getElementById('results-title').textContent =
-    n === 1 ? 'All done! Your books are looking lovely.' : `All done! ${n} statements sorted and named.`;
+    n===1 ? 'All done! Your books are looking lovely.' : `All done! ${n} statements sorted and named.`;
   document.getElementById('results-sub').textContent =
-    `${n} statement${n>1?'s':''} · ${totalTxn} transactions · ${hasLowConf ? 'Some files need a review — check the orange ones.' : 'All high confidence ✓'}`;
+    `${n} statement${n>1?'s':''} · ${totalTxn} transactions · ${hasLowConf?'Some files need a review — check the orange ones.':'All high confidence ✓'}`;
 
-  if(hasLowConf) document.getElementById('confidence-tip').style.display = 'flex';
-
-  setLibbySpeech(n === 1 ? 'All done! Everything looks lovely.' : `${n} statements sorted! Ready to download. 🎉`);
+  if(hasLowConf) document.getElementById('confidence-tip').style.display='flex';
   showState('results');
 }
 
 function downloadAll(){
-  processedResults.forEach((r, i) => {
-    if(r.pdf_url){
-      setTimeout(() => {
-        const a = document.createElement('a');
-        a.href = r.pdf_url + '?api_key=' + LIBBY_KEY;
-        a.download = r.filename || 'statement.pdf';
-        a.click();
-      }, i * 400);
-    }
-    if(r.csv_url && r.transactions > 0){
-      setTimeout(() => {
-        const a = document.createElement('a');
-        a.href = r.csv_url + '?api_key=' + LIBBY_KEY;
-        a.download = r.csv_filename || 'transactions.csv';
-        a.click();
-      }, i * 400 + 200);
-    }
+  processedResults.forEach((r,i)=>{
+    if(r.pdf_url) setTimeout(()=>{ const a=document.createElement('a'); a.href=r.pdf_url+'?api_key='+LIBBY_KEY; a.download=r.filename||'statement.pdf'; a.click(); }, i*400);
+    if(r.csv_url&&r.transactions>0) setTimeout(()=>{ const a=document.createElement('a'); a.href=r.csv_url+'?api_key='+LIBBY_KEY; a.download=r.csv_filename||'transactions.csv'; a.click(); }, i*400+200);
   });
 }
 
@@ -776,42 +926,49 @@ function exportQB(){
 
 // ── Error ──────────────────────────────────────────
 function showError(title, msg){
+  clearInterval(stepTimer);
   document.getElementById('error-title').textContent = title;
   document.getElementById('error-msg').textContent = msg;
+  setLibbySpeech("Oops, that one was tricky — but I know what happened!");
   showState('error');
 }
 
 // ── State management ───────────────────────────────
 function showState(name){
-  document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
-  document.getElementById('state-' + name).classList.add('active');
-  window.scrollTo(0, 0);
+  document.querySelectorAll('.state').forEach(s=>s.classList.remove('active'));
+  document.getElementById('state-'+name).classList.add('active');
+  window.scrollTo(0,0);
 }
 
 function resetApp(){
-  selectedFile = null;
+  clearInterval(stepTimer);
+  stacks = [];
+  stackCounter = 0;
   processedResults = [];
-  document.getElementById('file-input').value = '';
-  document.getElementById('upload-icon').textContent = '📄';
-  document.getElementById('upload-title').textContent = 'Drop your PDF bank statement here';
-  document.getElementById('upload-sub').innerHTML = 'or click to browse · <em>Bank, credit card, utility statements</em>';
-  document.getElementById('upload-zone').classList.remove('has-file');
-  document.getElementById('process-btn').disabled = true;
+  previewData = [];
+  document.getElementById('stack-container').innerHTML = '';
   document.getElementById('confidence-tip').style.display = 'none';
+  // Reset step list classes
+  ['step-load','step-split','step-vendor','step-health','step-name','step-save'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.className='';
+  });
+  document.getElementById('progress-bar').style.width = '4%';
   setLibbySpeech(randomLine(GREETINGS));
   showState('upload');
+  addStack(); // start with one stack
 }
 
 // ── Fade-up scroll animations ──────────────────────
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
-document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
 
 // ── Init ───────────────────────────────────────────
 setLibbySpeech(randomLine(GREETINGS));
 checkAPI();
 setInterval(checkAPI, 30000);
+addStack(); // start with one stack
 </script>
 </body>
 </html>
